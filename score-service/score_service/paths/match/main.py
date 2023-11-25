@@ -1,18 +1,39 @@
 import os
 import json
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, WebSocket
 
 from score_service import filter
 from score_service.utils import exports
 
 app = FastAPI()
+data_root = exports.data_root
 
 @app.get("/")
 def read_root():
   return {
     "message": "Welcome to match subpath"
   }
+  
+@app.websocket("/live/")
+async def live_score(websocket: WebSocket):
+  await websocket.accept()
+  while True:
+    data = await websocket.receive_text()
+    try:
+      message = json.loads(data)
+      if "match_id" in message:
+        match_id = message["match_id"]
+        if os.path.exists(f"{data_root}/matches/{match_id}.json"):
+          await websocket.send_text("Match ID received starting match streaming")
+        else:
+          await websocket.send_text("Match ID Not Found, Please send a valid match id to start streaming")
+      else:
+        await websocket.send_text("Match ID Not Found in the message")
+        await websocket.send_text("Please send a valid message in format {'match_id': 12345} where 12345 is match_id")
+    except Exception as e:
+      print(e)
+      await websocket.send_text("Invalid JSON")        
 
 @app.get("/list")
 def match_list():
@@ -21,9 +42,7 @@ def match_list():
   }
 
 @app.get("/{match_id}")
-def get_match(match_id: str):    
-  data_root = exports.data_root
-  
+def get_match(match_id: str):
   if os.path.exists(f"{data_root}/matches/{match_id}.json"):
     with open(f"{data_root}/matches/{match_id}.json") as match_file:
       match_json = json.load(match_file)
