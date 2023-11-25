@@ -38,10 +38,8 @@ def filter_files():
         )
       )
   
-  print(len(match_list))
-  
   random_match_list = random.sample(match_list, 10)
   
-  for i in random_match_list:
-    print(i)
+  logging.debug(f"random_match_list: {random_match_list}")
   
+  return random_match_list
