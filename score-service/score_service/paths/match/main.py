@@ -1,5 +1,7 @@
 import os
 import json
+import time
+import asyncio
 
 from fastapi import FastAPI, HTTPException, WebSocket
 
@@ -8,6 +10,21 @@ from score_service.utils import exports
 
 app = FastAPI()
 data_root = exports.data_root
+
+def get_match_info(match_json):
+  match_info = match_json["info"]
+  info_data = {
+    "city": match_info["city"],
+    "date": match_info["dates"][0],
+    "event": match_info["event"],
+    "officials": match_info["officials"],
+    "players": match_info["players"],
+    "teams": match_info["teams"],
+    "toss": match_info["toss"],
+    "venue": match_info["venue"]
+  }
+  
+  return match_info
 
 @app.get("/")
 def read_root():
@@ -26,6 +43,36 @@ async def live_score(websocket: WebSocket):
         match_id = message["match_id"]
         if os.path.exists(f"{data_root}/matches/{match_id}.json"):
           await websocket.send_text("Match ID received starting match streaming")
+          
+          with open(f"{data_root}/matches/{match_id}.json") as f:
+            await websocket.send_text("Match Found below is the data about the match")
+            match_json = json.load(f)
+            match_info = get_match_info(match_json=match_json)
+            
+            await asyncio.sleep(1)
+            await websocket.send_text(json.dumps(match_info))
+            
+            innings = match_json["innings"]
+            
+            for inning_number, inning in enumerate(innings):
+              await websocket.send_text(f"Starting Inning {inning_number + 1}")
+              overs = inning["overs"]
+              for over in overs:
+                over_no = over["over"]
+                deliveries = over["deliveries"]
+                for delivery_no_in_over, delivery in enumerate(deliveries):
+                  await asyncio.sleep(5)
+                  data_to_send = {
+                    "over": over_no,
+                    "delivery": delivery_no_in_over,
+                    "data": delivery
+                  }
+                  await websocket.send_text(json.dumps(data_to_send))
+            
+            
+            await websocket.send_text("Match Streaming Ended")
+            await websocket.send_text("Result of the match")
+            await websocket.send_json(match_info["outcome"])
         else:
           await websocket.send_text("Match ID Not Found, Please send a valid match id to start streaming")
       else:
@@ -46,19 +93,7 @@ def get_match(match_id: str):
   if os.path.exists(f"{data_root}/matches/{match_id}.json"):
     with open(f"{data_root}/matches/{match_id}.json") as match_file:
       match_json = json.load(match_file)
-      
-      match_info = match_json["info"]
-      info_data = {
-        "city": match_info["city"],
-        "date": match_info["dates"][0],
-        "event": match_info["event"],
-        "officials": match_info["officials"],
-        "players": match_info["players"],
-        "teams": match_info["teams"],
-        "toss": match_info["toss"],
-        "venue": match_info["venue"]
-      }
-      
+      info_data = get_match_info(match_json)
       return {
         "match_id": "Match Found below is the data about the match",
         "data": info_data
