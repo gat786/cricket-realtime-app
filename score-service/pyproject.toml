@@ -9,6 +9,8 @@ packages = [{include = "score_service"}]
 [tool.poetry.dependencies]
 python = "^3.8"
 python-dotenv = "^1.0.0"
+fastapi = {extras = ["api"], version = "^0.104.1"}
+uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
 
 [tool.poetry.scripts]
 start = "score_service.main:main"
