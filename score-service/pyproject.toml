@@ -14,6 +14,7 @@ uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
 
 [tool.poetry.scripts]
 start = "score_service.main:main"
+filter = "score_service.filter:filter_files"
 
 [build-system]
 requires = ["poetry-core"]
