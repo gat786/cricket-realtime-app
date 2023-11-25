@@ -14,8 +14,8 @@ uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
 websockets = "^12.0"
 
 [tool.poetry.scripts]
-start = "score_service.main:main"
-filter = "score_service.filter:filter_files"
+start   = "score_service.main:main"
+filter  = "score_service.filter:filter_files"
 
 [build-system]
 requires = ["poetry-core"]
