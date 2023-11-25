@@ -1,0 +1,79 @@
+id,name,code,image_path,country_id,national_team,updated_at
+1,Pakistan,PAK,https://cdn.sportmonks.com/images/cricket/teams/1/1.png,190324,TRUE,2018-11-29T11:47:20.000000Z
+10,India,IND,https://cdn.sportmonks.com/images/cricket/teams/10/10.png,190324,TRUE,2018-11-29T11:47:20.000000Z
+36,Australia,AUS,https://cdn.sportmonks.com/images/cricket/teams/4/36.png,190324,TRUE,2018-11-29T11:47:20.000000Z
+37,Bangladesh,BGD,https://cdn.sportmonks.com/images/cricket/teams/5/37.png,190324,TRUE,2018-11-29T11:47:20.000000Z
+38,England,ENG,https://cdn.sportmonks.com/images/cricket/teams/6/38.png,190324,TRUE,2019-01-29T11:07:04.000000Z
+39,Sri Lanka,LKA,https://cdn.sportmonks.com/images/cricket/teams/7/39.png,190324,TRUE,2019-08-31T12:20:09.000000Z
+40,South Africa,ZAF,https://cdn.sportmonks.com/images/cricket/teams/8/40.png,190324,TRUE,2019-08-31T12:31:16.000000Z
+41,Zimbabwe,ZIM,https://cdn.sportmonks.com/images/cricket/teams/9/41.png,190324,TRUE,2019-06-17T14:45:03.000000Z
+42,New Zealand,NZL,https://cdn.sportmonks.com/images/cricket/teams/10/42.png,190324,TRUE,2019-08-31T12:32:06.000000Z
+43,West Indies,WI,https://cdn.sportmonks.com/images/cricket/teams/11/43.png,190324,TRUE,2018-11-29T11:47:20.000000Z
+44,Scotland,SCO,https://cdn.sportmonks.com/images/cricket/teams/12/44.png,190324,TRUE,2019-02-13T16:25:03.000000Z
+45,United Arab Emirates,UAE,https://cdn.sportmonks.com/images/cricket/teams/13/45.png,190324,TRUE,2019-10-28T18:35:02.000000Z
+46,Afghanistan,AFG,https://cdn.sportmonks.com/images/cricket/teams/14/46.png,190324,TRUE,2019-02-19T06:30:02.000000Z
+47,Adelaide Strikers,AS,https://cdn.sportmonks.com/images/cricket/teams/15/47.png,98,FALSE,2019-12-19T12:26:02.000000Z
+48,Brisbane Heat,BH,https://cdn.sportmonks.com/images/cricket/teams/16/48.png,98,FALSE,2019-12-09T06:45:02.000000Z
+49,Hobart Hurricanes,HH,https://cdn.sportmonks.com/images/cricket/teams/17/49.png,98,FALSE,2018-11-29T11:47:20.000000Z
+50,Melbourne Renegades,MR,https://cdn.sportmonks.com/images/cricket/teams/18/50.png,98,FALSE,2018-11-29T11:47:20.000000Z
+51,Melbourne Stars,MLS,https://cdn.sportmonks.com/images/cricket/teams/19/51.png,98,FALSE,2022-12-13T10:41:00.000000Z
+52,Perth Scorchers,PS,https://cdn.sportmonks.com/images/cricket/teams/20/52.png,98,FALSE,2018-11-29T11:47:20.000000Z
+53,Sydney Sixers,SS,https://cdn.sportmonks.com/images/cricket/teams/21/53.png,98,FALSE,2018-11-29T11:47:20.000000Z
+54,Sydney Thunder,SYT,https://cdn.sportmonks.com/images/cricket/teams/22/54.png,98,FALSE,2022-12-13T10:41:07.000000Z
+60,Titans,MT,https://cdn.sportmonks.com/images/cricket/teams/28/60.png,146,FALSE,2019-02-28T11:27:04.000000Z
+61,Dolphins,HD,https://cdn.sportmonks.com/images/cricket/teams/29/61.png,146,FALSE,2018-11-13T20:31:04.000000Z
+62,Cape Cobras,CC,https://cdn.sportmonks.com/images/cricket/teams/30/62.png,146,FALSE,2018-11-13T20:31:09.000000Z
+63,Warriors,WAR,https://cdn.sportmonks.com/images/cricket/teams/31/63.png,146,FALSE,2019-02-21T10:39:04.000000Z
+64,Lions,HL,https://cdn.sportmonks.com/images/cricket/teams/0/64.png,146,FALSE,2018-11-13T20:31:21.000000Z
+65,Knights,KTS,https://cdn.sportmonks.com/images/cricket/teams/1/65.png,146,FALSE,2021-02-15T12:39:42.000000Z
+100,Ireland,IRE,https://cdn.sportmonks.com/images/cricket/teams/4/100.png,190324,TRUE,2019-02-08T11:22:03.000000Z
+115,Hong Kong,HK,https://cdn.sportmonks.com/images/cricket/teams/19/115.png,64306,TRUE,2019-10-30T06:40:02.000000Z
+140,Canada,CAN,https://cdn.sportmonks.com/images/cricket/teams/12/140.png,190324,TRUE,2019-11-05T09:22:02.000000Z
+143,Kenya,KEN,https://cdn.sportmonks.com/images/cricket/teams/15/143.png,190324,TRUE,2018-11-13T21:14:56.000000Z
+146,Netherlands,NLD,https://cdn.sportmonks.com/images/cricket/teams/18/146.png,190324,TRUE,2019-02-13T16:25:02.000000Z
+152,Nepal,NPL,https://cdn.sportmonks.com/images/cricket/teams/24/152.png,190324,TRUE,2020-02-08T15:54:07.000000Z
+155,Oman,OMN,https://cdn.sportmonks.com/images/cricket/teams/27/155.png,190324,TRUE,2019-02-08T11:22:03.000000Z
+272,USA,USA,https://cdn.sportmonks.com/images/cricket/teams/16/272.png,14566636,FALSE,2019-01-26T11:48:13.000000Z
+293,Namibia,NAM,https://cdn.sportmonks.com/images/cricket/teams/5/293.png,190324,FALSE,2019-10-28T08:40:04.000000Z
+296,Papua New Guinea,PNG,https://cdn.sportmonks.com/images/cricket/teams/8/296.png,190324,FALSE,2019-10-30T06:43:02.000000Z
+302,Estonia,EST,https://cdn.sportmonks.com/images/cricket/teams/14/302.png,190324,FALSE,2021-10-04T14:12:14.000000Z
+305,Spain,ESP,https://cdn.sportmonks.com/images/cricket/teams/17/305.png,190324,FALSE,2019-03-16T11:32:10.000000Z
+308,Malta,MLT,https://cdn.sportmonks.com/images/cricket/teams/20/308.png,190324,FALSE,2019-03-16T11:31:33.000000Z
+326,Germany,DEU,https://cdn.sportmonks.com/images/cricket/teams/6/326.png,190324,TRUE,2021-06-21T13:12:45.000000Z
+329,Italy,ITA,https://cdn.sportmonks.com/images/cricket/teams/9/329.png,251,TRUE,2019-04-03T11:09:15.000000Z
+370,Belgium,BEL,https://cdn.sportmonks.com/images/cricket/teams/18/370.png,190324,FALSE,2019-05-08T19:57:46.000000Z
+396,Jersey,JEY,https://cdn.sportmonks.com/images/cricket/teams/12/396.png,190324,FALSE,2019-05-27T19:16:17.000000Z
+399,Guernsey,GGY,https://cdn.sportmonks.com/images/cricket/teams/15/399.png,190324,FALSE,2019-05-27T19:17:12.000000Z
+402,Malaysia,MYS,https://cdn.sportmonks.com/images/cricket/teams/18/402.png,190324,TRUE,2020-02-20T11:23:02.000000Z
+414,Denmark,DNK,https://cdn.sportmonks.com/images/cricket/teams/30/414.png,320,FALSE,2019-07-04T22:27:12.000000Z
+417,Finland,FIN,https://cdn.sportmonks.com/images/cricket/teams/1/417.png,1233,FALSE,2019-07-04T22:26:47.000000Z
+420,Kuwait,KWT,https://cdn.sportmonks.com/images/cricket/teams/4/420.png,21462,TRUE,2019-07-05T21:58:31.000000Z
+423,Qatar,QAT,https://cdn.sportmonks.com/images/cricket/teams/7/423.png,74505,TRUE,2020-02-12T09:44:02.000000Z
+429,Singapore,SIN,https://cdn.sportmonks.com/images/cricket/teams/13/429.png,99474,FALSE,2019-09-24T19:55:02.000000Z
+456,Botswana,BWA,https://cdn.sportmonks.com/images/cricket/teams/8/456.png,190324,FALSE,2019-08-19T11:18:56.000000Z
+483,United States of America,USA,https://cdn.sportmonks.com/images/cricket/teams/3/483.png,190324,TRUE,2019-08-28T14:40:17.000000Z
+486,Romania,ROU,https://cdn.sportmonks.com/images/cricket/teams/6/486.png,190324,FALSE,2019-08-27T18:22:34.000000Z
+489,Austria,AUT,https://cdn.sportmonks.com/images/cricket/teams/9/489.png,190324,TRUE,2019-08-27T18:24:00.000000Z
+492,Czech Republic,CZE,https://cdn.sportmonks.com/images/cricket/teams/12/492.png,190324,TRUE,2019-08-27T18:24:53.000000Z
+495,Luxembourg,LUX,https://cdn.sportmonks.com/images/cricket/teams/15/495.png,190324,TRUE,2019-08-27T18:26:28.000000Z
+498,Turkey,TUR,https://cdn.sportmonks.com/images/cricket/teams/18/498.png,190324,TRUE,2019-08-27T18:27:20.000000Z
+501,Russia,RUS,https://cdn.sportmonks.com/images/cricket/teams/21/501.png,190324,TRUE,2019-08-27T18:31:20.000000Z
+552,Vanuatu,VUT,https://cdn.sportmonks.com/images/cricket/teams/8/552.png,190324,TRUE,2019-09-27T16:54:33.000000Z
+561,Gibraltar,GIB,https://cdn.sportmonks.com/images/cricket/teams/17/561.png,190324,TRUE,2019-10-04T18:26:51.000000Z
+678,Uganda,UGA,https://cdn.sportmonks.com/images/cricket/teams/6/678.png,4125,FALSE,2020-02-12T09:44:02.000000Z
+1065,Isle of Man,IMN,https://cdn.sportmonks.com/images/cricket/teams/9/1065.png,99474,FALSE,2020-08-11T09:46:20.000000Z
+1311,Bulgaria,BGR,https://cdn.sportmonks.com/images/cricket/teams/31/1311.png,190324,FALSE,2021-06-21T13:13:10.000000Z
+1829,Serbia,SEB,https://cdn.sportmonks.com/images/cricket/teams/5/1829.png,190324,FALSE,2021-06-21T13:16:31.000000Z
+1850,Sweden,SWE,https://cdn.sportmonks.com/images/cricket/teams/26/1850.png,99474,FALSE,2022-06-07T16:13:55.000000Z
+1856,Hungary,HUN,https://cdn.sportmonks.com/images/cricket/teams/0/1856.png,41,FALSE,2021-07-01T20:11:07.000000Z
+1880,France,FRA,https://cdn.sportmonks.com/images/cricket/teams/24/1880.png,190324,FALSE,2022-09-26T03:36:00.000000Z
+1958,Switzerland,CHE,https://cdn.sportmonks.com/images/cricket/teams/6/1958.png,190324,FALSE,2021-10-09T21:52:27.000000Z
+2057,Bahrain,BHR,https://cdn.sportmonks.com/images/cricket/teams/9/2057.png,190324,FALSE,2022-01-29T11:56:14.000000Z
+2060,Western Province,WP,https://cdn.sportmonks.com/images/cricket/teams/12/2060.png,146,FALSE,2022-02-02T09:43:17.000000Z
+2063,Rocks,ROC,https://cdn.sportmonks.com/images/cricket/teams/15/2063.png,146,FALSE,2022-02-05T19:30:00.000000Z
+2066,North West Dragons,NWD,https://cdn.sportmonks.com/images/cricket/teams/18/2066.png,146,FALSE,2022-10-12T19:41:50.000000Z
+2156,Croatia,HRV,https://cdn.sportmonks.com,190324,FALSE,2022-07-24T12:50:38.000000Z
+2183,Indonesia,ISN,https://cdn.sportmonks.com/images/cricket/teams/7/2183.png,190324,FALSE,2022-08-04T13:54:57.000000Z
+2186,Japan,JPN,https://cdn.sportmonks.com/images/cricket/teams/10/2186.png,190324,FALSE,2022-08-04T13:55:57.000000Z
+2252,Rwanda,RWA,https://cdn.sportmonks.com/images/cricket/teams/12/2252.png,190324,FALSE,2022-10-29T19:53:57.000000Z
+2255,Tanzania,TZA,https://cdn.sportmonks.com/images/cricket/teams/15/2255.png,190324,FALSE,2022-10-29T19:55:07.000000Z
