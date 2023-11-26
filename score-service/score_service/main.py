@@ -24,7 +24,7 @@ app.mount("/match",match.app)
 def main():
   uvicorn.run(
     "score_service.main:app",
-    host="127.0.0.1",
+    host="0.0.0.0",
     port=port,
     reload=True,
   )
