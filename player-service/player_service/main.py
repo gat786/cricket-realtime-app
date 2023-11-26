@@ -2,24 +2,43 @@ from player_service.utils import setup
 from player_service.utils import exports
 
 import uvicorn
-from fastapi import FastAPI
+import logging
+from fastapi import FastAPI 
+from pydantic import BaseModel
 
-from player_service.paths.players import main as players
+from player_service.utils import search
 
-app   = FastAPI()
-port  = 8000
+app     = FastAPI()
+port    = 8000
+logger  = logging.getLogger(__name__)
+
 if exports.port.isnumeric():
   port  = int(exports.port)
+
+class PlayerSearchQuery(BaseModel):
+  name: str
+  country_name: str
+
+    
+@app.get("/")
+def get_players():
+  return {
+    "message": "Players info can be retrieved from here"
+  }
   
 
-@app.get("/")
-def read_root():
+@app.post("/search")
+def get_player_from_name(player_search_query: PlayerSearchQuery):
+  logger.debug(player_search_query)
+  
+  closest_matches = search.search_from_file(
+    player_name=player_search_query.name.lower(),
+    country_name=player_search_query.country_name.lower()
+  )
+  closest_matches.fillna("", inplace=True)
   return {
-    "message": "Hello World",
-    "greetings": "I am Player Service use my /players endpoints to get player info"
+    "players": closest_matches.to_dict(orient="records")
   }
-
-app.mount("/players", players.app)
 
 def run_app():
   uvicorn.run(
