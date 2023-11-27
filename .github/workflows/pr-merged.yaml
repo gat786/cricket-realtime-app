@@ -40,7 +40,8 @@ jobs:
       with:
         push: true
         context: player-service
-        tags: gat786/cric-player-service:latest
+        tags: gat786/cric-player-service:${{ github.sha }}
+        platforms: linux/arm64, linux/amd64
     
     - id: dockerx-build-and-push-ss
       name: Build and push
@@ -48,6 +49,6 @@ jobs:
       with:
         push: true
         context: score-service
-        tags: gat786/cric-score-service:latest
+        tags: gat786/cric-score-service:${{ github.sha }}
         platforms: linux/arm64, linux/amd64
         # platforms: linux/arm64
