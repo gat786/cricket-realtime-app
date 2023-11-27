@@ -49,4 +49,5 @@ jobs:
         push: true
         context: score-service
         tags: gat786/cric-score-service:latest
+        platforms: linux/arm64, linux/amd64
         # platforms: linux/arm64
