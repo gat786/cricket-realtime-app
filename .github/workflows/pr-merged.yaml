@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main  # You can change this to match the branch you want to trigger the workflow
+      - master  # You can change this to match the branch you want to trigger the workflow
     
   workflow_dispatch: # This event allows you to run the workflow manually from the Actions tab
 
