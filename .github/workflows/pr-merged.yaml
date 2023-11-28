@@ -40,7 +40,7 @@ jobs:
       with:
         push: true
         context: player-service
-        tags: gat786/cric-player-service:${{ github.sha }}
+        tags: gat786/cric-player-service, gat786/cric-player-service:${{ github.sha }}
         platforms: linux/arm64, linux/amd64
     
     - id: dockerx-build-and-push-ss
@@ -49,6 +49,6 @@ jobs:
       with:
         push: true
         context: score-service
-        tags: gat786/cric-score-service:${{ github.sha }}
+        tags: gat786/cric-score-service, gat786/cric-score-service:${{ github.sha }}
         platforms: linux/arm64, linux/amd64
         # platforms: linux/arm64
