@@ -28,6 +28,23 @@
 			});
 	};
 
+	const start_streaming_match_data = (match_file_id: string) => {
+		const websockets_endpoint = constants.endpoints.score_streaming + "/live/";
+		let socket = new WebSocket(websockets_endpoint);
+
+		socket.onopen = () => {
+			console.log("Socket connection opened");
+			const initiation_message = JSON.stringify({
+				"match_id": match_file_id
+			});
+			socket.send(initiation_message);
+		};
+
+		socket.onmessage = (event) => {
+			console.log(event.data);
+		};
+	}
+
 	onMount(() => {
 		get_matches();
 	});
@@ -56,6 +73,7 @@
 						on:click={()=> {
 							selected_match = match;
 							selected_match_index = index;
+							start_streaming_match_data(match.match_file_id);
 						}}>
 						{match.match_title}
 				</button>
@@ -63,10 +81,10 @@
 			{/each}
 		</ul>
 	</div>
-	<div class="w-3/4 bg-slate-700 h-full text-white">
+	<div class="w-3/4 h-full ">
 		<!-- this will display match detail -->
 		{#if selected_match !== undefined}
-			<div class="flex justify-between items-center p-4">
+			<div class="flex bg-slate-700 justify-between items-center p-4 text-white">
 				<div class="text-2xl font-bold">{selected_match.match_title}</div>
 				<div class="text-2xl font-thin">{selected_match.match_date}</div>
 				<div class="text-2xl font-thin">Match Game Type: {selected_match.match_game_type}</div>	
