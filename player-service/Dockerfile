@@ -8,6 +8,9 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DATA_ROOT /usr/src/app/data
+ENV SERVER_PORT 8000
+
+EXPOSE 8000
 
 # Install Poetry
 RUN pip install poetry
