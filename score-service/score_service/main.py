@@ -8,11 +8,16 @@ from score_service.utils import setup
 from score_service.utils import exports
 
 from fastapi import FastAPI, HTTPException, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
 
 from score_service import filter
 from score_service.utils import exports
 
 
+origins = [
+  "http://localhost",
+  "http://localhost:5173"
+]
 data_root = exports.data_root
 app     = FastAPI()
 port    = 8000 
@@ -93,7 +98,7 @@ async def live_score(websocket: WebSocket):
 @app.get("/list")
 def match_list():
   return {
-    "list": filter.filter_files()
+    "match_list": filter.filter_files()
   }
 
 @app.get("/{match_id}")
@@ -114,6 +119,14 @@ def get_match(match_id: str):
         "message": "Please use a proper match id to get the match data"
       }
     )
+
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=origins,
+  allow_credentials=True,
+  allow_methods=["*"],
+  allow_headers=["*"],
+)
 
 def main():
   uvicorn.run(
