@@ -1,6 +1,6 @@
 <script lang="ts">
 	import constants from "$lib/constants";
-	import type { Match } from "$lib/models";
+	import type { LiveScore, Match } from "$lib/models";
 	import { onMount } from "svelte";
 
 	export let match_list: Match[] = [];
@@ -9,6 +9,18 @@
 	export let div_styles = {
 		"selected_style": "border-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white",
 		"unselected_style":  "border-gray-200 hover:bg-slate-200 active:bg-slate-300 text-black"
+	};
+
+	export let socket: WebSocket | undefined = undefined;
+	export let current_score: LiveScore = {
+		live_score: 0,
+		wickets_fallen: 0,
+		overs_bowled: 0,
+		balls_bowled_in_current: 0,
+		batsmen_already_out: [],
+		onstrike_batsman: "",
+		offstrike_batsman: "",
+		current_bowler: "",
 	};
 
 	const get_matches = () => {
@@ -30,23 +42,58 @@
 
 	const start_streaming_match_data = (match_file_id: string) => {
 		const websockets_endpoint = constants.endpoints.score_streaming + "/live/";
-		let socket = new WebSocket(websockets_endpoint);
+
+		close_socket();
+
+		socket = new WebSocket(websockets_endpoint);
+
+		socket.onmessage = (event) => {
+			const data = JSON.parse(event.data);
+			if("over" in data){
+				console.log("Over data received");
+				console.log(data);
+				current_score = {
+					live_score: 0,
+					overs_bowled: data["over"],
+					balls_bowled_in_current: data["delivery"],
+					onstrike_batsman: data["data"]["batter"],
+					offstrike_batsman: data["data"]["non_striker"],
+					current_bowler: data["data"]["bowler"],
+					wickets_fallen: 0,
+					batsmen_already_out: [],
+				};
+			}
+			else{
+				console.log(data);
+			}
+		};
 
 		socket.onopen = () => {
 			console.log("Socket connection opened");
 			const initiation_message = JSON.stringify({
 				"match_id": match_file_id
 			});
-			socket.send(initiation_message);
+			socket?.send(initiation_message);
 		};
+	}
 
-		socket.onmessage = (event) => {
-			console.log(event.data);
-		};
+	function close_socket(){
+		if (socket !== undefined){
+			console.log("Closing socket connection");
+			socket.close();
+			socket.onclose = () => {
+				console.log("Socket connection closed, it is now ready to open a new connection");
+			};
+		}else{
+			console.log("No socket connections already open");
+		}
 	}
 
 	onMount(() => {
 		get_matches();
+		if (socket !== undefined){
+			close_socket();
+		}
 	});
 </script>
 
@@ -91,7 +138,11 @@
 			</div>
 
 			<div>
-				Selected match number {selected_match_index}
+				Current Score: {current_score.live_score}
+				Current Over: {current_score.overs_bowled}.{current_score.balls_bowled_in_current}
+				Current On Strike Batsman: {current_score.onstrike_batsman}
+				Current Off Strike Batsman: {current_score.offstrike_batsman}
+				Current Bowler: {current_score.current_bowler}
 			</div>
 		{:else}
 			<div class="flex justify-center items-center h-full">

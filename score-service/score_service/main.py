@@ -32,16 +32,31 @@ def read_root():
 
 def get_match_info(match_json):
   match_info = match_json["info"]
-  info_data = {
-    "city": match_info["city"],
-    "date": match_info["dates"][0],
-    "event": match_info["event"],
-    "officials": match_info["officials"],
-    "players": match_info["players"],
-    "teams": match_info["teams"],
-    "toss": match_info["toss"],
-    "venue": match_info["venue"]
-  }
+  info_data = {}
+  
+  if "city" in match_info:
+    info_data["city"] = match_info["city"]
+  
+  if "dates" in match_info:
+    info_data["date"] = match_info["dates"][0]
+  
+  if "event" in match_info:
+    info_data["event"] = match_info["event"]
+    
+  if "officials" in match_info:
+    info_data["officials"] = match_info["officials"]
+  
+  if "players" in match_info:
+    info_data["players"] = match_info["players"]
+    
+  if "teams" in match_info:
+    info_data["teams"] = match_info["teams"]
+    
+  if "toss" in match_info:
+    info_data["toss"] = match_info["toss"]
+  
+  if "venue" in match_info:
+    info_data["venue"] = match_info["venue"]
   
   return match_info
 
@@ -55,20 +70,31 @@ async def live_score(websocket: WebSocket):
       if "match_id" in message:
         match_id = message["match_id"]
         if os.path.exists(f"{data_root}/matches/{match_id}.json"):
-          await websocket.send_text("Match ID received starting match streaming")
+          starting_stream_message = {
+            "message": f"Match ID received starting match streaming for match {match_id}"
+          }
+          await websocket.send_text(json.dumps(starting_stream_message))
           
           with open(f"{data_root}/matches/{match_id}.json") as f:
-            await websocket.send_text("Match Found below is the data about the match")
             match_json = json.load(f)
             match_info = get_match_info(match_json=match_json)
             
+            match_details = {
+              "match_id": match_id,
+              "message": "Match Found below is the data about the match",
+              "info": match_info
+            }
+            
             await asyncio.sleep(1)
-            await websocket.send_text(json.dumps(match_info))
+            await websocket.send_text(json.dumps(match_details))
             
             innings = match_json["innings"]
             
             for inning_number, inning in enumerate(innings):
-              await websocket.send_text(f"Starting Inning {inning_number + 1}")
+              message = {
+                "message": f"Starting Inning {inning_number + 1}"
+              }
+              await websocket.send_text(json.dumps(message))
               overs = inning["overs"]
               for over in overs:
                 over_no = over["over"]
@@ -89,11 +115,18 @@ async def live_score(websocket: WebSocket):
         else:
           await websocket.send_text("Match ID Not Found, Please send a valid match id to start streaming")
       else:
-        await websocket.send_text("Match ID Not Found in the message")
-        await websocket.send_text("Please send a valid message in format {'match_id': 12345} where 12345 is match_id")
+        message = {
+          "meessage": "Match ID Not Found in the message",
+          "help": "Please send a valid message in format {'match_id': 12345} where 12345 is match_id"
+        }
+        await websocket.send_text(message)
     except Exception as e:
       print(e)
-      await websocket.send_text("Invalid JSON")        
+      message = {
+        "message": "Invalid JSON",
+        "help": "Please send a valid JSON in format {'match_id': 12345} where 12345 is match_id"
+      }
+      await websocket.send_text(message)
 
 @app.get("/list")
 def match_list():
