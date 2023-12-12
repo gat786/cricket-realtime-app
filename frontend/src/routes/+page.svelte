@@ -7,8 +7,10 @@
 	export let selected_match: Match | undefined = undefined;
 	export let selected_match_index: number | undefined = undefined;
 	export let div_styles = {
-		"selected_style": "border-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white",
-		"unselected_style":  "border-gray-200 hover:bg-slate-200 active:bg-slate-300 text-black"
+		selected_style:
+			"border-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white",
+		unselected_style:
+			"border-gray-200 hover:bg-slate-200 active:bg-slate-300 text-black",
 	};
 
 	export let socket: WebSocket | undefined = undefined;
@@ -30,7 +32,7 @@
 			.then((res) => res.json())
 			.then((matches) => {
 				console.log(matches);
-				if ("match_list" in matches){
+				if ("match_list" in matches) {
 					match_list = matches["match_list"];
 				}
 			})
@@ -49,11 +51,25 @@
 
 		socket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
-			if("over" in data){
+			if ("over" in data) {
 				console.log("Over data received");
 				console.log(data);
+				let total_score =
+					current_score.live_score + data["data"]["runs"]["total"];
+
+				if ("wickets" in data["data"]) {
+					let wickets_data = data["data"]["wickets"][0];
+					current_score = {
+						...current_score,
+						wickets_fallen: current_score.wickets_fallen + 1,
+						batsmen_already_out: [
+							...current_score.batsmen_already_out,
+							wickets_data?.player_out,
+						]
+					}
+				}
 				current_score = {
-					live_score: 0,
+					live_score: total_score,
 					overs_bowled: data["over"],
 					balls_bowled_in_current: data["delivery"],
 					onstrike_batsman: data["data"]["batter"],
@@ -62,8 +78,7 @@
 					wickets_fallen: 0,
 					batsmen_already_out: [],
 				};
-			}
-			else{
+			} else {
 				console.log(data);
 			}
 		};
@@ -71,27 +86,29 @@
 		socket.onopen = () => {
 			console.log("Socket connection opened");
 			const initiation_message = JSON.stringify({
-				"match_id": match_file_id
+				match_id: match_file_id,
 			});
 			socket?.send(initiation_message);
 		};
-	}
+	};
 
-	function close_socket(){
-		if (socket !== undefined){
+	function close_socket() {
+		if (socket !== undefined) {
 			console.log("Closing socket connection");
 			socket.close();
 			socket.onclose = () => {
-				console.log("Socket connection closed, it is now ready to open a new connection");
+				console.log(
+					"Socket connection closed, it is now ready to open a new connection",
+				);
 			};
-		}else{
+		} else {
 			console.log("No socket connections already open");
 		}
 	}
 
 	onMount(() => {
 		get_matches();
-		if (socket !== undefined){
+		if (socket !== undefined) {
 			close_socket();
 		}
 	});
@@ -113,36 +130,53 @@
 			{#each match_list as match, index}
 				<li>
 					<button
-						class={
-							`p-4 border-b cursor-pointer w-full text-start ` +
-							`${selected_match_index === index ? div_styles.selected_style : div_styles.unselected_style}`
-						}
-						on:click={()=> {
+						class={`p-4 border-b cursor-pointer w-full text-start ` +
+							`${
+								selected_match_index === index
+									? div_styles.selected_style
+									: div_styles.unselected_style
+							}`}
+						on:click={() => {
 							selected_match = match;
 							selected_match_index = index;
 							start_streaming_match_data(match.match_file_id);
-						}}>
+						}}
+					>
 						{match.match_title}
-				</button>
+					</button>
 				</li>
 			{/each}
 		</ul>
 	</div>
-	<div class="w-3/4 h-full ">
+	<div class="w-3/4 h-full">
 		<!-- this will display match detail -->
 		{#if selected_match !== undefined}
-			<div class="flex bg-slate-700 justify-between items-center p-4 text-white">
+			<div
+				class="flex bg-slate-700 justify-between items-center p-4 text-white"
+			>
 				<div class="text-2xl font-bold">{selected_match.match_title}</div>
 				<div class="text-2xl font-thin">{selected_match.match_date}</div>
-				<div class="text-2xl font-thin">Match Game Type: {selected_match.match_game_type}</div>	
+				<div class="text-2xl font-thin">
+					Match Game Type: {selected_match.match_game_type}
+				</div>
 			</div>
 
 			<div>
-				Current Score: {current_score.live_score}
-				Current Over: {current_score.overs_bowled}.{current_score.balls_bowled_in_current}
-				Current On Strike Batsman: {current_score.onstrike_batsman}
-				Current Off Strike Batsman: {current_score.offstrike_batsman}
-				Current Bowler: {current_score.current_bowler}
+				<div>
+					Current Score: {current_score.live_score}
+				</div>
+				<div>
+					Current Over: {current_score.overs_bowled}.{current_score.balls_bowled_in_current}
+				</div>
+				<div>
+					Current On Strike Batsman: {current_score.onstrike_batsman}
+				</div>
+				<div>
+					Current Off Strike Batsman: {current_score.offstrike_batsman}
+				</div>
+				<div>
+					Current Bowler: {current_score.current_bowler}
+				</div>
 			</div>
 		{:else}
 			<div class="flex justify-center items-center h-full">
