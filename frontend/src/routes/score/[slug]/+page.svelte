@@ -13,6 +13,7 @@
 	} from "$lib/models";
 
 	import { defaultInnings } from "$lib/models";
+    import InningsBox from "../../../components/InningsBox.svelte";
 
 	export let data: PageData;
 	export let socket: WebSocket | undefined = undefined;
@@ -27,12 +28,13 @@
 		current_bowler: "",
 	};
 
+	
 	let match_innings: MatchInnings = {
 		first: {
-			...defaultInnings,
+			...(JSON.parse(JSON.stringify(defaultInnings))),
 		},
 		second: {
-			...defaultInnings,
+			...(JSON.parse(JSON.stringify(defaultInnings))),
 		},
 	};
 
@@ -144,51 +146,8 @@
 			Match Game Type: {match_data.data.city}
 		</div>
 	</div>
-	<div>
-		<h2>First Innings</h2>
-
-		<div>
-			<div>
-				Score: {match_innings.first.score} for {match_innings.first.wickets_down}
-			</div>
-			<div>
-				Overs: {Math.floor(match_innings.first.legal_deliveries / 6)}.{match_innings.first.legal_deliveries % 6}
-			</div>
-			<div>
-				Extras: {match_innings.first.extras}
-			</div>
-			<div>
-				🏏 - {match_innings.first.batsmen.on_onstrike}
-			</div>
-			<div>
-				🏃‍♂️ - {match_innings.first.batsmen.on_offstrike}
-			</div>
-			<div>
-				🎾 - {match_innings.first.current_bowler}
-			</div>
-		</div>
-	</div>
-
-	<div>
-		{#if match_data != undefined}
-			<h2>Second Innings</h2>
-			<div>
-				<div>
-					Score: {current_score.live_score} for {current_score.wickets_fallen}
-				</div>
-				<div>
-					Overs: {current_score.overs_bowled}.{current_score.balls_bowled_in_current}
-				</div>
-				<div>
-					🏏 - {current_score.onstrike_batsman}
-				</div>
-				<div>
-					🏃‍♂️ - {current_score.offstrike_batsman}
-				</div>
-				<div>
-					🎾 - {current_score.current_bowler}
-				</div>
-			</div>
-		{/if}
-	</div>
+	<div>First Innings</div>
+	<InningsBox innings_data={match_innings.first} />
+	<div>Second Innings</div>
+	<InningsBox innings_data={match_innings.second} />	
 {/if}
