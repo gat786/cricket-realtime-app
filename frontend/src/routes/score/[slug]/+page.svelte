@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
 	import { onMount } from "svelte";
+	import Navbar from "../../../components/Navbar.svelte";
 
 	import constants from "$lib/constants";
 	import { get_updated_innings } from "$lib/utils";
@@ -14,20 +15,10 @@
 
 	import { defaultInnings } from "$lib/models";
     import InningsBox from "../../../components/InningsBox.svelte";
+    import { stringify } from "postcss";
 
 	export let data: PageData;
 	export let socket: WebSocket | undefined = undefined;
-	export let current_score: LiveScore = {
-		live_score: 0,
-		wickets_fallen: 0,
-		overs_bowled: 0,
-		balls_bowled_in_current: 0,
-		batsmen_already_out: [],
-		onstrike_batsman: "",
-		offstrike_batsman: "",
-		current_bowler: "",
-	};
-
 	
 	let match_innings: MatchInnings = {
 		first: {
@@ -41,8 +32,24 @@
 	let match_data: MatchResponseApi | undefined = undefined;
 	let match_id = "";
 
+	const innings_order: string[] = [];
+
 	onMount(() => {
 		match_data = data.data;
+		const toss_data = match_data.data.toss;
+		const toss_winner = toss_data.winner;
+		const winner_decision = toss_data.decision;
+		if (winner_decision == "bat"){
+			innings_order.push(toss_winner);
+			let second_batting = match_data.data.teams.filter((team) => team != toss_winner)[0];
+			innings_order.push(second_batting);
+		}
+		else {
+			let first_batting = match_data.data.teams.filter((team) => team != toss_winner)[0];
+			innings_order.push(first_batting);
+			innings_order.push(toss_winner);
+		}
+
 		match_id = data.slug;
 		start_streaming_match_data(match_id);
 	});
@@ -59,30 +66,6 @@
 			if ("over" in data) {
 				console.log("Over data received");
 				console.log(data);
-				let total_score =
-					current_score.live_score + data["data"]["runs"]["total"];
-
-				if ("wickets" in data["data"]) {
-					let wickets_data = data["data"]["wickets"][0];
-					current_score = {
-						...current_score,
-						wickets_fallen: current_score.wickets_fallen + 1,
-						batsmen_already_out: [
-							...current_score.batsmen_already_out,
-							wickets_data?.player_out,
-						],
-					};
-				}
-				current_score = {
-					live_score: total_score,
-					overs_bowled: data["over"],
-					balls_bowled_in_current: data["delivery"],
-					onstrike_batsman: data["data"]["batter"],
-					offstrike_batsman: data["data"]["non_striker"],
-					current_bowler: data["data"]["bowler"],
-					wickets_fallen: 0,
-					batsmen_already_out: [],
-				};
 
 				add_to_innings(data);
 			} else {
@@ -138,16 +121,38 @@
 	};
 </script>
 
-{#if match_data != undefined}
-	<div class="flex bg-slate-700 justify-between items-center p-4 text-white">
-		<div class="text-2xl font-bold">{match_data.data.teams.join(" vs ")}</div>
-		<div class="text-2xl font-thin">{match_data.data.match_type}</div>
-		<div class="text-2xl font-thin">
-			Match Game Type: {match_data.data.city}
+<head>
+	<title>
+		{#if match_data != undefined}
+			{match_data.data.teams.join(" vs ")} - {match_data.data.match_type}
+		{/if}
+	</title>
+</head>
+
+<Navbar />
+
+<div class="w-3/4">
+	{#if match_data != undefined}
+		<div class="flex flex-col bg-slate-700 justify-between items-center p-4 text-white">
+			<div class="text-2xl font-bold">{match_data.data.teams.join(" vs ")}</div>
+			<div class="text-2xl font-thin">{match_data.data.match_type}</div>
+			<div class="text-2xl font-thin">
+				Match Game Type: {match_data.data.city}
+			</div>
 		</div>
-	</div>
-	<div>First Innings</div>
-	<InningsBox innings_data={match_innings.first} />
-	<div>Second Innings</div>
-	<InningsBox innings_data={match_innings.second} />	
-{/if}
+		<div class="flex">
+			<div class="w-1/2 flex flex-col items-center text-center">
+				<div>{innings_order[0]}'s Innings</div>
+				<InningsBox innings_data={match_innings.first} />
+			</div>
+			<div class="w-1/2 flex flex-col items-center text-center">
+				<div>{innings_order[1]}'s Innings</div>
+				{#if JSON.stringify(match_innings.second) == JSON.stringify(defaultInnings)}
+					<div class="text-2xl font-bold">Yet to bat</div>
+				{:else}
+					<InningsBox innings_data={match_innings.second} />
+				{/if}
+			</div>
+		</div>
+	{/if}
+</div>

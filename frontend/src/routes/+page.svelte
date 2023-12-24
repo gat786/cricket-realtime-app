@@ -2,6 +2,7 @@
 	import constants from "$lib/constants";
 	import type { LiveScore, Match } from "$lib/models";
 	import { onMount } from "svelte";
+    import Navbar from "../components/Navbar.svelte";
 
 	export let match_list: Match[] = [];
 
@@ -32,9 +33,7 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<nav class="font-bold bg-gray-200 h-16 flex items-center px-8">
-	<span class="text-xl"> Cricket Realtime Application </span>
-</nav>
+<Navbar />
 
 <div class="flex">
 	<div class="h-full w-full">
