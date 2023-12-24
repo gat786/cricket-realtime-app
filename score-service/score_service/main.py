@@ -104,6 +104,7 @@ async def live_score(websocket: WebSocket):
                   data_to_send = {
                     "over": over_no,
                     "delivery": delivery_no_in_over,
+                    "innings": inning_number,
                     "data": delivery
                   }
                   await websocket.send_text(json.dumps(data_to_send))
