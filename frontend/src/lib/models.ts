@@ -85,8 +85,8 @@ export type Innings = {
   illegal_deliveries: number;
   extras: number;
   batsmen: {
-    on_onstrike: string;
-    on_offstrike: string;
+    on_onstrike: BatsmanScore;
+    on_offstrike: BatsmanScore;
   }
   current_bowler: string;
   batsmans: BatsmanInnings;
@@ -102,8 +102,14 @@ export const defaultInnings : Innings = {
   illegal_deliveries: 0,
   extras: 0,
   batsmen: {
-    on_offstrike: "",
-    on_onstrike: "",
+    on_offstrike: {
+      name: "Loading",
+      score: 0,
+    },
+    on_onstrike: {
+      name: "Loading",
+      score: 0,
+    },
   },
   current_bowler: "",
 }

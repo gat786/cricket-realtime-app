@@ -5,7 +5,7 @@ export interface MatchInnings {
   second: Innings;
 }
 
-export const get_updated_innings = (innings : Innings, ball_data : BallData) => {
+export const get_updated_innings = (innings: Innings, ball_data: BallData) => {
   const batsman = innings.batsmans.find(b => b.name == ball_data.batter)
   if (batsman) {
     batsman.score += ball_data.runs.batter;
@@ -31,15 +31,15 @@ export const get_updated_innings = (innings : Innings, ball_data : BallData) => 
   }
 
   innings.score += ball_data.runs.total;
-  if (ball_data.runs.extras){
+  if (ball_data.runs.extras) {
     innings.extras += ball_data.runs.extras;
   }
 
   if (ball_data.extras) {
-    if ( "wides" in ball_data.extras ) {
+    if ("wides" in ball_data.extras) {
       innings.illegal_deliveries += 1;
     }
-    else if ( "noballs" in ball_data.extras ) {
+    else if ("noballs" in ball_data.extras) {
       innings.illegal_deliveries += 1;
     }
   }
@@ -50,9 +50,22 @@ export const get_updated_innings = (innings : Innings, ball_data : BallData) => 
   if (ball_data.wickets && ball_data.wickets.length > 0) {
     innings.wickets_down += 1;
   }
+  const on_onstrike_name = ball_data.batter;
+  const on_offstrike_name = ball_data.non_striker;
 
-  innings.batsmen.on_onstrike = ball_data.batter;
-  innings.batsmen.on_offstrike = ball_data.non_striker;
+  innings.batsmen.on_onstrike = innings.batsmans.find(
+    (batsman) => on_onstrike_name == batsman.name,
+  ) ?? {
+    name: 'Loading',
+    score: 0,
+  };
+  
+  innings.batsmen.on_offstrike = innings.batsmans.find(
+    (batsman) => on_offstrike_name == batsman.name,
+  ) ?? {
+    name: 'Loading',
+    score: 0,
+  };
   innings.current_bowler = ball_data.bowler;
 
   return innings;
