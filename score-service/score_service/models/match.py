@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 
 @dataclass
@@ -9,3 +10,4 @@ class Match:
   match_game_type:      str
   match_title:          str
   match_file_id:        str
+  match_teams:          List[str]

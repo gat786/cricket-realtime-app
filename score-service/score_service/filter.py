@@ -27,6 +27,7 @@ def filter_files():
       match_file_id       = items[6]
       match_player_gender = items[5]
       match_title         = items[7]
+      match_teams         = [ x.strip() for x in match_title.split("vs")]
       match_list.append(
         match.Match(
           match_date          = match_date,
@@ -34,7 +35,8 @@ def filter_files():
           match_level         = match_level,
           match_title         = match_title,
           match_file_id       = match_file_id,
-          match_game_type     = match_game_type
+          match_game_type     = match_game_type,
+          match_teams         = match_teams
         )
       )
   
