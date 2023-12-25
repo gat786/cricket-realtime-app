@@ -5,6 +5,7 @@ export type Match = {
   match_file_id: string;
   match_game_type: string;
   match_level: string;
+  match_teams: string[];
 }
 
 export type LiveScore = {
@@ -165,4 +166,14 @@ export interface Wicket {
 
 export interface Fielder {
   name: string;
+}
+
+export interface TeamData {
+  id: number
+  name: string
+  code: string
+  image_path: string
+  country_id: number
+  national_team: boolean
+  updated_at: string
 }

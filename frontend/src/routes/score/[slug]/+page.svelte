@@ -132,30 +132,34 @@
 <Navbar />
 
 <div>
-	
-	<div class="w-3/4 max-w-3xl">
-		{#if match_data != undefined}
-			<div class="flex flex-col bg-slate-700 justify-between items-center p-4 text-white">
-				<div class="text-2xl font-bold">{match_data.data.teams.join(" vs ")}</div>
-				<div class="text-2xl font-thin">{match_data.data.match_type}</div>
-				<div class="text-2xl font-thin">
-					Match Game Type: {match_data.data.city}
+	<div class = "flex flex-col items-center py-4">
+		<div class="w-3/4 max-w-3xl">
+			{#if match_data != undefined}
+				<div class="flex flex-col bg-slate-700 justify-between items-center p-4 text-white">
+					<div class="text-2xl font-bold">{match_data.data.teams.join(" vs ")}</div>
+					<div class="text-2xl font-thin">{match_data.data.match_type}</div>
+					<div class="text-2xl font-thin">
+						Match Game Type: {match_data.data.city}
+					</div>
 				</div>
-			</div>
-			<div class="flex">
-				<div class="w-1/2 flex flex-col items-center text-center">
-					<div>{innings_order[0]}'s Innings</div>
-					<InningsBox innings_data={match_innings.first} />
+				<div class="flex">
+					<div class="w-1/2 flex flex-col items-center text-center">
+						<div>{innings_order[0]}'s Innings</div>
+						<InningsBox innings_data={match_innings.first} />
+					</div>
+					<div class="w-1/2 flex flex-col items-center text-center">
+						<div>{innings_order[1]}'s Innings</div>
+						{#if JSON.stringify(match_innings.second) == JSON.stringify(defaultInnings)}
+							<div class="text-2xl font-bold">Yet to bat</div>
+						{:else}
+							<InningsBox innings_data={match_innings.second} />
+						{/if}
+					</div>
 				</div>
-				<div class="w-1/2 flex flex-col items-center text-center">
-					<div>{innings_order[1]}'s Innings</div>
-					{#if JSON.stringify(match_innings.second) == JSON.stringify(defaultInnings)}
-						<div class="text-2xl font-bold">Yet to bat</div>
-					{:else}
-						<InningsBox innings_data={match_innings.second} />
-					{/if}
-				</div>
-			</div>
-		{/if}
+			{/if}
+		</div>
 	</div>
+	<div>
+		Click on players name to search for their data
+	</div>	
 </div>

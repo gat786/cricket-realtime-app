@@ -3,6 +3,7 @@
 	import type { LiveScore, Match } from "$lib/models";
 	import { onMount } from "svelte";
     import Navbar from "../components/Navbar.svelte";
+    import MatchCard from "../components/MatchCard.svelte";
 
 	export let match_list: Match[] = [];
 
@@ -36,17 +37,10 @@
 <Navbar />
 
 <div class="flex">
-	<div class="h-full w-full">
+	<div class="h-full grid grid-cols-4 items-start gap-4 p-8">
 		<!-- this will display the list of matches -->
 		{#each match_list as match, index}
-			<div class="w-72">
-				<a
-					class={`border-b cursor-pointer w-72 text-start `}
-					href="/score/{match.match_file_id}"
-				>
-					{match.match_title}
-				</a>
-			</div>
+			<MatchCard {match}/>
 		{/each}
 	</div>
 </div>
