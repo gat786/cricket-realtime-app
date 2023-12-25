@@ -4,17 +4,29 @@
 
   import { onMount } from 'svelte'
 
-  let score_onstrike: BatsmanScore | undefined = undefined;
-  let score_offstrike: BatsmanScore | undefined = undefined;
+  let score_onstrike: BatsmanScore = {
+    name: 'Loading',
+    score: 0,
+  };
+  let score_offstrike: BatsmanScore = {
+    name: 'Loading',
+    score: 0,
+  };
 
   onMount(() => {
     score_onstrike = innings_data.batsmans.find(
       (batsman) => batsman.name == innings_data.batsmen.on_onstrike,
-    );
+    ) ?? {
+      name: 'Loading',
+      score: 0,
+    };
 
     score_offstrike = innings_data.batsmans.find(
       (batsman) => batsman.name == innings_data.batsmen.on_offstrike,
-    );
+    ) ?? {
+      name: 'Loading',
+      score: 0,
+    };
   });
 </script>
 
@@ -32,6 +44,7 @@
   </div>
   <div>
     🏏 - {innings_data.batsmen.on_onstrike} - {score_onstrike?.score}
+
   </div>
   <div>
     🏃‍♂️ - {innings_data.batsmen.on_offstrike} - {score_offstrike?.score}
