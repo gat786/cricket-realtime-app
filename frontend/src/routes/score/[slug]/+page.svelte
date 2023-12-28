@@ -132,25 +132,27 @@
 <Navbar />
 
 <div>
-	<div class = "flex flex-col items-center py-4">
-		<div class="w-3/4 max-w-3xl">
+	<div class = "flex flex-col py-4">
+		<div class="">
 			{#if match_data != undefined}
-				<div class="flex flex-col bg-slate-700 justify-between items-center p-4 text-white">
-					<div class="text-2xl font-bold">{match_data.data.teams.join(" vs ")}</div>
-					<div class="text-2xl font-thin">{match_data.data.match_type}</div>
-					<div class="text-2xl font-thin">
-						Match Game Type: {match_data.data.city}
+				<div class="flex flex-col gap-4 justify-between p-4">
+					<div class="flex gap-8 items-center">
+						<div class="text-xl font-bold">{match_data.data.teams.join(" vs ")}</div>
+						<div class="text-l font-thin"> Date - {match_data.data.dates[0]}</div>
+						<div class="text-l font-light">
+							Match Game Type: {match_data.data.match_type}
+						</div>
 					</div>
 				</div>
-				<div class="flex">
-					<div class="w-1/2 flex flex-col items-center text-center">
-						<div>{innings_order[0]}'s Innings</div>
+				<div class="flex m-4">
+					<div class="flex flex-col border p-4">
+						<div class="text-xl font-bold">{innings_order[0]}'s Innings</div>
 						<InningsBox innings_data={match_innings.first} />
 					</div>
-					<div class="w-1/2 flex flex-col items-center text-center">
-						<div>{innings_order[1]}'s Innings</div>
+					<div class="flex flex-col border p-4">
+						<div class="text-xl font-bold">{innings_order[1]}'s Innings</div>
 						{#if JSON.stringify(match_innings.second) == JSON.stringify(defaultInnings)}
-							<div class="text-2xl font-bold">Yet to bat</div>
+							<div class="text-l font-bold py-4">Yet to bat</div>
 						{:else}
 							<InningsBox innings_data={match_innings.second} />
 						{/if}
@@ -160,6 +162,25 @@
 		</div>
 	</div>
 	<div>
-		Click on players name to search for their data
+		<div>
+			Batting Stats
+			<div>
+				{#each match_innings.first.batsmans as batsman}
+					<div>
+						{batsman.name} - {batsman.score}
+					</div>
+				{/each}
+			</div>
+		</div>
+		<div>
+			Batting Stats
+			<div>
+				{#each match_innings.first.balling as bowler}
+					<div>
+						{bowler.name} - {bowler.deliveries} - {bowler.runs_given}
+					</div>
+				{/each}
+			</div>
+		</div>
 	</div>	
 </div>
