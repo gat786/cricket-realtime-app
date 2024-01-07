@@ -33,9 +33,10 @@ jobs:
       run: |
         cp -r data player-service/
         cp -r data score-service/
+        cp -r data team-service/
 
     - id: dockerx-build-and-push-ps
-      name: Build and push
+      name: Build and push (Player Service)
       uses: docker/build-push-action@v5
       with:
         push: true
@@ -44,7 +45,7 @@ jobs:
         platforms: linux/arm64, linux/amd64
     
     - id: dockerx-build-and-push-ss
-      name: Build and push
+      name: Build and push (Score Service)
       uses: docker/build-push-action@v5
       with:
         push: true
@@ -53,7 +54,7 @@ jobs:
         platforms: linux/arm64, linux/amd64
     
     - id: dockerx-build-and-push-ts
-      name: Build and push
+      name: Build and push (Team Service)
       uses: docker/build-push-action@v5
       with:
         push: true

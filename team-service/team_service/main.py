@@ -12,7 +12,8 @@ import pandas as pd
 
 origins = [
   "http://localhost",
-  "http://localhost:5173"
+  "http://localhost:5173",
+  "http://localhost:4173"
 ]
 
 app     = FastAPI()

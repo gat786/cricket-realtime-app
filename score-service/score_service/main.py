@@ -16,7 +16,8 @@ from score_service.utils import exports
 
 origins = [
   "http://localhost",
-  "http://localhost:5173"
+  "http://localhost:5173",
+  "http://localhost:4173"
 ]
 data_root = exports.data_root
 app     = FastAPI()

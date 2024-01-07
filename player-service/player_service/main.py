@@ -12,6 +12,7 @@ from player_service.utils import search
 origins = [
   "http://localhost",
   "http://localhost:5173"
+  "http://localhost:4173"
 ]
 app     = FastAPI()
 port    = 8000
