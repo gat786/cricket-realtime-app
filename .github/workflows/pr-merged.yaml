@@ -51,4 +51,12 @@ jobs:
         context: score-service
         tags: gat786/cric-score-service, gat786/cric-score-service:${{ github.sha }}
         platforms: linux/arm64, linux/amd64
-        # platforms: linux/arm64
+    
+    - id: dockerx-build-and-push-ts
+      name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        push: true
+        context: team-service
+        tags: gat786/cric-team-service, gat786/cric-team-service:${{ github.sha }}
+        platforms: linux/arm64, linux/amd64
