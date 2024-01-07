@@ -7,7 +7,7 @@
   export let on_click: player_search_callback;
 </script>
 
-<table class="table-auto max-w-2xl gap-2 py-4 font-thin p-2">
+<table class="table-auto max-w-2xl gap-2 py-4 font-thin p-2 m-4">
   <tr class="p-2 text-xl">
     <td class="col-span-2">
       Score: <span class="font-medium"

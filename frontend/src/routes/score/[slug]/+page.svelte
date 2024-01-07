@@ -5,6 +5,7 @@
 
 	import constants from "$lib/constants";
 	import { get_updated_innings } from "$lib/utils";
+	import api from "$lib/api";
 	import type {
 		LiveScore,
 		Innings,
@@ -13,6 +14,7 @@
 		TeamData,
 		PlayerInfo,
 		MatchInnings,
+        Player,
 	} from "$lib/models";
 
 	import { defaultInnings } from "$lib/models";
@@ -20,6 +22,7 @@
 	import TeamFlag from "../../../components/TeamFlag.svelte";
 	import { writable, type Writable } from "svelte/store";
 	import PlayerName from "../../../components/PlayerName.svelte";
+    import PlayerCard from "../../../components/PlayerCard.svelte";
 
 	export let data: PageData;
 	export let socket: WebSocket | undefined = undefined;
@@ -39,6 +42,12 @@
 
 	const teams_data: Writable<TeamData[]> = writable([]);
 	const innings_order: string[] = [];
+
+	const player_to_search: Writable<PlayerInfo> = writable({
+		name: "",
+		country_name: "",
+	});
+	const search_results: Writable<Player[]> = writable([]);
 
 	onMount(() => {
 		match_data = data.data;
@@ -144,7 +153,6 @@
 				first: updated_inning_score,
 			};
 			match_innings.set(updated_inning);
-
 		} else if (ball_data.innings == 1) {
 			let updated_inning_score = get_updated_innings(
 				$match_innings.second,
@@ -154,12 +162,17 @@
 				...$match_innings,
 				second: updated_inning_score,
 			};
-			match_innings.set(updated_inning)
+			match_innings.set(updated_inning);
 		}
 	};
 
-	const search_for_player = (player_name: string, country_name: string) => {
-		console.log(player_name, country_name);
+	const search_for_player = async (player_name: string, country_name: string) => {
+		player_to_search.set({
+			name: player_name,
+			country_name: country_name,
+		});
+		let results = await api.search_for_player($player_to_search);
+		search_results.set(results.players);
 	};
 </script>
 
@@ -174,46 +187,33 @@
 <Navbar />
 
 <div>
-	<div class="flex flex-col py-4">
-		<div class="">
-			{#if match_data != undefined}
-				<div class="flex flex-col gap-4 justify-between p-4">
-					<div class="flex flex-col gap-4">
-						<div class="flex gap-4 items-center">
-							{#each $teams_data as team}
-								<TeamFlag image_url={team.image_path} />
-								<div>{team.name}</div>
-							{/each}
-						</div>
-						<div class="flex flex-row gap-4">
-							<div class="text-l font-thin">
-								Date - {match_data.data.dates[0]}
-							</div>
-							<div class="text-l font-light">
-								Match Game Type: {match_data.data.match_type}
-							</div>
-						</div>
+	{#if match_data != undefined}
+		<div class="flex flex-col gap-4 justify-between p-4">
+			<div class="flex flex-col gap-4">
+				<div class="flex gap-4 items-center">
+					{#each $teams_data as team}
+						<TeamFlag image_url={team.image_path} />
+						<div>{team.name}</div>
+					{/each}
+				</div>
+				<div class="flex flex-row gap-4">
+					<div class="text-l font-thin">
+						Date - {match_data.data.dates[0]}
+					</div>
+					<div class="text-l font-light">
+						Match Game Type: {match_data.data.match_type}
 					</div>
 				</div>
-				<div class="flex m-4">
-					<InningsBox
-						innings_data={$match_innings.first}
-						on_click={(player_name, country_name) => {
-							search_for_player(player_name, country_name);
-						}}
-					/>
-
-					<!-- <div class="flex flex-col border p-4">
-						<div class="text-xl font-bold">{innings_order[1]}'s Innings</div>
-						{#if JSON.stringify(match_innings.second) == JSON.stringify(defaultInnings)}
-							<div class="text-l font-bold py-4">Yet to bat</div>
-						{:else}
-							<InningsBox innings_data={match_innings.second} />
-						{/if}
-					</div> -->
-				</div>
-			{/if}
+			</div>
 		</div>
+	{/if}
+	<div class="flex flex-col">
+		<InningsBox
+			innings_data={$match_innings.first}
+			on_click={(player_name, country_name) => {
+				search_for_player(player_name, country_name);
+			}}
+		/>
 	</div>
 	<div class="p-4 flex flex-col gap-4">
 		<h3 class="text-lg font-bold">Batting Stats</h3>
@@ -225,10 +225,7 @@
 			{#each $match_innings.first.batsmans as batsman}
 				<tr>
 					<td>
-						<PlayerName
-							player_info={batsman}
-							on_click={search_for_player}
-						/>
+						<PlayerName player_info={batsman} on_click={search_for_player} />
 					</td>
 					<td>
 						{batsman.score}
@@ -247,10 +244,7 @@
 			{#each $match_innings.first.balling as bowler}
 				<tr>
 					<td>
-						<PlayerName
-							player_info={bowler}
-							on_click={search_for_player}
-						/>
+						<PlayerName player_info={bowler} on_click={search_for_player} />
 					</td>
 					<td>
 						{bowler.deliveries}
@@ -261,5 +255,20 @@
 				</tr>
 			{/each}
 		</table>
+	</div>
+
+	<div class="absolute top-16 right-0 h-full bg-white w-80">
+		{#if $player_to_search.name == ""}
+			<h3 class="p-4 text-lg">
+				Click on any players name to search for related information
+			</h3>
+		{:else}
+			<h3>
+				Searching for {$player_to_search.name} from {$player_to_search.country_name}
+			</h3>
+			{#each $search_results as player}
+				<PlayerCard player_data={player}/>
+			{/each}
+		{/if}
 	</div>
 </div>

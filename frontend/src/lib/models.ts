@@ -196,3 +196,26 @@ export interface MatchInnings {
   first: Innings;
   second: Innings;
 }
+
+export interface PlayerSearchResults {
+  players: Player[]
+}
+
+export interface Player {
+  id: number
+  firstname: string
+  lastname: string
+  fullname: string
+  image_path: string
+  dateofbirth: string
+  gender: string
+  battingstyle: string
+  bowlingstyle: string
+  position: string
+  updated_at: string
+  continent_id: number
+  continent_name: string
+  country_id: number
+  country_name: string
+  country_image_path: string
+}
