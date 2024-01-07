@@ -14,18 +14,18 @@
 	} from "$lib/models";
 
 	import { defaultInnings } from "$lib/models";
-    import InningsBox from "../../../components/InningsBox.svelte";
-    import { stringify } from "postcss";
+	import InningsBox from "../../../components/InningsBox.svelte";
+	import { stringify } from "postcss";
 
 	export let data: PageData;
 	export let socket: WebSocket | undefined = undefined;
-	
+
 	let match_innings: MatchInnings = {
 		first: {
-			...(JSON.parse(JSON.stringify(defaultInnings))),
+			...JSON.parse(JSON.stringify(defaultInnings)),
 		},
 		second: {
-			...(JSON.parse(JSON.stringify(defaultInnings))),
+			...JSON.parse(JSON.stringify(defaultInnings)),
 		},
 	};
 
@@ -39,13 +39,16 @@
 		const toss_data = match_data.data.toss;
 		const toss_winner = toss_data.winner;
 		const winner_decision = toss_data.decision;
-		if (winner_decision == "bat"){
+		if (winner_decision == "bat") {
 			innings_order.push(toss_winner);
-			let second_batting = match_data.data.teams.filter((team) => team != toss_winner)[0];
+			let second_batting = match_data.data.teams.filter(
+				(team) => team != toss_winner,
+			)[0];
 			innings_order.push(second_batting);
-		}
-		else {
-			let first_batting = match_data.data.teams.filter((team) => team != toss_winner)[0];
+		} else {
+			let first_batting = match_data.data.teams.filter(
+				(team) => team != toss_winner,
+			)[0];
 			innings_order.push(first_batting);
 			innings_order.push(toss_winner);
 		}
@@ -132,55 +135,80 @@
 <Navbar />
 
 <div>
-	<div class = "flex flex-col py-4">
+	<div class="flex flex-col py-4">
 		<div class="">
 			{#if match_data != undefined}
 				<div class="flex flex-col gap-4 justify-between p-4">
-					<div class="flex gap-8 items-center">
-						<div class="text-xl font-bold">{match_data.data.teams.join(" vs ")}</div>
-						<div class="text-l font-thin"> Date - {match_data.data.dates[0]}</div>
-						<div class="text-l font-light">
-							Match Game Type: {match_data.data.match_type}
+					<div class="flex flex-col gap-4">
+						<div class="text-xl font-bold">
+							{match_data.data.teams.join(" vs ")}
+						</div>
+						<div class="flex flex-row gap-4">
+							<div class="text-l font-thin">
+								Date - {match_data.data.dates[0]}
+							</div>
+							<div class="text-l font-light">
+								Match Game Type: {match_data.data.match_type}
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="flex m-4">
-					<div class="flex flex-col border p-4">
-						<div class="text-xl font-bold">{innings_order[0]}'s Innings</div>
-						<InningsBox innings_data={match_innings.first} />
-					</div>
-					<div class="flex flex-col border p-4">
+					<InningsBox innings_data={match_innings.first} />
+
+					<!-- <div class="flex flex-col border p-4">
 						<div class="text-xl font-bold">{innings_order[1]}'s Innings</div>
 						{#if JSON.stringify(match_innings.second) == JSON.stringify(defaultInnings)}
 							<div class="text-l font-bold py-4">Yet to bat</div>
 						{:else}
 							<InningsBox innings_data={match_innings.second} />
 						{/if}
-					</div>
+					</div> -->
 				</div>
 			{/if}
 		</div>
 	</div>
-	<div>
-		<div>
-			Batting Stats
-			<div>
-				{#each match_innings.first.batsmans as batsman}
-					<div>
-						{batsman.name} - {batsman.score}
-					</div>
-				{/each}
-			</div>
-		</div>
-		<div>
-			Batting Stats
-			<div>
-				{#each match_innings.first.balling as bowler}
-					<div>
-						{bowler.name} - {bowler.deliveries} - {bowler.runs_given}
-					</div>
-				{/each}
-			</div>
-		</div>
-	</div>	
+	<div class="p-4 flex flex-col gap-4">
+		<h3 class="text-lg font-bold">Batting Stats</h3>
+		<table class="w-1/2">
+			<thead>
+				<td>Batsmans Name</td>
+				<td>Score</td>
+			</thead>
+			{#each match_innings.first.batsmans as batsman}
+				<tr>
+					<td>
+						{batsman.name}
+					</td>
+					<td>
+						{batsman.score}
+					</td>
+				</tr>
+			{/each}
+		</table>
+
+		<h3 class="text-lg font-bold">
+			Bowling Stats
+		</h3>
+		<table class="w-1/2">
+			<thead>
+				<td>Bowlers Name</td>
+				<td>Overs Bowled</td>
+				<td>Runs Conceeded</td>
+			</thead>
+			{#each match_innings.first.balling as bowler}
+				<tr>
+					<td>
+						{bowler.name}
+					</td>
+					<td>
+						{bowler.deliveries}
+					</td>
+					<td>
+						{bowler.runs_given}
+					</td>
+				</tr>
+			{/each}
+		</table>
+	</div>
 </div>

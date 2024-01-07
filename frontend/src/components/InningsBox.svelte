@@ -3,27 +3,44 @@
   export let innings_data: Innings;
 </script>
 
-<div class="flex flex-col gap-2 py-4 font-thin">
-  <div>
-    Score: <span class="font-medium">{innings_data.score} for {innings_data.wickets_down}</span>
-  </div>
-  <div>
-    Overs: {Math.floor(
-      innings_data.legal_deliveries / 6,
-    )}.{innings_data.legal_deliveries % 6}
-  </div>
-  <div>
-    Extras: {innings_data.extras}
-  </div>
-  <div class="text-blue-800 flex flex-col gap-4 font-medium">
-    <div>
-      🏏 - {innings_data.batsmen.on_onstrike.name} - {innings_data.batsmen.on_onstrike.score} 
-    </div>
-    <div>
-      🏃‍♂️ - {innings_data.batsmen.on_offstrike.name} - {innings_data.batsmen.on_offstrike.score}
-    </div>
-  </div>
-  <div class="text-green-800 font-medium">
-    🎾 - {innings_data.current_bowler}
-  </div>
-</div>
+<table class="table table-auto w-1/2 gap-2 py-4 font-thin p-2">
+  <tr class="p-2 text-xl">
+    <td class="col-span-2">
+      Score: <span class="font-medium"
+        >{innings_data.score} for {innings_data.wickets_down}
+      </span></td
+    >
+  </tr>
+  <tr class="p-2">
+    <td> Overs: </td>
+    <td>
+      {Math.floor(
+        innings_data.legal_deliveries / 6,
+      )}.{innings_data.legal_deliveries % 6}
+    </td>
+  </tr>
+  <tr class="p-2">
+    <td> Extras: </td>
+    <td>
+      {innings_data.extras}
+    </td>
+  </tr>
+  <tr class="text-blue-800 font-medium p-2">
+    <td>
+      🏏 - {innings_data.batsmen.on_onstrike.name}
+    </td>
+    <td> {innings_data.batsmen.on_onstrike.score} </td>
+  </tr>
+  <tr class="text-blue-800 font-medium p-2">
+    <td>
+      🏃‍♂️ - {innings_data.batsmen.on_offstrike.name}
+    </td>
+    <td>{innings_data.batsmen.on_offstrike.score} </td>
+  </tr>
+  <tr class="text-green-800 font-medium p-2">
+    <td>
+      🎾 -
+      {innings_data.current_bowler}
+    </td>
+  </tr>
+</table>

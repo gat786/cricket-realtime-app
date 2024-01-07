@@ -1,9 +1,10 @@
 <script lang="ts">
+	import "./styles.css";
 	import constants from "$lib/constants";
 	import type { LiveScore, Match } from "$lib/models";
 	import { onMount } from "svelte";
-    import Navbar from "../components/Navbar.svelte";
-    import MatchCard from "../components/MatchCard.svelte";
+	import Navbar from "../components/Navbar.svelte";
+	import MatchCard from "../components/MatchCard.svelte";
 
 	export let match_list: Match[] = [];
 
