@@ -7,7 +7,7 @@
   export let on_click: player_search_callback;
 </script>
 
-<table class="table table-auto w-1/2 gap-2 py-4 font-thin p-2">
+<table class="table-auto max-w-2xl gap-2 py-4 font-thin p-2">
   <tr class="p-2 text-xl">
     <td class="col-span-2">
       Score: <span class="font-medium"
@@ -31,19 +31,21 @@
   </tr>
   <tr class="text-blue-800 font-medium p-2">
     <td>
-      <PlayerName player_info={innings_data.batsmen.on_onstrike} {on_click} />
+      🏏 - <PlayerName player_info={innings_data.batsmen.on_onstrike} {on_click} />
     </td>
-    <td> {innings_data.batsmen.on_onstrike.score} </td>
+    <td> 
+      {innings_data.batsmen.on_onstrike.score} 
+    </td>
   </tr>
   <tr class="text-blue-800 font-medium p-2">
     <td>
-      <PlayerName player_info={innings_data.batsmen.on_offstrike} {on_click} />
+      🏃 - <PlayerName player_info={innings_data.batsmen.on_offstrike} {on_click} />
     </td>
     <td>{innings_data.batsmen.on_offstrike.score} </td>
   </tr>
   <tr class="text-green-800 font-medium p-2">
     <td>
-      <PlayerName
+      🎾 - <PlayerName
         player_info={innings_data.current_bowler}
         {on_click}
       />

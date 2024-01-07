@@ -217,7 +217,7 @@
 	</div>
 	<div class="p-4 flex flex-col gap-4">
 		<h3 class="text-lg font-bold">Batting Stats</h3>
-		<table class="w-1/2">
+		<table class="table-auto max-w-2xl">
 			<thead>
 				<td>Batsmans Name</td>
 				<td>Score</td>
@@ -238,7 +238,7 @@
 		</table>
 
 		<h3 class="text-lg font-bold">Bowling Stats</h3>
-		<table class="w-1/2">
+		<table class="table-auto max-w-2xl">
 			<thead>
 				<td>Bowlers Name</td>
 				<td>Deliveries Bowled</td>
