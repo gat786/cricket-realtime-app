@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Innings } from "$lib/models";
+  import PlayerName from "./PlayerName.svelte";
   export let innings_data: Innings;
 </script>
 
@@ -27,20 +28,29 @@
   </tr>
   <tr class="text-blue-800 font-medium p-2">
     <td>
-      🏏 - {innings_data.batsmen.on_onstrike.name}
+      <PlayerName
+        player_name={`🏏 : ${innings_data.batsmen.on_onstrike.name}`}
+        on_click={(name) => {}}
+      />
     </td>
     <td> {innings_data.batsmen.on_onstrike.score} </td>
   </tr>
   <tr class="text-blue-800 font-medium p-2">
     <td>
-      🏃‍♂️ - {innings_data.batsmen.on_offstrike.name}
+      <PlayerName
+        player_name={`🏃‍♂️ : ${innings_data.batsmen.on_offstrike.name}`}
+        on_click={(name) => {}}
+      />
     </td>
     <td>{innings_data.batsmen.on_offstrike.score} </td>
   </tr>
   <tr class="text-green-800 font-medium p-2">
     <td>
-      🎾 -
-      {innings_data.current_bowler}
+      <PlayerName
+        player_name={`🎾 : ${innings_data.current_bowler}`}
+        on_click={(name) => {}}
+      />
+      
     </td>
   </tr>
 </table>

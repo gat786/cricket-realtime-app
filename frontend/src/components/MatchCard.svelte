@@ -3,20 +3,12 @@
   import { writable, type Writable } from "svelte/store";
 
   import type { Match, TeamData } from "$lib/models";
+  import { get_country_data } from "$lib/api";
   import exports from "$lib/constants";
   import TeamFlag from "./TeamFlag.svelte";
   export let match : Match;
-
-  const team_service_endpoint = exports.endpoints.team;
   const teams = match.match_teams;
   let teams_data: Writable<TeamData[]> = writable([]);
-
-  const get_country_data = async (country_name: string) => {
-    let search_string = country_name.trim().toLowerCase();
-    const team_info = await fetch(`${team_service_endpoint}/${search_string}`);
-    const team_info_json = await team_info.json();
-    return team_info_json;
-  };
 
   onMount(() => {
     teams.forEach(async (team) => {

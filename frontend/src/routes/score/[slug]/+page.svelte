@@ -11,11 +11,14 @@
 		Innings,
 		MatchResponseApi,
 		BallDataWithMeta,
+		TeamData,
 	} from "$lib/models";
 
 	import { defaultInnings } from "$lib/models";
 	import InningsBox from "../../../components/InningsBox.svelte";
-	import { stringify } from "postcss";
+	import TeamFlag from "../../../components/TeamFlag.svelte";
+	import { writable, type Writable } from "svelte/store";
+	import PlayerName from "../../../components/PlayerName.svelte";
 
 	export let data: PageData;
 	export let socket: WebSocket | undefined = undefined;
@@ -32,6 +35,7 @@
 	let match_data: MatchResponseApi | undefined = undefined;
 	let match_id = "";
 
+	const teams_data: Writable<TeamData[]> = writable([]);
 	const innings_order: string[] = [];
 
 	onMount(() => {
@@ -53,9 +57,22 @@
 			innings_order.push(toss_winner);
 		}
 
+		match_data.data.teams.forEach(async (team) => {
+			let data: TeamData = await get_country_data(team);
+			teams_data.update((teams_data) => [...teams_data, data]);
+		});
+
 		match_id = data.slug;
 		start_streaming_match_data(match_id);
 	});
+
+	const get_country_data = async (country_name: string) => {
+		const team_service_endpoint = constants.endpoints.team;
+		let search_string = country_name.trim().toLowerCase();
+		const team_info = await fetch(`${team_service_endpoint}/${search_string}`);
+		const team_info_json = await team_info.json();
+		return team_info_json;
+	};
 
 	const start_streaming_match_data = (match_file_id: string) => {
 		const websockets_endpoint = constants.endpoints.score_streaming + "/live/";
@@ -140,8 +157,11 @@
 			{#if match_data != undefined}
 				<div class="flex flex-col gap-4 justify-between p-4">
 					<div class="flex flex-col gap-4">
-						<div class="text-xl font-bold">
-							{match_data.data.teams.join(" vs ")}
+						<div class="flex gap-4 items-center">
+							{#each $teams_data as team}
+								<TeamFlag image_url={team.image_path} />
+								<div>{team.name}</div>
+							{/each}
 						</div>
 						<div class="flex flex-row gap-4">
 							<div class="text-l font-thin">
@@ -178,7 +198,7 @@
 			{#each match_innings.first.batsmans as batsman}
 				<tr>
 					<td>
-						{batsman.name}
+						<PlayerName player_name={batsman.name} on_click={(name) => {}} />
 					</td>
 					<td>
 						{batsman.score}
@@ -187,19 +207,17 @@
 			{/each}
 		</table>
 
-		<h3 class="text-lg font-bold">
-			Bowling Stats
-		</h3>
+		<h3 class="text-lg font-bold">Bowling Stats</h3>
 		<table class="w-1/2">
 			<thead>
 				<td>Bowlers Name</td>
-				<td>Overs Bowled</td>
+				<td>Deliveries Bowled</td>
 				<td>Runs Conceeded</td>
 			</thead>
 			{#each match_innings.first.balling as bowler}
 				<tr>
 					<td>
-						{bowler.name}
+						<PlayerName player_name={bowler.name} on_click={(name) => {}} />
 					</td>
 					<td>
 						{bowler.deliveries}
