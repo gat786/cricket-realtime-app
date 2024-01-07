@@ -13,3 +13,5 @@ const endpoints = {
 export default {
   endpoints
 };
+
+export type player_search_callback = (player_name: string, country_name: string) => void;

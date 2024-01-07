@@ -85,6 +85,7 @@ export type Innings = {
   legal_deliveries: number;
   illegal_deliveries: number;
   extras: number;
+  players_list: PlayerInfo[];
   batsmen: {
     on_onstrike: BatsmanScore;
     on_offstrike: BatsmanScore;
@@ -102,13 +103,16 @@ export const defaultInnings : Innings = {
   legal_deliveries: 0,
   illegal_deliveries: 0,
   extras: 0,
+  players_list: [],
   batsmen: {
     on_offstrike: {
       name: "Loading",
+      country_name: "",
       score: 0,
     },
     on_onstrike: {
       name: "Loading",
+      country_name: "",
       score: 0,
     },
   },
@@ -119,7 +123,13 @@ export type BatsmanInnings = BatsmanScore[];
 
 export type BatsmanScore = {
   name: string;
+  country_name: string;
   score: number;
+}
+
+export type PlayerInfo = {
+  name: string;
+  country_name: string;
 }
 
 export type BallingInnings = BallingStats[];
@@ -127,6 +137,7 @@ export type BallingInnings = BallingStats[];
 export type BallingStats = {
   name: string;
   deliveries: number;
+  country_name: string;
   runs_given: number;
 }
 
@@ -176,4 +187,9 @@ export interface TeamData {
   country_id: number
   national_team: boolean
   updated_at: string
+}
+
+export interface MatchInnings {
+  first: Innings;
+  second: Innings;
 }

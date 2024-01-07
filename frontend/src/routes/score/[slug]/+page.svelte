@@ -5,13 +5,14 @@
 
 	import constants from "$lib/constants";
 	import { get_updated_innings } from "$lib/utils";
-	import type { MatchInnings } from "$lib/utils";
 	import type {
 		LiveScore,
 		Innings,
 		MatchResponseApi,
 		BallDataWithMeta,
 		TeamData,
+		PlayerInfo,
+		MatchInnings,
 	} from "$lib/models";
 
 	import { defaultInnings } from "$lib/models";
@@ -23,6 +24,7 @@
 	export let data: PageData;
 	export let socket: WebSocket | undefined = undefined;
 
+	let players_list: PlayerInfo[] = [];
 	let match_innings: MatchInnings = {
 		first: {
 			...JSON.parse(JSON.stringify(defaultInnings)),
@@ -88,6 +90,21 @@
 				console.log(data);
 
 				add_to_innings(data);
+			} else if ("info" in data) {
+				console.log("Match info received");
+				const players = data.info.players;
+				Object.keys(players).forEach((country_name: string) => {
+					let players_of_country = players[country_name];
+					players_of_country.forEach((player_of_country: string) => {
+						players_list.push({
+							country_name: country_name,
+							name: player_of_country,
+						});
+					});
+				});
+
+				match_innings.first.players_list = players_list;
+				match_innings.second.players_list = players_list;
 			} else {
 				console.log(data);
 			}
@@ -139,6 +156,10 @@
 			};
 		}
 	};
+
+	const search_for_player = (player_name: string, country_name: string) => {
+		console.log(player_name, country_name);
+	};
 </script>
 
 <head>
@@ -174,7 +195,12 @@
 					</div>
 				</div>
 				<div class="flex m-4">
-					<InningsBox innings_data={match_innings.first} />
+					<InningsBox
+						innings_data={match_innings.first}
+						on_click={(player_name, country_name) => {
+							search_for_player(player_name, country_name);
+						}}
+					/>
 
 					<!-- <div class="flex flex-col border p-4">
 						<div class="text-xl font-bold">{innings_order[1]}'s Innings</div>
@@ -198,7 +224,11 @@
 			{#each match_innings.first.batsmans as batsman}
 				<tr>
 					<td>
-						<PlayerName player_name={batsman.name} on_click={(name) => {}} />
+						<PlayerName
+							player_name={batsman.name}
+							country_name={batsman.country_name}
+							on_click={search_for_player}
+						/>
 					</td>
 					<td>
 						{batsman.score}
@@ -217,7 +247,11 @@
 			{#each match_innings.first.balling as bowler}
 				<tr>
 					<td>
-						<PlayerName player_name={bowler.name} on_click={(name) => {}} />
+						<PlayerName
+							player_name={bowler.name}
+							country_name={bowler.country_name}
+							on_click={search_for_player}
+						/>
 					</td>
 					<td>
 						{bowler.deliveries}

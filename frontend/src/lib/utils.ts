@@ -1,23 +1,22 @@
-import type { Innings, BallData, BallDataWithMeta } from "$lib/models"
+import type { Innings, BallData, BallDataWithMeta, PlayerInfo, } from "$lib/models"
 
-export interface MatchInnings {
-  first: Innings;
-  second: Innings;
-}
 
 export const get_updated_innings = (innings: Innings, ball_data: BallData) => {
-  const batsman = innings.batsmans.find(b => b.name == ball_data.batter)
+  const batsman = innings.batsmans.find(b => b.name == ball_data.batter);
+  let batsman_country = get_country_name_from_players_list(innings.players_list, ball_data.batter);
   if (batsman) {
     batsman.score += ball_data.runs.batter;
   }
   else {
     innings.batsmans.push({
       name: ball_data.batter,
+      country_name: batsman_country,
       score: ball_data.runs.batter
     })
   }
 
   const baller = innings.balling.find(b => b.name == ball_data.bowler)
+  let baller_country = get_country_name_from_players_list(innings.players_list, ball_data.bowler);
   if (baller) {
     baller.deliveries += 1;
     baller.runs_given += ball_data.runs.total;
@@ -26,6 +25,7 @@ export const get_updated_innings = (innings: Innings, ball_data: BallData) => {
     innings.balling.push({
       name: ball_data.bowler,
       deliveries: 1,
+      country_name: baller_country,
       runs_given: ball_data.runs.total
     })
   }
@@ -57,6 +57,7 @@ export const get_updated_innings = (innings: Innings, ball_data: BallData) => {
     (batsman) => on_onstrike_name == batsman.name,
   ) ?? {
     name: 'Loading',
+    country_name: 'Loading',
     score: 0,
   };
   
@@ -64,9 +65,15 @@ export const get_updated_innings = (innings: Innings, ball_data: BallData) => {
     (batsman) => on_offstrike_name == batsman.name,
   ) ?? {
     name: 'Loading',
+    country_name: 'Loading',
     score: 0,
   };
   innings.current_bowler = ball_data.bowler;
 
   return innings;
+}
+
+export const get_country_name_from_players_list = (players_list: PlayerInfo[], name: string) => {
+  const player = players_list.find(p => p.name == name);
+  return player?.country_name ?? "";
 }
