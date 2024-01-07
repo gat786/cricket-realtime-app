@@ -1,7 +1,7 @@
 import type { Innings, BallData, BallDataWithMeta, PlayerInfo, } from "$lib/models"
 
-
 export const get_updated_innings = (innings: Innings, ball_data: BallData) => {
+
   const batsman = innings.batsmans.find(b => b.name == ball_data.batter);
   let batsman_country = get_country_name_from_players_list(innings.players_list, ball_data.batter);
   if (batsman) {
@@ -53,22 +53,31 @@ export const get_updated_innings = (innings: Innings, ball_data: BallData) => {
   const on_onstrike_name = ball_data.batter;
   const on_offstrike_name = ball_data.non_striker;
 
+  
+  let onstrike_batsman_country = get_country_name_from_players_list(innings.players_list, ball_data.batter);
+  let offstrike_batsman_country = get_country_name_from_players_list(innings.players_list, ball_data.non_striker);
+    
+
   innings.batsmen.on_onstrike = innings.batsmans.find(
     (batsman) => on_onstrike_name == batsman.name,
   ) ?? {
-    name: 'Loading',
-    country_name: 'Loading',
+    name: on_onstrike_name,
+    country_name: onstrike_batsman_country,
     score: 0,
   };
   
   innings.batsmen.on_offstrike = innings.batsmans.find(
     (batsman) => on_offstrike_name == batsman.name,
   ) ?? {
-    name: 'Loading',
-    country_name: 'Loading',
+    name: on_offstrike_name,
+    country_name: offstrike_batsman_country,
     score: 0,
   };
-  innings.current_bowler = ball_data.bowler;
+
+  innings.current_bowler = {
+    name: ball_data.bowler,
+    country_name: baller_country,
+  };
 
   return innings;
 }

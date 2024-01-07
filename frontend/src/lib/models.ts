@@ -90,7 +90,7 @@ export type Innings = {
     on_onstrike: BatsmanScore;
     on_offstrike: BatsmanScore;
   }
-  current_bowler: string;
+  current_bowler: PlayerInfo;
   batsmans: BatsmanInnings;
   balling: BallingInnings;
 }
@@ -116,7 +116,10 @@ export const defaultInnings : Innings = {
       score: 0,
     },
   },
-  current_bowler: "",
+  current_bowler: {
+    name: "Loading",
+    country_name: "",
+  },
 }
 
 export type BatsmanInnings = BatsmanScore[];

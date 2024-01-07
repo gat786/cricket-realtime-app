@@ -31,29 +31,20 @@
   </tr>
   <tr class="text-blue-800 font-medium p-2">
     <td>
-      <PlayerName
-        player_name={`🏏 : ${innings_data.batsmen.on_onstrike.name}`}
-        country_name={innings_data.batsmen.on_onstrike.country_name}
-        {on_click}
-      />
+      <PlayerName player_info={innings_data.batsmen.on_onstrike} {on_click} />
     </td>
     <td> {innings_data.batsmen.on_onstrike.score} </td>
   </tr>
   <tr class="text-blue-800 font-medium p-2">
     <td>
-      <PlayerName
-        player_name={`🏃‍♂️ : ${innings_data.batsmen.on_offstrike.name}`}
-        country_name={innings_data.batsmen.on_offstrike.country_name}
-        {on_click}
-      />
+      <PlayerName player_info={innings_data.batsmen.on_offstrike} {on_click} />
     </td>
     <td>{innings_data.batsmen.on_offstrike.score} </td>
   </tr>
   <tr class="text-green-800 font-medium p-2">
     <td>
       <PlayerName
-        player_name={`🎾 : ${innings_data.current_bowler}`}
-        country_name={""}
+        player_info={innings_data.current_bowler}
         {on_click}
       />
     </td>
