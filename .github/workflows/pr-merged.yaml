@@ -35,6 +35,15 @@ jobs:
         cp -r data score-service/
         cp -r data team-service/
 
+    - id: dockerx-build-and-push-frontend
+      name: Build and push (Frontend Svelte App)
+      uses: docker/build-push-action@v5
+      with:
+        push: true
+        context: frontend
+        tags: gat786/cric-frontend, gat786/cric-frontend:${{ github.sha }}
+        platforms: linux/arm64, linux/amd64
+
     - id: dockerx-build-and-push-ps
       name: Build and push (Player Service)
       uses: docker/build-push-action@v5

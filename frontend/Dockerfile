@@ -1,5 +1,5 @@
 # Use an official Node runtime as a parent image
-FROM node:21-slim as build
+FROM --platform=$BUILDPLATFORM node:21-slim as build
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -16,7 +16,7 @@ ENV ENVIRONMENT=production
 # Install any needed packages specified in package.json
 RUN npm install && npm run build
 
-FROM node:latest as deployment
+FROM --platform=$BUILDPLATFORM node:latest as deployment
 
 WORKDIR /usr/src/app
 
