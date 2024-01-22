@@ -1,7 +1,6 @@
 import constants from '$lib/constants';
 import type { MatchResponse } from '$lib/models.js';
 
-export const ssr = false;
 
 export const load = async({ params }) => {
   const slug = params.slug
