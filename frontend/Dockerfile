@@ -31,4 +31,4 @@ RUN chmod +x tini
 
 ENTRYPOINT ["/usr/src/app/tini", "--"]
 
-CMD [ "node", "build/index.js" ]
+# CMD [ "node", "build/index.js" ]
