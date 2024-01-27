@@ -1,6 +1,7 @@
 # Use an official Node runtime as a parent image
 FROM --platform=$BUILDPLATFORM node:21-slim as build
 
+ARG BUILDPLATFORM
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
@@ -17,6 +18,7 @@ ENV ENVIRONMENT=production
 RUN npm install && npm run build
 
 FROM --platform=$BUILDPLATFORM node:latest as deployment
+ARG BUILDPLATFORM
 
 WORKDIR /usr/src/app
 
@@ -26,8 +28,9 @@ EXPOSE 3000
 
 # Add Tini
 ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-arm64 tini
+RUN ARCH=$(echo $BUILDPLATFORM | cut -c 7-); wget https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${ARCH} -O tini;
 RUN chmod +x tini
+
 
 ENTRYPOINT ["/usr/src/app/tini", "--"]
 
