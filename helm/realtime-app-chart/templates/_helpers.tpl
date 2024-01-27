@@ -66,6 +66,18 @@ Create the name of the service account to use
 app: frontend
 {{- end }}
 
+{{- define "frontend.env" -}}
+env:
+  - name: PUBLIC_PLAYER_SERVICE_ENDPOINT
+    value: http://{{ .Values.playerService.service.name }}.{{ .Release.Namespace }}.svc
+  - name: PUBLIC_TEAM_SERVICE_ENDPOINT
+    value: http://{{ .Values.teamService.service.name }}.{{ .Release.Namespace }}.svc
+  - name: PUBLIC_SCORE_SERVICE_ENDPOINT
+    value: http://{{ .Values.scoreService.service.name }}.{{ .Release.Namespace }}.svc
+  - name: PUBLIC_SCORE_SOCKET_ENDPOINT
+    value: ws://{{ .Values.scoreService.service.name }}.{{ .Release.Namespace }}.svc
+{{- end }}
+
 {{- define "scoreService.labels" -}}
 app: score-service
 {{- end }}

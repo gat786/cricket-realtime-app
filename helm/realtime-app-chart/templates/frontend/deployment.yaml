@@ -19,3 +19,5 @@ spec:
         image: {{ .Values.frontend.image }}:{{ .Values.frontend.tag }}
         ports:
         - containerPort: {{ .Values.frontend.deployment.containerPort }}
+        env:
+        {{- include "frontend.env" . | nindent 8 }}
