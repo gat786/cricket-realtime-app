@@ -66,14 +66,14 @@ Create the name of the service account to use
 app: frontend
 {{- end }}
 
-{{- define "score_service.labels" -}}
+{{- define "scoreService.labels" -}}
 app: score-service
 {{- end }}
 
-{{- define "player_service.labels" -}}
+{{- define "playerService.labels" -}}
 app: player-service
 {{- end }}
 
-{{- define "team_service.labels" -}}
+{{- define "teamService.labels" -}}
 app: team-service
 {{- end }}

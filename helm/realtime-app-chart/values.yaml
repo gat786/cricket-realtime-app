@@ -104,6 +104,8 @@ frontend:
 
   deployment:
     containerPort: 3000
+  service:
+    port: 80
 
 playerService:
   image: gat786/cric-player-service
@@ -111,7 +113,10 @@ playerService:
   replicaCount: 1
 
   deployment:
-    containerPort: 8080
+    containerPort: 8000
+  service:
+    port: 80
+    name: http
 
 teamService:
   image: gat786/cric-team-service
@@ -119,7 +124,10 @@ teamService:
   replicaCount: 1
 
   deployment:
-    containerPort: 8080
+    containerPort: 8000
+  service:
+    port: 80
+    name: http
 
 scoreService:
   image: gat786/cric-score-service
@@ -127,4 +135,7 @@ scoreService:
   replicaCount: 1
 
   deployment:
-    containerPort: 8080
+    containerPort: 8000
+  service:
+    port: 80
+    name: http
