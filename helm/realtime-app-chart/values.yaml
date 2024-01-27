@@ -96,3 +96,35 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+frontend:
+  image: gat786/cric-frontend
+  tag: latest
+  replicaCount: 1
+
+  deployment:
+    containerPort: 3000
+
+playerService:
+  image: gat786/cric-player-service
+  tag: latest
+  replicaCount: 1
+
+  deployment:
+    containerPort: 8080
+
+teamService:
+  image: gat786/cric-team-service
+  tag: latest
+  replicaCount: 1
+
+  deployment:
+    containerPort: 8080
+
+scoreService:
+  image: gat786/cric-score-service
+  tag: latest
+  replicaCount: 1
+
+  deployment:
+    containerPort: 8080

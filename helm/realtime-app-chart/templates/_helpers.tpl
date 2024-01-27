@@ -60,3 +60,20 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+{{- define "frontend.labels" -}}
+app: frontend
+{{- end }}
+
+{{- define "score_service.labels" -}}
+app: score-service
+{{- end }}
+
+{{- define "player_service.labels" -}}
+app: player-service
+{{- end }}
+
+{{- define "team_service.labels" -}}
+app: team-service
+{{- end }}

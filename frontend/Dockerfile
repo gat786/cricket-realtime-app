@@ -26,9 +26,9 @@ EXPOSE 3000
 
 # Add Tini
 ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-arm64 /tini
-RUN chmod +x /tini
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-arm64 tini
+RUN chmod +x tini
 
-ENTRYPOINT ["/tini", "--"]
+ENTRYPOINT ["/usr/src/app/tini", "--"]
 
 CMD [ "node", "build/index.js" ]
