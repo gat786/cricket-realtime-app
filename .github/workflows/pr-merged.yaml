@@ -34,14 +34,6 @@ jobs:
         cp -r data player-service/
         cp -r data score-service/
         cp -r data team-service/
-    
-    - id: create-env-file-for-frontend
-      name: Create env file for frontend
-      run: |
-        echo "PUBLIC_PLAYER_SERVICE_ENDPOINT=http://player-service.default.svc" >> frontend/.env;
-        echo "PUBLIC_SCORE_SERVICE_ENDPOINT=http://score-service.default.svc" >> frontend/.env;
-        echo "PUBLIC_TEAM_SERVICE_ENDPOINT=http://team-service.default.svc" >> frontend/.env;
-        echo "PUBLIC_SCORE_SOCKET_ENDPOINT=ws://score-service.default.svc" >> frontend/.env;
       
     - id: dockerx-build-and-push-frontend
       name: Build and push (Frontend Svelte App)
