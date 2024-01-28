@@ -8,10 +8,17 @@ WORKDIR /usr/src/app
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
-ENV PUBLIC_PLAYER_SERVICE_ENDPOINT=http://localhost:8001
-ENV PUBLIC_TEAM_SERVICE_ENDPOINT=http://localhost:8002
-ENV PUBLIC_SCORE_SERVICE_ENDPOINT=http://localhost:8000
-ENV PUBLIC_SCORE_SOCKET_ENDPOINT=ws://localhost:8000
+# Update this with
+# PUBLIC_PLAYER_SERVICE_ENDPOINT=http://localhost:8001
+# PUBLIC_SCORE_SERVICE_ENDPOINT=http://localhost:8000
+# PUBLIC_SCORE_SOCKET_ENDPOINT=ws://localhost:8000
+# PUBLIC_TEAM_SERVICE_ENDPOINT=http://localhost:8002
+# when running locally
+
+ENV PUBLIC_PLAYER_SERVICE_ENDPOINT=http://player-service.default.svc
+ENV PUBLIC_TEAM_SERVICE_ENDPOINT=http://team-service.default.svc
+ENV PUBLIC_SCORE_SERVICE_ENDPOINT=http://score-service.default.svc
+ENV PUBLIC_SCORE_SOCKET_ENDPOINT=ws://score-service.default.svc
 ENV ENVIRONMENT=production
 
 # Install any needed packages specified in package.json
