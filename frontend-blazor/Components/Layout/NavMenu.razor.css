@@ -17,7 +17,7 @@
 
 .top-row {
     height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+    background-color: var(--russian-violet);
 }
 
 .navbar-brand {
@@ -60,8 +60,8 @@
     }
 
     .nav-item ::deep .nav-link {
-        color: #d7d7d7;
-        background: none;
+        color: var(--night);
+        background: white;
         border: none;
         border-radius: 4px;
         height: 3rem;
@@ -72,7 +72,7 @@
     }
 
 .nav-item ::deep a.active {
-    background-color: rgba(255,255,255,0.37);
+    background-color: var(--cinnabar);
     color: white;
 }
 
@@ -83,6 +83,7 @@
 
 .nav-scrollable {
     display: none;
+    background-color: var(--pine-green);
 }
 
 .navbar-toggler:checked ~ .nav-scrollable {

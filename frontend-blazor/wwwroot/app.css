@@ -49,3 +49,26 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+:root {
+    /* CSS HEX */
+    --cinnabar: #f2542dff;
+    --night: #000f08ff;
+    --pine-green: #136f63ff;
+    --citrine: #e0ca3cff;
+    --russian-violet: #3e2f5bff;
+
+    /* CSS HSL */
+    --cinnabar: hsla(12, 88%, 56%, 1);
+    --night: hsla(152, 100%, 3%, 1);
+    --pine-green: hsla(172, 71%, 25%, 1);
+    --citrine: hsla(52, 73%, 56%, 1);
+    --russian-violet: hsla(260, 32%, 27%, 1);
+}
+
+.nav-icon{
+    width: 1rem;
+    height: 1rem;
+    margin-right: 1rem
+}
+  
