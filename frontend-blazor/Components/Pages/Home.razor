@@ -2,6 +2,14 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Something new to see</h1>
+<h1>Welcome to StreamIt</h1>
 
-Welcome to your new app.
+@_name
+
+@code {
+    private string _name;
+    protected async override void OnInitialized()
+    {
+        _name = "StreamIt";
+    }  
+}
