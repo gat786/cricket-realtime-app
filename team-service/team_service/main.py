@@ -56,7 +56,7 @@ def get_team_from_name(team_id: str):
     return {
       "message": "Team not found"
     }
-  
+ 
 app.add_middleware(
   CORSMiddleware,
   allow_origins=origins,

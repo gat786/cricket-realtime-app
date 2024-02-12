@@ -3,6 +3,7 @@ from player_service.utils import exports
 
 import uvicorn
 import logging
+import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -31,7 +32,16 @@ def get_players():
   return {
     "message": "Players info can be retrieved from here"
   }
-  
+
+@app.get("/random")
+def get_random_players():
+  with open(f"{exports.data_root}/player/players_data.csv") as player_csv_file:
+    df: pd.DataFrame = pd.read_csv(player_csv_file)
+    random_sample = df.sample(20)
+    random_sample.fillna("",inplace=True)
+    return {
+      "players": random_sample.to_dict(orient="records")
+    } 
 
 @app.post("/search")
 def get_player_from_name(player_search_query: PlayerSearchQuery):
