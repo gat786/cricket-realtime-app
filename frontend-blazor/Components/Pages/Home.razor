@@ -7,6 +7,8 @@
 @inject IConfiguration Configuration
 @inject ILogger<Home> Logger
 
+<PageTitle>StreamLit</PageTitle>
+
 <h3>Welcome to StreamIt</h3>
 <hr />
 <br />
@@ -20,7 +22,7 @@ else {
   if (Response?.Matches != null) {
     @foreach (var MatchData in Response.Matches){
       <div>
-         @string.Join(" vs ", MatchData.Teams)
+        <frontend_blazor.Components.Elements.MatchCard Teams=MatchData.Teams />
       </div>
     }
   }
@@ -44,9 +46,6 @@ else {
       if (responseStream != null)
       {
         Response = JsonSerializer.Deserialize<MatchListResponse>(response.Content.ReadAsStream());
-        Console.WriteLine(Response);
-        initial             = "Ending Data";
-        Console.WriteLine(initial);
       }
     }
     else

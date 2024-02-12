@@ -1,0 +1,55 @@
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using frontend_blazor.Utils
+@inject IHttpClientFactory ClientFactory
+@inject IConfiguration Configuration
+@attribute [StreamRendering]
+
+@if (TeamsData.Count > 1 ){
+  <div class="d-flex flex-row">
+    <div class="mr-2">
+      <img style=@img_style src=@TeamsData[0].ImagePath />
+      <p>@TeamsData[0].Name </p>
+    </div>
+
+    <div class="align-self-center">
+      VS
+    </div>
+
+    <div>
+      <img style=@img_style src=@TeamsData[1].ImagePath />
+      <p>@TeamsData[1].Name</p>
+    </div>
+  </div>
+}
+
+@code {
+  [Parameter]
+  public IEnumerable<string> Teams { get; set; } = [];
+
+  string Team1 = "";
+  string Team2 = "";
+
+  string img_style = "height: 80px; width: 130px;";
+
+  List<Team> TeamsData = new List<Team>();
+
+  protected async override Task OnInitializedAsync()
+  {
+    string? TeamsUrl = Configuration["Urls:Teams"];
+
+    if (Teams.ToList<string>().Count > 1){
+      Team1 = Teams.ToList<string>()[0];
+      Team2 = Teams.ToList<string>()[1];
+    }
+
+    var client = new HttpClient();
+    foreach(var TeamName in Teams){
+      string TeamDataString = await client.GetStringAsync($"{TeamsUrl}/{TeamName.ToLower()}");
+      Team? TeamData = JsonSerializer.Deserialize<Team>(TeamDataString);
+      if (TeamData != null){
+        TeamsData.Add(TeamData);
+      }
+    }
+  }
+}
