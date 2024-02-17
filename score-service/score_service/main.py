@@ -52,6 +52,7 @@ def get_match_info(match_json):
     
   if "teams" in match_info:
     info_data["teams"] = match_info["teams"]
+    info_data["title"] = " vs ".join(match_info["teams"])
     
   if "toss" in match_info:
     info_data["toss"] = match_info["toss"]

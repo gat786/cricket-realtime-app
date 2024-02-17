@@ -10,7 +10,9 @@
 
 <div>
   @if (MatchDetailsFetched != null) {
-    
+    @foreach (var Team in MatchDetailsFetched.Data.Teams) {
+      <p>@Team</p>
+    }
   }
 </div>
 
@@ -31,6 +33,6 @@
 
     string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
     MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
-    Console.WriteLine(MatchDetailsFetched.match_id);
+    Console.WriteLine(MatchDetailsFetched?.MatchId);
   }
 }

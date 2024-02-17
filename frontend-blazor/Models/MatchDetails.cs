@@ -1,70 +1,110 @@
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-    public class By
-    {
-        public int wickets { get; set; }
-    }
+using System.Text.Json.Serialization;
 
-    public class Data
-    {
-        public int balls_per_over { get; set; }
-        public string city { get; set; }
-        public List<string> dates { get; set; }
-        public Event @event { get; set; }
-        public string gender { get; set; }
-        public string match_type { get; set; }
-        public int match_type_number { get; set; }
-        public Officials officials { get; set; }
-        public Outcome outcome { get; set; }
-        public int overs { get; set; }
-        public List<string> player_of_match { get; set; }
-        public Players players { get; set; }
-        public Registry registry { get; set; }
-        public string season { get; set; }
-        public string team_type { get; set; }
-        public List<string> teams { get; set; }
-        public Toss toss { get; set; }
-        public string venue { get; set; }
-    }
+namespace frontend_blazor.Models
+{
+  public class By
+  {
+    [JsonPropertyName("wickets")]
+    public int Wickets { get; set; }
+  }
 
-    public class Event
-    {
-        public string name { get; set; }
-        public string stage { get; set; }
-    }
+  public class MatchDataDetailed
+  {
+    [JsonPropertyName("balls_per_over")]
+    public int BallsPerOver { get; set; }
 
-    public class Officials
-    {
-        public List<string> match_referees { get; set; }
-        public List<string> reserve_umpires { get; set; }
-        public List<string> tv_umpires { get; set; }
-        public List<string> umpires { get; set; }
-    }
+    [JsonPropertyName("city")]
+    public string City { get; set; }
 
-    public class Outcome
-    {
-        public string winner { get; set; }
-        public By by { get; set; }
-    }
-    public class Players
-    {
-        public List<string> Australia { get; set; }
-        public List<string> England { get; set; }
-    }
+    [JsonPropertyName("dates")] 
+    public List<string> Dates { get; set; }
 
-    public class Registry
-    {
-        public Dictionary<String,String> people { get; set; }
-    }
+    [JsonPropertyName("event")]
+    public EventModel Event { get; set; }
+    [JsonPropertyName("gender")]
+    public string Gender { get; set; }
 
-    public class MatchDetailsRoot
-    {
-        public string message { get; set; }
-        public string match_id { get; set; }
-        public Data data { get; set; }
-    }
+    [JsonPropertyName("match_type")]
+    public string MatchType { get; set; }
+    [JsonPropertyName("match_type_number")]
+    public int MatchTypeNumber { get; set; }
 
-    public class Toss
-    {
-        public string decision { get; set; }
-        public string winner { get; set; }
-    }
+    [JsonPropertyName("officials")]
+    public OfficialsModel Officials { get; set; }
+    [JsonPropertyName("outcome")]
+    public OutcomeModel Outcome { get; set; }
+    [JsonPropertyName("overs")]
+    public int Overs { get; set; }
+
+    [JsonPropertyName("player_of_match")]
+    public List<string> PlayerOfMatch { get; set; }
+    [JsonPropertyName("players")]
+    public Dictionary<string,List<string>> Players { get; set; }
+    [JsonPropertyName("registry")]
+    public RegistryModel Registry { get; set; }
+    [JsonPropertyName("season")]
+    public string Season { get; set; }
+    [JsonPropertyName("team_type")]
+    public string TeamType { get; set; }
+    [JsonPropertyName("teams")]
+    public List<string> Teams { get; set; }
+    [JsonPropertyName("toss")]
+    public Toss Toss { get; set; }
+    [JsonPropertyName("venue")]
+    public string VenueName { get; set; }
+  }
+
+  public class EventModel
+  {
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+    [JsonPropertyName("stage")]
+    public string Stage { get; set; }
+  }
+
+  public class OfficialsModel
+  {
+    [JsonPropertyName("match_referees")]
+    public List<string> MatchReferees { get; set; }
+    [JsonPropertyName("reserve_umpires")]
+    public List<string> ReserveUmpires { get; set; }
+    [JsonPropertyName("tv_umpires")]
+    public List<string> tv_umpires { get; set; }
+    [JsonPropertyName("umpires")]
+    public List<string> Umpires { get; set; }
+  }
+
+  public class OutcomeModel
+  {
+    [JsonPropertyName("winner")]
+    public string Winner { get; set; }
+    [JsonPropertyName("by")]
+    public By ByCause { get; set; }
+  }
+  public class RegistryModel
+  {
+    [JsonPropertyName("people")]
+    public Dictionary<String, String> People { get; set; }
+  }
+
+  public class MatchDetailsRoot
+  {
+    [JsonPropertyName("message")]
+    public string Message { get; set; }
+
+    [JsonPropertyName("match_id")]
+    public string MatchId { get; set; }
+
+    [JsonPropertyName("data")]
+    public MatchDataDetailed Data { get; set; }
+  }
+
+  public class Toss
+  {
+    [JsonPropertyName("decision")]
+    public string Decision { get; set; }
+    [JsonPropertyName("winner")]
+    public string Winner { get; set; }
+  }
+
+}
