@@ -5,14 +5,16 @@
 @inject IConfiguration Configuration
 @attribute [StreamRendering]
 
-@if (TeamsData.Count > 1 ){
-  <div class="d-flex flex-row">
-    <div class="mr-2">
+@if (TeamsData.Count > 1)
+{
+  <a href="/stream/some-id" class="root-div">
+  <div class="d-flex flex-row p-4 my-2 border border-black">
+    <div class="">
       <img style=@img_style src=@TeamsData[0].ImagePath />
       <p>@TeamsData[0].Name </p>
     </div>
 
-    <div class="align-self-center">
+    <div class="align-self-center mx-4">
       VS
     </div>
 
@@ -21,11 +23,13 @@
       <p>@TeamsData[1].Name</p>
     </div>
   </div>
+</a>
 }
+
 
 @code {
   [Parameter]
-  public IEnumerable<string> Teams { get; set; } = [];
+  public Match MatchData {get; set;}
 
   string Team1 = "";
   string Team2 = "";
@@ -36,19 +40,24 @@
 
   protected async override Task OnInitializedAsync()
   {
+    
     string? TeamsUrl = Configuration["Urls:Teams"];
+    if (MatchData != null){
+      if (MatchData.Teams?.ToList<string>().Count > 1)
+      {
+        Team1 = MatchData.Teams.ToList<string>()[0];
+        Team2 = MatchData.Teams.ToList<string>()[1];
+      }
 
-    if (Teams.ToList<string>().Count > 1){
-      Team1 = Teams.ToList<string>()[0];
-      Team2 = Teams.ToList<string>()[1];
-    }
-
-    var client = new HttpClient();
-    foreach(var TeamName in Teams){
-      string TeamDataString = await client.GetStringAsync($"{TeamsUrl}/{TeamName.ToLower()}");
-      Team? TeamData = JsonSerializer.Deserialize<Team>(TeamDataString);
-      if (TeamData != null){
-        TeamsData.Add(TeamData);
+      var client = new HttpClient();
+      foreach (var TeamName in MatchData.Teams)
+      {
+        string TeamDataString = await client.GetStringAsync($"{TeamsUrl}/{TeamName.ToLower()}");
+        Team? TeamData = JsonSerializer.Deserialize<Team>(TeamDataString);
+        if (TeamData != null)
+        {
+          TeamsData.Add(TeamData);
+        }
       }
     }
   }

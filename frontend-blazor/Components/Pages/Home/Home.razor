@@ -15,23 +15,29 @@
 <h4>All the currently ongoing matches can be viewed here</h4>
 
 
-@if(Response == null) {
+@if (Response == null)
+{
   <p>Make sure we have Scores API Setup</p>
 }
-else {
-  if (Response?.Matches != null) {
-    @foreach (var MatchData in Response.Matches){
-      <div>
-        <frontend_blazor.Components.Elements.MatchCard Teams=MatchData.Teams />
-      </div>
-    }
+else
+{
+  if (Response?.Matches != null)
+  {
+    <div class="root-grid">
+      @foreach (var MatchData in Response.Matches)
+      {
+        <frontend_blazor.Components.Elements.MatchCard
+          MatchData=MatchData
+        />
+      }
+    </div>
   }
-  
+
 }
 
 @code {
   MatchListResponse? Response;
-  string initial             = "Starting Data";
+  string initial = "Starting Data";
   protected async override Task OnInitializedAsync()
   {
     string? PlayersUrl = Configuration["Urls:Players"];
