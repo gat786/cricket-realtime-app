@@ -9,9 +9,16 @@
 <PageTitle>We will stream score changes here</PageTitle>
 
 <div>
-  @if (MatchDetailsFetched != null) {
-    @foreach (var Team in MatchDetailsFetched.Data.Teams) {
-      <p>@Team</p>
+  @if (MatchDetailsFetched != null){
+    @if (Teams != null && Teams.Count > 1) {
+      <div class="match-title">
+        <h2>@Teams[0].Name vs. @Teams[1].Name</h2> 
+      </div>
+      <div class="match-details">
+        <span>@MatchDetailsFetched.Data.Dates[0]</span>
+        <span>@MatchDetailsFetched.Data.City</span>
+        <span>@MatchDetailsFetched.Data.MatchType</span>
+      </div>
     }
   }
 </div>
@@ -21,18 +28,30 @@
   public string StreamTitle {get; set;}
 
   public MatchDetailsRoot? MatchDetailsFetched;
+  HttpClient client = new HttpClient();
+  public List<Team> Teams = new List<Team>();
 
 
   protected async override Task OnInitializedAsync(){
     string? ScoreUrl = Configuration["Urls:Score"];
+    string? TeamsUrl = Configuration["Urls:Teams"];
 
     string _WebsocketUrl = $"{ScoreUrl}/live/{StreamTitle}";
     string _MatchDetailUrl = $"{ScoreUrl}/{StreamTitle}";
 
-    var client = new HttpClient();
-
     string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
     MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
+
+    if (MatchDetailsFetched != null) {
+      foreach(string teamName in MatchDetailsFetched.Data.Teams){
+        string teamDataString = await client.GetStringAsync($"{TeamsUrl}/{teamName.ToLower()}");
+        Team? teamData = JsonSerializer.Deserialize<Team>(teamDataString);
+        if (teamData != null) {
+          Teams.Add(teamData);
+        }
+      }
+    }
+    
     Console.WriteLine(MatchDetailsFetched?.MatchId);
   }
 }

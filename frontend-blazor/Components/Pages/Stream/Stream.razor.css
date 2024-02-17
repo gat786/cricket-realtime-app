@@ -1,0 +1,14 @@
+.small-flag-img{
+  height: 50px;
+  width: 80px;
+}
+
+.match-title{
+  display: flex;
+}
+
+.match-details{
+  display: flex;
+  gap: 1rem;
+  margin-block: 8px;
+}
