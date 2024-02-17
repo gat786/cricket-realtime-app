@@ -1,3 +1,6 @@
+namespace frontend_blazor.Models
+{
+  
 using System.Text.Json.Serialization;
 
 public class Match
@@ -48,4 +51,5 @@ public class MatchListResponse
     }
 
   }
+}
 }

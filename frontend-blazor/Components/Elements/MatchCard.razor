@@ -1,13 +1,14 @@
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using frontend_blazor.Utils
+@using frontend_blazor.Models
 @inject IHttpClientFactory ClientFactory
 @inject IConfiguration Configuration
 @attribute [StreamRendering]
 
 @if (TeamsData.Count > 1)
 {
-  <a href="/stream/some-id" class="root-div">
+  <a href="/stream/@MatchData.FileId" class="root-div">
   <div class="d-flex flex-row p-4 my-2 border border-black">
     <div class="">
       <img style=@img_style src=@TeamsData[0].ImagePath />
@@ -35,7 +36,6 @@
   string Team2 = "";
 
   string img_style = "height: 80px; width: 130px;";
-
   List<Team> TeamsData = new List<Team>();
 
   protected async override Task OnInitializedAsync()
@@ -52,11 +52,16 @@
       var client = new HttpClient();
       foreach (var TeamName in MatchData.Teams)
       {
-        string TeamDataString = await client.GetStringAsync($"{TeamsUrl}/{TeamName.ToLower()}");
-        Team? TeamData = JsonSerializer.Deserialize<Team>(TeamDataString);
-        if (TeamData != null)
-        {
-          TeamsData.Add(TeamData);
+        try{
+          string TeamDataString = await client.GetStringAsync($"{TeamsUrl}/{TeamName.ToLower()}");
+          Team? TeamData = JsonSerializer.Deserialize<Team>(TeamDataString);
+          if (TeamData != null)
+          {
+            TeamsData.Add(TeamData);
+          }
+        }
+        catch (Exception e) {
+
         }
       }
     }

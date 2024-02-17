@@ -143,7 +143,8 @@ def get_match(match_id: str):
       match_json = json.load(match_file)
       info_data = get_match_info(match_json)
       return {
-        "match_id": "Match Found below is the data about the match",
+        "message": "Match Found below is the data about the match",
+        "match_id": match_id,
         "data": info_data
       }
   else:

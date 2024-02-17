@@ -1,0 +1,36 @@
+@page "/stream/{streamtitle}"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using frontend_blazor.Models
+@inject IHttpClientFactory ClientFactory
+@inject IConfiguration Configuration
+@attribute [StreamRendering]
+
+<PageTitle>We will stream score changes here</PageTitle>
+
+<div>
+  @if (MatchDetailsFetched != null) {
+    
+  }
+</div>
+
+@code{
+  [Parameter]
+  public string StreamTitle {get; set;}
+
+  public MatchDetailsRoot? MatchDetailsFetched;
+
+
+  protected async override Task OnInitializedAsync(){
+    string? ScoreUrl = Configuration["Urls:Score"];
+
+    string _WebsocketUrl = $"{ScoreUrl}/live/{StreamTitle}";
+    string _MatchDetailUrl = $"{ScoreUrl}/{StreamTitle}";
+
+    var client = new HttpClient();
+
+    string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
+    MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
+    Console.WriteLine(MatchDetailsFetched.match_id);
+  }
+}
