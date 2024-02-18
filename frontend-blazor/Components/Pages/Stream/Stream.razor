@@ -129,15 +129,20 @@
     string streamingUrl = $"{ScoreUrl}/live/";
     Console.WriteLine($"Url: {streamingUrl}");
 
-    using (var ws = new WebSocket(streamingUrl)){
-      ws.OnMessage += (sender, e) => {
-        Console.WriteLine($"Message Received: {e.Data}");
-      };
+    var ws = new WebSocket(streamingUrl);
+    ws.Connect();
 
-      ws.Connect();
-      ws.Send("Hello");
-    }
+    var connection = ws.IsAlive;
+    Console.WriteLine($"Connection is {connection}");
+     
+    var streamInitiationObj   = new MatchStreamInitializer(StreamTitle);
+    var streamInitiaitionJson = JsonSerializer.Serialize<MatchStreamInitializer>(streamInitiationObj);
 
+    ws.Send(streamInitiaitionJson);
+
+    ws.OnMessage += (sender, e) => {
+      Console.WriteLine(e.Data);
+    }; 
 
     @* ClientWebSocket wsClient = new ClientWebSocket(); 
     Uri websocketUri = new Uri(streamingUrl);

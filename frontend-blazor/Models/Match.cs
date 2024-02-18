@@ -1,55 +1,68 @@
-namespace frontend_blazor.Models
-{
-  
 using System.Text.Json.Serialization;
 
-public class Match
+namespace frontend_blazor.Models
 {
-  [JsonPropertyName("match_date")]
-  public string? Date { get; set; }
 
-  [JsonPropertyName("match_player_gender")]
-  public string? PlayerGender { get; set; }
+  using System.Text.Json.Serialization;
 
-  [JsonPropertyName("match_level")]
-  public string? MatchLevel { get; set; }
+  public class Match
+  {
+    [JsonPropertyName("match_date")]
+    public string? Date { get; set; }
 
-  [JsonPropertyName("match_game_type")]
-  public string? GameType { get; set; }
+    [JsonPropertyName("match_player_gender")]
+    public string? PlayerGender { get; set; }
 
-  [JsonPropertyName("match_title")]
-  public string? Title { get; set; }
+    [JsonPropertyName("match_level")]
+    public string? MatchLevel { get; set; }
 
-  [JsonPropertyName("match_file_id")]
-  public string? FileId { get; set; }
-  
-  [JsonPropertyName("match_teams")]
-  public List<string>? Teams { get; set; }
+    [JsonPropertyName("match_game_type")]
+    public string? GameType { get; set; }
 
-  public override string ToString() {
-    return $"(Date: {Date}, Level: {MatchLevel}, Type: {GameType}, Title: {Title}, FileId: {FileId})";
-  }
-}
+    [JsonPropertyName("match_title")]
+    public string? Title { get; set; }
 
-public class MatchListResponse
-{
-  [JsonPropertyName("match_list")]
-  public List<Match>? Matches { get; set; }
+    [JsonPropertyName("match_file_id")]
+    public string? FileId { get; set; }
 
-  public override string ToString() {
-    if (Matches == null ) {
-      return "";
+    [JsonPropertyName("match_teams")]
+    public List<string>? Teams { get; set; }
+
+    public override string ToString()
+    {
+      return $"(Date: {Date}, Level: {MatchLevel}, Type: {GameType}, Title: {Title}, FileId: {FileId})";
     }
-    else if (Matches.Count < 1)  {
-      return "[]";
-    }else {
-      string data = "";
-      foreach(var MatchData in Matches){
-        data = data + MatchData.ToString();
+  }
+
+  public class MatchListResponse
+  {
+    [JsonPropertyName("match_list")]
+    public List<Match>? Matches { get; set; }
+
+    public override string ToString()
+    {
+      if (Matches == null)
+      {
+        return "";
       }
-      return data;
-    }
+      else if (Matches.Count < 1)
+      {
+        return "[]";
+      }
+      else
+      {
+        string data = "";
+        foreach (var MatchData in Matches)
+        {
+          data = data + MatchData.ToString();
+        }
+        return data;
+      }
 
+    }
   }
 }
-}
+
+public record MatchStreamInitializer(
+  [property: JsonPropertyName("match_id")] string MatchId
+);
