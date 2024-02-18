@@ -2,6 +2,8 @@
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using frontend_blazor.Models
+@using WebSocketSharp
+@using System.Text
 @inject IHttpClientFactory ClientFactory
 @inject IConfiguration Configuration
 @attribute [StreamRendering]
@@ -122,6 +124,31 @@
   }
   
 
+  private async Task StartStreaming() {
+    string? ScoreUrl = Configuration["Urls:ScoreWebSocket"];
+    string streamingUrl = $"{ScoreUrl}/live/";
+    Console.WriteLine($"Url: {streamingUrl}");
+
+    using (var ws = new WebSocket(streamingUrl)){
+      ws.OnMessage += (sender, e) => {
+        Console.WriteLine($"Message Received: {e.Data}");
+      };
+
+      ws.Connect();
+      ws.Send("Hello");
+    }
+
+
+    @* ClientWebSocket wsClient = new ClientWebSocket(); 
+    Uri websocketUri = new Uri(streamingUrl);
+    await wsClient.ConnectAsync(websocketUri, CancellationToken.None);
+
+    var buffer = new byte[1024];
+    var result = await wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+    var message = Encoding.UTF8.GetString(buffer,0, result.Count);
+    Console.WriteLine($"Received Message: {message}"); *@
+  }
+
   protected async override Task OnInitializedAsync(){
     string? ScoreUrl = Configuration["Urls:Score"];
     string? TeamsUrl = Configuration["Urls:Teams"];
@@ -142,6 +169,7 @@
       }
     }
     
-    Console.WriteLine(MatchDetailsFetched?.MatchId);
+    Console.WriteLine($"Starting Streaming of {MatchDetailsFetched?.MatchId}");
+    StartStreaming();
   }
 }

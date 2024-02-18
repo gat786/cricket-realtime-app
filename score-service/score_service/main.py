@@ -3,6 +3,7 @@ import os
 import json
 import time
 import asyncio
+from json.decoder import JSONDecodeError
 
 from score_service.utils import setup
 from score_service.utils import exports
@@ -62,11 +63,12 @@ def get_match_info(match_json):
   
   return match_info
 
-@app.websocket("/live/")
+@app.websocket_route("/live/")
 async def live_score(websocket: WebSocket):
   await websocket.accept()
   while True:
     data = await websocket.receive_text()
+    print(f"received: {data}")
     try:
       message = json.loads(data)
       if "match_id" in message:
@@ -123,13 +125,16 @@ async def live_score(websocket: WebSocket):
           "help": "Please send a valid message in format {'match_id': 12345} where 12345 is match_id"
         }
         await websocket.send_text(message)
-    except Exception as e:
-      print(e)
+    except JSONDecodeError as e:
+      print("Exception is: ",e)
       message = {
         "message": "Invalid JSON",
         "help": "Please send a valid JSON in format {'match_id': 12345} where 12345 is match_id"
       }
-      await websocket.send_text(message)
+      print(f"Message sent: {message}")
+      await websocket.send_text(
+        json.dumps(message)
+      )
 
 @app.get("/list")
 def match_list():
