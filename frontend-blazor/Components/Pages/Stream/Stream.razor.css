@@ -12,3 +12,82 @@
   gap: 1rem;
   margin-block: 8px;
 }
+
+.type{
+  font-weight: 600;
+}
+
+.country-flags{
+  height: 80px;
+  width: 120px;
+}
+
+.match-details-top{
+  display: flex;
+  justify-content: space-between;
+}
+
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 200px);
+
+  gap: 1rem;
+  margin-block: 1rem;
+}
+
+.scores-panel {
+  grid-row: 1 / 6;
+  grid-column: 1 / 5;
+}
+
+.scores-panel .tabpanel {
+  background-color: #fff;
+
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+  padding: 1rem;
+}
+
+.players-panel {
+  grid-column: 5 / 7;
+  grid-row: 1 / 6; 
+}
+
+.players-panel .tabpanel {
+  background-color: #fff;
+
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+  padding: 1rem;
+}
+
+.team-name-button{
+  background-color: #fff;
+  padding-inline: 1rem;
+  box-shadow: none;
+}
+
+.caption {
+  font-size: small;
+  font-weight: 300;
+}
+
+.selected-team {
+  background-color: var(--cinnabar);
+  color: #fff;
+}
+
+.player-thumbnail {
+  height: 40px;
+  width: 40px;
+}
+
+.player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-block: 2rem;
+}
