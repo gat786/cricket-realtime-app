@@ -1,0 +1,16 @@
+name: Release/Tag Pushed
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: first step
+        run: |
+          echo "Hello world"
+          echo "I run when a tag is pushed"

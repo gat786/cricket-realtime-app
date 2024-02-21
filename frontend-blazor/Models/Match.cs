@@ -61,8 +61,7 @@ namespace frontend_blazor.Models
 
     }
   }
+  public record MatchStreamInitializer(
+    [property: JsonPropertyName("match_id")] string MatchId
+  );
 }
-
-public record MatchStreamInitializer(
-  [property: JsonPropertyName("match_id")] string MatchId
-);
