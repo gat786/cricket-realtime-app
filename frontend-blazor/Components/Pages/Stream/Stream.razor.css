@@ -87,7 +87,12 @@
 
 .player-list {
   display: flex;
+  width: 100%;
   flex-direction: column;
   gap: 1rem;
-  margin-block: 2rem;
+  margin-block: 1rem;
+}
+
+.player-list thead tr {
+  width: 100%;
 }

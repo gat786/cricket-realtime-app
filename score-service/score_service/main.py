@@ -146,7 +146,7 @@ async def live_score(websocket: WebSocket):
             })
         else:
           await websocket.send_json({
-            "type": "information",
+            "type": "error-message",
             "data": {
               "message": "Match ID Not Found, Please send a valid match id to start streaming"
             }
