@@ -81,18 +81,18 @@
               </tr>
             </thead>
             @* <tbody>
-              @foreach (Player player in playersList[Teams?[0].Name])
-              {
-                <tr>
-                  <td>
-                    <img src=@player.ImagePath class="player-thumbnail" alt=@player.Fullname />
-                  </td>
-                  <td class="item">
-                    <span>@player.Fullname</span>
-                  </td>
-                </tr>
-              }
-            </tbody> *@
+        @foreach (Player player in playersList[Teams?[0].Name])
+        {
+        <tr>
+        <td>
+        <img src=@player.ImagePath class="player-thumbnail" alt=@player.Fullname />
+        </td>
+        <td class="item">
+        <span>@player.Fullname</span>
+        </td>
+        </tr>
+        }
+        </tbody> *@
           </table>
         }
       </div>
@@ -102,18 +102,18 @@
 
 @code {
   [Parameter]
-  public string StreamTitle { get; set; }
+  public string? StreamTitle { get; set; }
 
   public MatchDetailsRoot? MatchDetailsFetched;
 
   HttpClient client = new HttpClient();
   WebSocket? wsClient;
   public List<Team> Teams = new List<Team>();
-  public Dictionary<string,List<Player>> playersList { get; set; }
-  
+  public Dictionary<string, List<Player>>? playersList { get; set; }
+
 
   @functions {
-    public string CurrentlySelectedTeam { get; set; }
+    public string? CurrentlySelectedTeam { get; set; }
 
     public async Task fetchTeamPlayers(string teamName)
     {
@@ -125,113 +125,127 @@
 
       List<string>? playersList = MatchDetailsFetched?.Data.Players[CurrentlySelectedTeam];
 
-      foreach (var player in playersList)
+      if (playersList != null)
       {
-        string playersInfoUrl = $"{PlayersUrl}/search";
-        PlayerSearchModel searchModel = new PlayerSearchModel()
+        foreach (var player in playersList)
         {
-          Name = player,
-          CountryName = CurrentlySelectedTeam
-        };
-        HttpResponseMessage responseMessage = await client.PostAsJsonAsync<PlayerSearchModel>(playersInfoUrl, searchModel);
-
-        if (responseMessage.IsSuccessStatusCode)
-        {
-          string response = await responseMessage.Content.ReadAsStringAsync();
-          PlayersSearchResponse playersSearchResponse = JsonSerializer.Deserialize<PlayersSearchResponse>(response);
-          if (playersSearchResponse != null && playersSearchResponse.Players.Count > 0)
+          string playersInfoUrl = $"{PlayersUrl}/search";
+          PlayerSearchModel searchModel = new PlayerSearchModel()
           {
-            Player mostCloseResult = playersSearchResponse.Players[0];
-            playersListObject.Add(mostCloseResult);
-          } else {
-            Player unfoundPlayer = new Player(player,player, player);
-            playersListObject.Add(unfoundPlayer);
+            Name = player,
+            CountryName = CurrentlySelectedTeam
+          };
+          HttpResponseMessage responseMessage = await client.PostAsJsonAsync<PlayerSearchModel>(playersInfoUrl, searchModel);
+
+          if (responseMessage.IsSuccessStatusCode)
+          {
+            string response = await responseMessage.Content.ReadAsStringAsync();
+            PlayersSearchResponse? playersSearchResponse = JsonSerializer.Deserialize<PlayersSearchResponse>(response);
+            if (playersSearchResponse != null && playersSearchResponse.Players.Count > 0)
+            {
+              Player mostCloseResult = playersSearchResponse.Players[0];
+              playersListObject.Add(mostCloseResult);
+            }
+            else
+            {
+              Player unfoundPlayer = new Player(player, player, player);
+              playersListObject.Add(unfoundPlayer);
+            }
           }
         }
+
       }
     }
   }
 
 
-  private async Task StartStreaming()
-  {
-    string? ScoreUrl = Configuration["Urls:ScoreWebSocket"];
-    string streamingUrl = $"{ScoreUrl}/live/";
-    Console.WriteLine($"Url: {streamingUrl}");
+    private async Task StartStreaming()
+    {
+      if (StreamTitle == null) {
+        return;
+      }
+      string? ScoreUrl = Configuration["Urls:ScoreWebSocket"];
+      string streamingUrl = $"{ScoreUrl}/live/";
+      Console.WriteLine($"Url: {streamingUrl}");
 
-    wsClient = new WebSocket(streamingUrl);
-    wsClient.Connect();
+      wsClient = new WebSocket(streamingUrl);
+      wsClient.Connect();
 
-    var connection = wsClient.IsAlive;
-    Console.WriteLine($"Connection is {connection}");
+      var connection = wsClient.IsAlive;
+      Console.WriteLine($"Connection is {connection}");
 
-    var streamInitiationObj = new MatchStreamInitializer(StreamTitle);
-    var streamInitiaitionJson = JsonSerializer.Serialize<MatchStreamInitializer>(
+      var streamInitiationObj = new MatchStreamInitializer(StreamTitle);
+      var streamInitiaitionJson = JsonSerializer.Serialize<MatchStreamInitializer>(
       streamInitiationObj
-    );
+      );
 
-    wsClient.Send(streamInitiaitionJson);
+      wsClient.Send(streamInitiaitionJson);
 
-    wsClient.OnMessage += (sender, e) =>
-    {
-      Console.WriteLine(e.Data);
-      WebsocketResponseType? messageType = ParseWebsocketData.GetMessageType(e.Data);
-      if (messageType != null) {
-        if (messageType == WebsocketResponseType.BallData) {
-
-        }
-        else if (messageType == WebsocketResponseType.ErrorMessage ) {
-
-        }
-        else if (messageType == WebsocketResponseType.Information ) {
-
-        }
-        else if (messageType == WebsocketResponseType.Outcome) {
-
-        }
-      }
-    };
-  }
-
-  protected async override Task OnInitializedAsync()
-  {
-    string? ScoreUrl = Configuration["Urls:Score"];
-    string? TeamsUrl = Configuration["Urls:Teams"];
-
-    string _WebsocketUrl = $"{ScoreUrl}/live/{StreamTitle}";
-    string _MatchDetailUrl = $"{ScoreUrl}/{StreamTitle}";
-
-    string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
-    MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
-
-    if (MatchDetailsFetched != null)
-    {
-      foreach (string teamName in MatchDetailsFetched.Data.Teams)
+      wsClient.OnMessage += (sender, e) =>
       {
-        string teamDataString = await client.GetStringAsync($"{TeamsUrl}/{teamName.ToLower()}");
-
-        Team? teamData = JsonSerializer.Deserialize<Team>(teamDataString);
-        if (teamData != null)
+        Console.WriteLine(e.Data);
+        WebsocketResponseType? messageType = ParseWebsocketData.GetMessageType(e.Data);
+        if (messageType != null)
         {
-          Teams.Add(teamData);
+          if (messageType == WebsocketResponseType.BallData)
+          {
+
+          }
+          else if (messageType == WebsocketResponseType.ErrorMessage)
+          {
+
+          }
+          else if (messageType == WebsocketResponseType.Information)
+          {
+
+          }
+          else if (messageType == WebsocketResponseType.Outcome)
+          {
+
+          }
         }
+      };
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+  string? ScoreUrl = Configuration["Urls:Score"];
+  string? TeamsUrl = Configuration["Urls:Teams"];
+
+  string _WebsocketUrl = $"{ScoreUrl}/live/{StreamTitle}";
+  string _MatchDetailUrl = $"{ScoreUrl}/{StreamTitle}";
+
+  string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
+  MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
+
+  if (MatchDetailsFetched != null)
+  {
+    foreach (string teamName in MatchDetailsFetched.Data.Teams)
+    {
+      string teamDataString = await client.GetStringAsync($"{TeamsUrl}/{teamName.ToLower()}");
+
+      Team? teamData = JsonSerializer.Deserialize<Team>(teamDataString);
+      if (teamData != null)
+      {
+        Teams.Add(teamData);
+      }
+    }
+  }
+
+  Console.WriteLine($"Starting Streaming of {MatchDetailsFetched?.MatchId}");
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+      if (firstRender)
+      {
+        StartStreaming();
       }
     }
 
-    Console.WriteLine($"Starting Streaming of {MatchDetailsFetched?.MatchId}");
-  }
-
-  protected override void OnAfterRender(bool firstRender)
-  {
-    if (firstRender)
+    public void Dispose()
     {
-      StartStreaming();
+      Console.WriteLine("Disposing Websocket Connection");
+      wsClient?.Close();
     }
-  }
-
-  public void Dispose()
-  {
-    Console.WriteLine("Disposing Websocket Connection");
-    wsClient?.Close();
-  }
 }

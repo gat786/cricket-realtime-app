@@ -12,6 +12,9 @@ namespace frontend_blazor.Utils {
   public static class ParseWebsocketData {
     public static WebsocketResponseType? GetMessageType(string data) {
       dynamic? dataDynamic = JsonSerializer.Deserialize<dynamic>(data);
+      if (dataDynamic == null) {
+        return null;
+      }
       JsonElement type = dataDynamic.GetProperty("type");
       string? messageType = type.GetString();
 
