@@ -106,6 +106,8 @@
 
   public MatchDetailsRoot? MatchDetailsFetched;
 
+  public MatchState? matchState = null;
+
   HttpClient client = new HttpClient();
   WebSocket? wsClient;
   public List<Team> Teams = new List<Team>();
@@ -185,28 +187,42 @@
       {
         Console.WriteLine(e.Data);
         WebsocketResponseType? messageType = ParseWebsocketData.GetMessageType(e.Data);
-        if (messageType != null)
+        dynamic? dataDynamic = JsonSerializer.Deserialize<dynamic>(e.Data);
+        if (messageType is not null && dataDynamic is not null)
         {
+          dynamic dataToParse = dataDynamic.GetProperty("data");
           if (messageType == WebsocketResponseType.BallData)
           {
-
+            BallDataRoot ballDataRoot = JsonSerializer.Deserialize<BallDataRoot>(dataToParse);
+            
           }
           else if (messageType == WebsocketResponseType.ErrorMessage)
           {
-
+            
           }
           else if (messageType == WebsocketResponseType.Information)
           {
-
+            
           }
           else if (messageType == WebsocketResponseType.Outcome)
           {
-
+            OutcomeModel outcome = JsonSerializer.Deserialize<OutcomeModel>(dataToParse);
+          }
+          else if (messageType == WebsocketResponseType.MatchDetails){
+            MatchDetailsRoot matchDetailsRoot = JsonSerializer.Deserialize<MatchDetailsRoot>(dataToParse);
+            matchState = new MatchState(matchDetailsRoot.Data);
           }
         }
       };
     }
 
+    private async Task FetchPlayersList(Dictionary<string, List<string>> TeamPlayers) {
+      foreach(var team in TeamPlayers) {
+        foreach(var value in team.Value){
+          
+        }
+      }
+    }
     protected async override Task OnInitializedAsync()
     {
   string? ScoreUrl = Configuration["Urls:Score"];
@@ -218,7 +234,7 @@
   string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
   MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
 
-  if (MatchDetailsFetched != null)
+  if (MatchDetailsFetched is not null)
   {
     foreach (string teamName in MatchDetailsFetched.Data.Teams)
     {

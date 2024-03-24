@@ -1,16 +1,16 @@
 namespace frontend_blazor.Models {
   class BatsmanStat {
-    string FullName, FName, LName;
-    int RunsScored, BallsFaced, Fours, Sixes;
+    string? FullName, FName, LName;
+    int? RunsScored, BallsFaced, Fours, Sixes;
   }
 
   class BowlerStat {
-    string FullName, FName, LName;
+    string? FullName, FName, LName;
     int DeliveriesBowled, RunsGiven, WicketsTaken, LegalDeliveriesBowled;
   }
 
   class Innings {
-    string BattingTeam, BowlingTeam;
+    string? BattingTeam, BowlingTeam;
     List<BatsmanStat> BatsmanStats;
     List<BowlerStat> BowlerStats;
 
@@ -38,7 +38,7 @@ namespace frontend_blazor.Models {
     }
   }
 
-  class MatchState {
+  public class MatchState {
     Innings FirstInnings, SecondInnings;
     List<string> Teams;
     Dictionary<string, List<string>> TeamPlayers;

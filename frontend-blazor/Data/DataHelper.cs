@@ -49,5 +49,11 @@ namespace frontend_blazor.Data {
       }
       return null;
     }
+
+    public async Task<Player> GetPlayerAsync() {
+      PlayersUrl = Configuration["Urls:Players"];
+
+      return 0;
+    }
   }
 }

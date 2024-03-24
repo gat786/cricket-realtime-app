@@ -87,11 +87,11 @@ async def live_score(websocket: WebSocket):
             match_info = get_match_info(match_json=match_json)
             
             match_details = {
-              "type": "information",
+              "type": "match_details",
               "data": {
                 "match_id": match_id,
-                "message": "Match Found below is the data about the match",
-                "info": match_info
+                "message": "Match Found below is the details about the match",
+                "data": match_info
               }
             }
             
