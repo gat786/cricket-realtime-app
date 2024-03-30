@@ -5,6 +5,7 @@
 @using frontend_blazor.Utils
 @using WebSocketSharp
 @using System.Text
+@using frontend_blazor.Data
 @inject IHttpClientFactory ClientFactory
 @inject IConfiguration Configuration
 @attribute [StreamRendering]
@@ -59,19 +60,19 @@
         <div>
           <button
             class="team-name-button @(CurrentlySelectedTeam == MatchDetailsFetched.Data.Teams[0] ? "selected-team" : "")"
-            @onclick="(() => Console.WriteLine(MatchDetailsFetched.Data.Teams[0]))">
+            @onclick="(() => ChangeSelectedTeam(MatchDetailsFetched.Data.Teams[0]))">
             @MatchDetailsFetched.Data.Teams[0]
           </button>
           <button
             class="team-name-button @(CurrentlySelectedTeam == MatchDetailsFetched.Data.Teams[1] ? "selected-team" : "")"
-            @onclick="(() => Console.WriteLine(MatchDetailsFetched.Data.Teams[1]))">
+            @onclick="(() => ChangeSelectedTeam(MatchDetailsFetched.Data.Teams[1]))">
             @MatchDetailsFetched.Data.Teams[1]
           </button>
           <div class="caption">
             * Click on teams name to view its players
           </div>
         </div>
-        @if (CurrentlySelectedTeam != null)
+        @if (CurrentlySelectedTeam is not null)
         {
           <table class="player-list table">
             <thead>
@@ -80,19 +81,19 @@
                 <th scope="col">Player Name</th>
               </tr>
             </thead>
-            @* <tbody>
-        @foreach (Player player in playersList[Teams?[0].Name])
-        {
-        <tr>
-        <td>
-        <img src=@player.ImagePath class="player-thumbnail" alt=@player.Fullname />
-        </td>
-        <td class="item">
-        <span>@player.Fullname</span>
-        </td>
-        </tr>
-        }
-        </tbody> *@
+              <tbody>
+                @foreach (Player player in playersList[CurrentlySelectedTeam])
+                {
+                <tr>
+                  <td>
+                    <img src=@player.ImagePath class="player-thumbnail" alt=@player.Fullname />
+                  </td>
+                  <td class="item">
+                    <span>@player.Fullname</span>
+                  </td>
+                </tr>
+                }
+            </tbody>
           </table>
         }
       </div>
@@ -111,8 +112,12 @@
   HttpClient client = new HttpClient();
   WebSocket? wsClient;
   public List<Team> Teams = new List<Team>();
-  public Dictionary<string, List<Player>>? playersList { get; set; }
+  public Dictionary<string, List<Player>>? playersList { get; set; } = new Dictionary<string, List<Player>>();
 
+  private void ChangeSelectedTeam(string teamName) {
+    CurrentlySelectedTeam = teamName;
+    StateHasChanged();
+  }
 
   @functions {
     public string? CurrentlySelectedTeam { get; set; }
@@ -215,40 +220,49 @@
         }
       };
     }
-
-    private async Task FetchPlayersList(Dictionary<string, List<string>> TeamPlayers) {
-      foreach(var team in TeamPlayers) {
-        foreach(var value in team.Value){
-          
-        }
-      }
-    }
     protected async override Task OnInitializedAsync()
     {
-  string? ScoreUrl = Configuration["Urls:Score"];
-  string? TeamsUrl = Configuration["Urls:Teams"];
+      string? ScoreUrl = Configuration["Urls:Score"];
+      string? TeamsUrl = Configuration["Urls:Teams"];
 
-  string _WebsocketUrl = $"{ScoreUrl}/live/{StreamTitle}";
-  string _MatchDetailUrl = $"{ScoreUrl}/{StreamTitle}";
+      string _WebsocketUrl = $"{ScoreUrl}/live/{StreamTitle}";
+      string _MatchDetailUrl = $"{ScoreUrl}/{StreamTitle}";
 
-  string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
-  MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
+      string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
+      MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
 
-  if (MatchDetailsFetched is not null)
-  {
-    foreach (string teamName in MatchDetailsFetched.Data.Teams)
-    {
-      string teamDataString = await client.GetStringAsync($"{TeamsUrl}/{teamName.ToLower()}");
-
-      Team? teamData = JsonSerializer.Deserialize<Team>(teamDataString);
-      if (teamData != null)
+      if (MatchDetailsFetched is not null)
       {
-        Teams.Add(teamData);
-      }
-    }
-  }
+        foreach (string teamName in MatchDetailsFetched.Data.Teams)
+        {
+          string teamDataString = await client.GetStringAsync($"{TeamsUrl}/{teamName.ToLower()}");
 
-  Console.WriteLine($"Starting Streaming of {MatchDetailsFetched?.MatchId}");
+          Team? teamData = JsonSerializer.Deserialize<Team>(teamDataString);
+          if (teamData != null)
+          {
+            Teams.Add(teamData);
+          }
+        }
+        foreach(var team in MatchDetailsFetched.Data.Players) {
+          string teamName = team.Key;
+          playersList[teamName] = new List<Player>();
+          foreach(var playerName in team.Value){
+            var helper = new DataHelper(Configuration);
+
+            var playerSearchResponse = await helper.GetPlayerAsync(playerName, countryName: teamName);
+            if (playerSearchResponse is not null) {
+              if (playerSearchResponse.Players.Count > 0){
+                Player mostClosestResult = playerSearchResponse.Players[0];
+                if(mostClosestResult is not null){
+                  playersList[teamName].Add(mostClosestResult);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      Console.WriteLine($"Starting Streaming of {MatchDetailsFetched?.MatchId}");
     }
 
     protected override void OnAfterRender(bool firstRender)

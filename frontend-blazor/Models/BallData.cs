@@ -13,6 +13,7 @@ namespace frontend_blazor.Models {
 
     public record Wickets(
       [property: JsonPropertyName("kind")] string Kind,
+      [property: JsonPropertyName("fielders")]  Dictionary<string, string>? Fielders,
       [property: JsonPropertyName("player_out")] string PlayerOut
     );
 
