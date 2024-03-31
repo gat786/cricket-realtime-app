@@ -7,14 +7,18 @@ namespace frontend_blazor.Models {
         [property: JsonPropertyName("bowler")] string Bowler,
         [property: JsonPropertyName("non_striker")] string NonStriker,
         [property: JsonPropertyName("runs")] Runs Runs,
-        [property: JsonPropertyName("wickets")] Wickets? Wickets,
+        [property: JsonPropertyName("wickets")] List<Wicket>? Wickets,
         [property: JsonPropertyName("extras")] Dictionary<string, int>? Extras
     );
 
-    public record Wickets(
+    public record Wicket(
       [property: JsonPropertyName("kind")] string Kind,
-      [property: JsonPropertyName("fielders")]  Dictionary<string, string>? Fielders,
+      [property: JsonPropertyName("fielders")]  List<FielderInfo>? Fielders,
       [property: JsonPropertyName("player_out")] string PlayerOut
+    );
+
+    public record FielderInfo(
+      [property: JsonPropertyName("name")] string FielderName
     );
 
     public record BallDataRoot(

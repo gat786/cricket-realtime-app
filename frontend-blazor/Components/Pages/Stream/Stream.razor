@@ -49,7 +49,25 @@
 <div class="data-grid">
   <div class="scores-panel">
     <div class="tabpanel">
-      <h5>Scores</h5>
+      <h5>Match Details</h5>
+      @if (matchState is not null){
+        <p>@matchState?.TossDetails?.Winner has won the Toss and Decided to @matchState?.TossDetails?.Decision first</p>
+      }
+
+      <div class="tabbar">
+        <div class="tabbarHeader">
+          <div
+            class="tabbarItem @(ActiveInnings == 0 ? "active" : "")"
+            @onclick="(() => { ActiveInnings = 0; })">
+            First Innings
+          </div>
+          <div 
+            class="tabbarItem @(ActiveInnings == 1 ? "active" : "")"
+            @onclick="(() => {  ActiveInnings = 1; })">
+            Second Innings
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   @if (MatchDetailsFetched != null)
@@ -82,16 +100,18 @@
               </tr>
             </thead>
               <tbody>
-                @foreach (Player player in playersList[CurrentlySelectedTeam])
-                {
-                <tr>
-                  <td>
-                    <img src=@player.ImagePath class="player-thumbnail" alt=@player.Fullname />
-                  </td>
-                  <td class="item">
-                    <span>@player.Fullname</span>
-                  </td>
-                </tr>
+                @if (playersList is not null) {
+                  @foreach (Player player in playersList[CurrentlySelectedTeam])
+                  {
+                  <tr>
+                    <td>
+                      <img src=@player.ImagePath class="player-thumbnail" alt=@player.Fullname />
+                    </td>
+                    <td class="item">
+                      <span>@player.Fullname</span>
+                    </td>
+                  </tr>
+                  }
                 }
             </tbody>
           </table>
@@ -121,6 +141,7 @@
 
   @functions {
     public string? CurrentlySelectedTeam { get; set; }
+    public int ActiveInnings {get; set;} = 0;
 
     public async Task fetchTeamPlayers(string teamName)
     {
@@ -199,7 +220,14 @@
           if (messageType == WebsocketResponseType.BallData)
           {
             BallDataRoot ballDataRoot = JsonSerializer.Deserialize<BallDataRoot>(dataToParse);
-            
+            if (ballDataRoot.Innings == 0 ){
+              // update first innings
+              matchState?.FirstInnings.UpdateInningsScore(ballDataRoot);
+            }
+            else if (ballDataRoot.Innings == 1) {
+              // update second innings
+              matchState?.SecondInnings.UpdateInningsScore(ballDataRoot);
+            }
           }
           else if (messageType == WebsocketResponseType.ErrorMessage)
           {
@@ -216,6 +244,7 @@
           else if (messageType == WebsocketResponseType.MatchDetails){
             MatchDetailsRoot matchDetailsRoot = JsonSerializer.Deserialize<MatchDetailsRoot>(dataToParse);
             matchState = new MatchState(matchDetailsRoot.Data);
+            InvokeAsync(() => StateHasChanged());
           }
         }
       };
