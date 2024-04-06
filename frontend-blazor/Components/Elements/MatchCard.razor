@@ -6,7 +6,7 @@
 @inject IConfiguration Configuration
 @attribute [StreamRendering]
 
-@if (TeamsData.Count > 1)
+@if (TeamsData.Count > 1 && MatchData is not null)
 {
   <a href="/stream/@MatchData.FileId" class="root-div">
   <div class="d-flex flex-row p-4 my-2 border border-black">
@@ -30,7 +30,7 @@
 
 @code {
   [Parameter]
-  public Match MatchData {get; set;}
+  public Match? MatchData {get; set;}
 
   string Team1 = "";
   string Team2 = "";
@@ -42,7 +42,7 @@
   {
     
     string? TeamsUrl = Configuration["Urls:Teams"];
-    if (MatchData != null){
+    if (MatchData is not null){
       if (MatchData.Teams?.ToList<string>().Count > 1)
       {
         Team1 = MatchData.Teams.ToList<string>()[0];
@@ -50,6 +50,9 @@
       }
 
       var client = new HttpClient();
+      if (MatchData.Teams is null) {
+        return;
+      }
       foreach (var TeamName in MatchData.Teams)
       {
         try{
@@ -61,7 +64,7 @@
           }
         }
         catch (Exception e) {
-
+          Console.WriteLine(e.StackTrace);
         }
       }
     }

@@ -87,7 +87,51 @@
 
 .player-list {
   display: flex;
+  width: 100%;
   flex-direction: column;
   gap: 1rem;
-  margin-block: 2rem;
+  margin-block: 1rem;
+}
+
+.player-list thead tr {
+  width: 100%;
+}
+
+.tabbar {
+  border-style: dashed;
+  border-width: 1px;
+  border-color: gainsboro;
+}
+
+.tabbarItem {
+  cursor: pointer;
+}
+
+.tabbarItem.first {
+  padding-inline-end: 1rem;
+  padding-inline-start: 0.5rem;
+  border-style: solid;
+  border-color: gray;  
+}
+
+.active {
+  border-bottom: none !important;
+  border-color: black !important;
+}
+
+.tabbarItem:first-child {
+  padding-inline: 0.5rem;
+}
+
+.tabbarItem:last-child {
+  padding-inline: 0.5rem;
+}
+
+.tabbarItem {
+  border-style: solid;
+  border-color: gray;
+}
+
+.tabbarHeader {
+  display: flex;
 }

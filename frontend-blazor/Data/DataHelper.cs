@@ -8,16 +8,15 @@ using Microsoft.AspNetCore.Components;
 namespace frontend_blazor.Data {
 
   public class DataHelper {
-
-    [Inject]
-    private IConfiguration Configuration {get; set;}
+    private IConfiguration Configuration;
     HttpClient client = new HttpClient();
     string TeamsUrl;
     string PlayersUrl;
     string ScoreUrl;
 
-    public DataHelper(){
+    public DataHelper(IConfiguration configuration){
       // Console.WriteLine("Data helper constructor: ", Configuration);
+      Configuration = configuration;
       
     }
 
@@ -46,6 +45,20 @@ namespace frontend_blazor.Data {
 
       if (matchListResponse != null){
        return matchListResponse; 
+      }
+      return null;
+    }
+
+    public async Task<PlayersSearchResponse?> GetPlayerAsync(string name, string countryName) {
+      PlayersUrl = Configuration["Urls:Players"];
+
+      string playersInfoUrl = $"{PlayersUrl}/search";
+      var playerSearchModel = new PlayerSearchModel{ Name = name, CountryName = countryName};
+      var result = await client.PostAsJsonAsync(playersInfoUrl, playerSearchModel);
+      if(result.IsSuccessStatusCode){
+        var response = await result.Content.ReadAsStringAsync();
+        var playerInfo = JsonSerializer.Deserialize<PlayersSearchResponse>(response);
+        return playerInfo;
       }
       return null;
     }

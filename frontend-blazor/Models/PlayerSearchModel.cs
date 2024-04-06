@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 
 namespace frontend_blazor.Models {
-  public class PlayerSearchModel {
+  public record PlayerSearchModel {
     [JsonPropertyName("name")]
     public string Name {get; set;}
     [JsonPropertyName("country_name")]

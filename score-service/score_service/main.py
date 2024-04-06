@@ -75,30 +75,39 @@ async def live_score(websocket: WebSocket):
         match_id = message["match_id"]
         if os.path.exists(f"{data_root}/matches/{match_id}.json"):
           starting_stream_message = {
-            "message": f"Match ID received starting match streaming for match {match_id}"
+            "type": "information",
+            "data": {
+              "message": f"Match ID received starting match streaming for match {match_id}"
+            }
           }
-          await websocket.send_text(json.dumps(starting_stream_message))
+          await websocket.send_json(starting_stream_message)
           
           with open(f"{data_root}/matches/{match_id}.json") as f:
             match_json = json.load(f)
             match_info = get_match_info(match_json=match_json)
             
             match_details = {
-              "match_id": match_id,
-              "message": "Match Found below is the data about the match",
-              "info": match_info
+              "type": "match_details",
+              "data": {
+                "match_id": match_id,
+                "message": "Match Found below is the details about the match",
+                "data": match_info
+              }
             }
             
             await asyncio.sleep(1)
-            await websocket.send_text(json.dumps(match_details))
+            await websocket.send_json(match_details)
             
             innings = match_json["innings"]
             
             for inning_number, inning in enumerate(innings):
               message = {
-                "message": f"Starting Inning {inning_number + 1}"
+                "type": "information",
+                "data": { 
+                  "message": f"Starting Inning {inning_number + 1}"
+                }
               }
-              await websocket.send_text(json.dumps(message))
+              await websocket.send_json(message)
               overs = inning["overs"]
               for over in overs:
                 over_no = over["over"]
@@ -106,34 +115,63 @@ async def live_score(websocket: WebSocket):
                 for delivery_no_in_over, delivery in enumerate(deliveries):
                   await asyncio.sleep(5)
                   data_to_send = {
-                    "over": over_no,
-                    "delivery": delivery_no_in_over,
-                    "innings": inning_number,
-                    "data": delivery
+                    "type": "ball_data",
+                    "data": {
+                      "over": over_no,
+                      "delivery": delivery_no_in_over,
+                      "innings": inning_number,
+                      "data": delivery
+                    }
                   }
-                  await websocket.send_text(json.dumps(data_to_send))
+                  await websocket.send_json(data_to_send)
             
             
-            await websocket.send_text("Match Streaming Ended")
-            await websocket.send_text("Result of the match")
-            await websocket.send_json(match_info["outcome"])
+            await websocket.send_json({
+                "type": "information",
+                "data": {
+                  "message": "Match Streaming Ended"
+                }
+              })
+            await websocket.send_json({
+              "type": "information",
+              "data": {
+                "message": "Result of the match"
+              }
+              }
+            )
+            
+            await websocket.send_json({
+              "type": "outcome", 
+              "data" : match_info["outcome"] 
+            })
         else:
-          await websocket.send_text("Match ID Not Found, Please send a valid match id to start streaming")
+          await websocket.send_json({
+            "type": "error-message",
+            "data": {
+              "message": "Match ID Not Found, Please send a valid match id to start streaming"
+            }
+          }
+        )
       else:
         message = {
-          "meessage": "Match ID Not Found in the message",
-          "help": "Please send a valid message in format {'match_id': 12345} where 12345 is match_id"
+          "type": "error-message",
+          "data": {
+            "message": "Match ID Not Found in the message",
+            "help": "Please send a valid message in format {'match_id': 12345} where 12345 is match_id"
+          }
         }
-        await websocket.send_text(message)
+        await websocket.send_json(message)
     except JSONDecodeError as e:
       print("Exception is: ",e)
       message = {
-        "message": "Invalid JSON",
-        "help": "Please send a valid JSON in format {'match_id': 12345} where 12345 is match_id"
+        "type": "error-message",
+        "data": {
+          "message": "Invalid JSON",
+          "help": "Please send a valid JSON in format {'match_id': 12345} where 12345 is match_id"
+        }
       }
-      print(f"Message sent: {message}")
-      await websocket.send_text(
-        json.dumps(message)
+      await websocket.send_json(
+        message
       )
 
 @app.get("/list")

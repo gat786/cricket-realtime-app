@@ -2,21 +2,26 @@
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using frontend_blazor.Models
+@using frontend_blazor.Utils
 @using WebSocketSharp
 @using System.Text
+@using frontend_blazor.Data
 @inject IHttpClientFactory ClientFactory
 @inject IConfiguration Configuration
 @attribute [StreamRendering]
+@implements IDisposable
 @rendermode InteractiveServer
 
 <PageTitle>Live Streaming here</PageTitle>
 
 <div class="match-details-top">
-  @if (MatchDetailsFetched != null){
-    @if (Teams != null && Teams.Count > 1) {
+  @if (MatchDetailsFetched != null)
+  {
+    @if (Teams != null && Teams.Count > 1)
+    {
       <div>
         <div class="match-title">
-          <h2>@Teams[0].Name vs. @Teams[1].Name</h2> 
+          <h2>@Teams[0].Name vs. @Teams[1].Name</h2>
         </div>
         <div class="match-details">
           <div>
@@ -28,7 +33,7 @@
             <span class="data">@MatchDetailsFetched.Data.City</span>
           </div>
           <div>
-            <span class="type">Match Type:</span> 
+            <span class="type">Match Type:</span>
             <span class="data">@MatchDetailsFetched.Data.MatchType</span>
           </div>
         </div>
@@ -44,137 +49,345 @@
 <div class="data-grid">
   <div class="scores-panel">
     <div class="tabpanel">
-      <h5>Scores</h5>
+      <h5>Match Details</h5>
+      @if (matchState is not null){
+        <p>@matchState?.TossDetails?.Winner has won the Toss and Decided to @matchState?.TossDetails?.Decision first</p>
+      }
+
+      <div class="tabbar">
+        <div class="tabbarHeader">
+          <div
+            class="tabbarItem @(ActiveInnings == 0 ? "active" : "")"
+            @onclick="(() => { 
+              ActiveInnings = 0;
+              InningsDataToShow = matchState?.FirstInnings;
+            })">
+            First Innings
+          </div>
+          <div 
+            class="tabbarItem @(ActiveInnings == 1 ? "active" : "")"
+            @onclick="(() => {
+              ActiveInnings = 1;
+              InningsDataToShow = matchState?.SecondInnings;
+            })">
+            Second Innings
+          </div>
+        </div>
+        <div class="tabbarData">
+          @if ((InningsDataToShow is not null) && (InningsDataToShow.BatsmanStats is not null)) {
+            <div>
+              <img 
+                src=@Teams?.Find(x => x.Name == InningsDataToShow.BattingTeam)?.ImagePath 
+                class="country-flags"/>
+              
+              <span>
+                Score @InningsDataToShow?.Score / @InningsDataToShow?.WicketsFallen
+                Extras - @InningsDataToShow?.Extras
+              </span>
+              <span>
+                VS
+              </span>
+
+              <img
+                src=@Teams?.Find(x => x.Name == InningsDataToShow.BowlingTeam)?.ImagePath
+                class="country-flags"/>
+            </div>
+
+            <span>
+              Batsmans
+            </span>
+            @foreach (var batsman in InningsDataToShow?.BatsmanStats) {
+              <table>
+                <tr class="batsman">
+                  <td class="batsman-name">
+                    <span>@batsman.FullName</span>
+                  </td>
+                  <td class="batsman-score">
+                    <span>@batsman.RunsScored</span>
+                  </td>
+                  <td class="batsman-balls">
+                    <span>@batsman.BallsFaced</span>
+                  </td>
+                  <td class="batsman-fours">
+                    <span>@batsman.Fours</span>
+                  </td>
+                  <td class="batsman-sixes">
+                    <span>@batsman.Sixes</span>
+                  </td>
+                </tr>
+              </table>
+            }
+
+            <span>
+              Bowlers
+            </span>
+
+            <table>
+              @foreach(var bowler in InningsDataToShow?.BowlerStats) {
+                <tr class="bowler">
+                  <td class="bowler-name">
+                    <span>@bowler.FullName</span>
+                  </td>
+                  <td class="bowler-overs">
+                    <span>@bowler.LegalDeliveriesBowled</span>
+                  </td>
+                  <td class="bowler-runs">
+                    <span>@bowler.RunsGiven</span>
+                  </td>
+                  <td class="bowler-wickets">
+                    <span>@bowler.WicketsTaken</span>
+                  </td>
+                </tr>
+              }
+            </table>
+          }
+        </div>
+      </div>
     </div>
   </div>
-  @if (MatchDetailsFetched != null) {
+  @if (MatchDetailsFetched != null)
+  {
     <div class="players-panel">
       <div class="tabpanel">
         <h5>Players</h5>
         <div>
-          <button 
+          <button
             class="team-name-button @(CurrentlySelectedTeam == MatchDetailsFetched.Data.Teams[0] ? "selected-team" : "")"
-            @onclick="(() => SelectTeam(MatchDetailsFetched.Data.Teams[0]))">
+            @onclick="(() => ChangeSelectedTeam(MatchDetailsFetched.Data.Teams[0]))">
             @MatchDetailsFetched.Data.Teams[0]
           </button>
           <button
             class="team-name-button @(CurrentlySelectedTeam == MatchDetailsFetched.Data.Teams[1] ? "selected-team" : "")"
-            @onclick="(() => SelectTeam(MatchDetailsFetched.Data.Teams[1]))">
+            @onclick="(() => ChangeSelectedTeam(MatchDetailsFetched.Data.Teams[1]))">
             @MatchDetailsFetched.Data.Teams[1]
           </button>
           <div class="caption">
             * Click on teams name to view its players
           </div>
         </div>
-        @if (CurrentlySelectedTeam != null) {
-          <div class="player-list">
-            @foreach (Player player in SelectedTeamPlayersList){
-              <div class="item">
-                <img src=@player.ImagePath class="player-thumbnail" alt=@player.Fullname />
-                <span>@player.Fullname</span>
-              </div>
-            }
-          </div>
+        @if (CurrentlySelectedTeam is not null)
+        {
+          <table class="player-list table">
+            <thead>
+              <tr>
+                <th scope="col">Photo</th>
+                <th scope="col">Player Name</th>
+              </tr>
+            </thead>
+              <tbody>
+                @if (playersList is not null) {
+                  @foreach (Player player in playersList[CurrentlySelectedTeam])
+                  {
+                  <tr>
+                    <td>
+                      <img src=@player.ImagePath class="player-thumbnail" alt=@player.Fullname />
+                    </td>
+                    <td class="item">
+                      <span>@player.Fullname</span>
+                    </td>
+                  </tr>
+                  }
+                }
+            </tbody>
+          </table>
         }
       </div>
     </div>
   }
 </div>
 
-@code{
+@code {
   [Parameter]
-  public string StreamTitle {get; set;}
+  public string? StreamTitle { get; set; }
 
   public MatchDetailsRoot? MatchDetailsFetched;
+  public Innings? InningsDataToShow;
+
+  public MatchState? matchState = null;
 
   HttpClient client = new HttpClient();
+  WebSocket? wsClient;
   public List<Team> Teams = new List<Team>();
+  public Dictionary<string, List<Player>>? playersList { get; set; } = new Dictionary<string, List<Player>>();
 
-  @functions{
-    public string CurrentlySelectedTeam {get; set;}
-    public List<Player> SelectedTeamPlayersList {get; set;} = new List<Player>();
+  private void ChangeSelectedTeam(string teamName) {
+    CurrentlySelectedTeam = teamName;
+    StateHasChanged();
+  }
 
-    public async Task SelectTeam(string TeamName) {
+  @functions {
+    public string? CurrentlySelectedTeam { get; set; }
+    public int ActiveInnings {get; set;} = 0;
+
+    public async Task fetchTeamPlayers(string teamName)
+    {
       string? PlayersUrl = Configuration["Urls:Players"];
 
-      Console.WriteLine($"Selecting {TeamName}");
-      CurrentlySelectedTeam = TeamName;
-      SelectedTeamPlayersList = new List<Player>();
+      Console.WriteLine($"Selecting {teamName}");
+      CurrentlySelectedTeam = teamName;
+      var playersListObject = new List<Player>();
 
       List<string>? playersList = MatchDetailsFetched?.Data.Players[CurrentlySelectedTeam];
-      
-      foreach(var player in playersList) {
-        string playersInfoUrl = $"{PlayersUrl}/search";
-        PlayerSearchModel searchModel = new PlayerSearchModel(){
-          Name = player, 
-          CountryName = CurrentlySelectedTeam
-        };
-        HttpResponseMessage responseMessage = await client.PostAsJsonAsync<PlayerSearchModel>(playersInfoUrl,searchModel);
 
-        if (responseMessage.IsSuccessStatusCode) {
-          string response = await responseMessage.Content.ReadAsStringAsync();
-          PlayersSearchResponse playersSearchResponse = JsonSerializer.Deserialize<PlayersSearchResponse>(response);
-          if (playersSearchResponse != null && playersSearchResponse.Players.Count > 0) {
-            Player mostCloseResult = playersSearchResponse.Players[0];
-            SelectedTeamPlayersList.Add(mostCloseResult);
+      if (playersList != null)
+      {
+        foreach (var player in playersList)
+        {
+          string playersInfoUrl = $"{PlayersUrl}/search";
+          PlayerSearchModel searchModel = new PlayerSearchModel()
+          {
+            Name = player,
+            CountryName = CurrentlySelectedTeam
+          };
+          HttpResponseMessage responseMessage = await client.PostAsJsonAsync<PlayerSearchModel>(playersInfoUrl, searchModel);
+
+          if (responseMessage.IsSuccessStatusCode)
+          {
+            string response = await responseMessage.Content.ReadAsStringAsync();
+            PlayersSearchResponse? playersSearchResponse = JsonSerializer.Deserialize<PlayersSearchResponse>(response);
+            if (playersSearchResponse != null && playersSearchResponse.Players.Count > 0)
+            {
+              Player mostCloseResult = playersSearchResponse.Players[0];
+              playersListObject.Add(mostCloseResult);
+            }
+            else
+            {
+              Player unfoundPlayer = new Player(player, player, player);
+              playersListObject.Add(unfoundPlayer);
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+
+    private async Task StartStreaming()
+    {
+      if (StreamTitle == null) {
+        return;
+      }
+      string? ScoreUrl = Configuration["Urls:ScoreWebSocket"];
+      string streamingUrl = $"{ScoreUrl}/live/";
+      Console.WriteLine($"Url: {streamingUrl}");
+
+      wsClient = new WebSocket(streamingUrl);
+      wsClient.Connect();
+
+      var connection = wsClient.IsAlive;
+      Console.WriteLine($"Connection is {connection}");
+
+      var streamInitiationObj = new MatchStreamInitializer(StreamTitle);
+      var streamInitiaitionJson = JsonSerializer.Serialize<MatchStreamInitializer>(
+      streamInitiationObj
+      );
+
+      wsClient.Send(streamInitiaitionJson);
+
+      wsClient.OnMessage += (sender, e) =>
+      {
+        Console.WriteLine(e.Data);
+        WebsocketResponseType? messageType = ParseWebsocketData.GetMessageType(e.Data);
+        dynamic? dataDynamic = JsonSerializer.Deserialize<dynamic>(e.Data);
+        if (messageType is not null && dataDynamic is not null)
+        {
+          dynamic dataToParse = dataDynamic.GetProperty("data");
+          if (messageType == WebsocketResponseType.BallData)
+          {
+            BallDataRoot ballDataRoot = JsonSerializer.Deserialize<BallDataRoot>(dataToParse);
+            if (ballDataRoot.Innings == 0 && ballDataRoot.Over == 0 && ballDataRoot.Delivery == 0)
+            {
+              ActiveInnings = 0;
+              InningsDataToShow = matchState?.FirstInnings;
+              InvokeAsync(() => StateHasChanged());
+            }
+            if (ballDataRoot.Innings == 0 ){
+              // update first innings
+              matchState?.FirstInnings.UpdateInningsScore(ballDataRoot);
+            }
+            else if (ballDataRoot.Innings == 1 ) {
+              // update second innings
+              matchState?.SecondInnings.UpdateInningsScore(ballDataRoot);
+            }
+            InvokeAsync(() => StateHasChanged());
+          }
+          else if (messageType == WebsocketResponseType.ErrorMessage)
+          {
+            
+          }
+          else if (messageType == WebsocketResponseType.Information)
+          {
+            
+          }
+          else if (messageType == WebsocketResponseType.Outcome)
+          {
+            OutcomeModel outcome = JsonSerializer.Deserialize<OutcomeModel>(dataToParse);
+          }
+          else if (messageType == WebsocketResponseType.MatchDetails){
+            MatchDetailsRoot matchDetailsRoot = JsonSerializer.Deserialize<MatchDetailsRoot>(dataToParse);
+            matchState = new MatchState(matchDetailsRoot.Data);
+          }
+        }
+        InvokeAsync(() => StateHasChanged());
+      };
+    }
+    protected async override Task OnInitializedAsync()
+    {
+      string? ScoreUrl = Configuration["Urls:Score"];
+      string? TeamsUrl = Configuration["Urls:Teams"];
+
+      string _WebsocketUrl = $"{ScoreUrl}/live/{StreamTitle}";
+      string _MatchDetailUrl = $"{ScoreUrl}/{StreamTitle}";
+
+      string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
+      MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
+
+      if (MatchDetailsFetched is not null)
+      {
+        foreach (string teamName in MatchDetailsFetched.Data.Teams)
+        {
+          string teamDataString = await client.GetStringAsync($"{TeamsUrl}/{teamName.ToLower()}");
+
+          Team? teamData = JsonSerializer.Deserialize<Team>(teamDataString);
+          if (teamData != null)
+          {
+            Teams.Add(teamData);
+          }
+        }
+        foreach(var team in MatchDetailsFetched.Data.Players) {
+          string teamName = team.Key;
+          playersList[teamName] = new List<Player>();
+          foreach(var playerName in team.Value){
+            var helper = new DataHelper(Configuration);
+
+            var playerSearchResponse = await helper.GetPlayerAsync(playerName, countryName: teamName);
+            if (playerSearchResponse is not null) {
+              if (playerSearchResponse.Players.Count > 0){
+                Player mostClosestResult = playerSearchResponse.Players[0];
+                if(mostClosestResult is not null){
+                  playersList[teamName].Add(mostClosestResult);
+                }
+              }
+            }
           }
         }
       }
+
+      Console.WriteLine($"Starting Streaming of {MatchDetailsFetched?.MatchId}");
     }
-  }
-  
 
-  private async Task StartStreaming() {
-    string? ScoreUrl = Configuration["Urls:ScoreWebSocket"];
-    string streamingUrl = $"{ScoreUrl}/live/";
-    Console.WriteLine($"Url: {streamingUrl}");
-
-    var ws = new WebSocket(streamingUrl);
-    ws.Connect();
-
-    var connection = ws.IsAlive;
-    Console.WriteLine($"Connection is {connection}");
-     
-    var streamInitiationObj   = new MatchStreamInitializer(StreamTitle);
-    var streamInitiaitionJson = JsonSerializer.Serialize<MatchStreamInitializer>(streamInitiationObj);
-
-    ws.Send(streamInitiaitionJson);
-
-    ws.OnMessage += (sender, e) => {
-      Console.WriteLine(e.Data);
-    }; 
-
-    @* ClientWebSocket wsClient = new ClientWebSocket(); 
-    Uri websocketUri = new Uri(streamingUrl);
-    await wsClient.ConnectAsync(websocketUri, CancellationToken.None);
-
-    var buffer = new byte[1024];
-    var result = await wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-    var message = Encoding.UTF8.GetString(buffer,0, result.Count);
-    Console.WriteLine($"Received Message: {message}"); *@
-  }
-
-  protected async override Task OnInitializedAsync(){
-    string? ScoreUrl = Configuration["Urls:Score"];
-    string? TeamsUrl = Configuration["Urls:Teams"];
-
-    string _WebsocketUrl = $"{ScoreUrl}/live/{StreamTitle}";
-    string _MatchDetailUrl = $"{ScoreUrl}/{StreamTitle}";
-
-    string MatchDetails = await client.GetStringAsync(_MatchDetailUrl);
-    MatchDetailsFetched = JsonSerializer.Deserialize<MatchDetailsRoot>(MatchDetails);
-
-    if (MatchDetailsFetched != null) {
-      foreach(string teamName in MatchDetailsFetched.Data.Teams){
-        string teamDataString = await client.GetStringAsync($"{TeamsUrl}/{teamName.ToLower()}");
-        Team? teamData = JsonSerializer.Deserialize<Team>(teamDataString);
-        if (teamData != null) {
-          Teams.Add(teamData);
-        }
+    protected override void OnAfterRender(bool firstRender)
+    {
+      if (firstRender)
+      {
+        StartStreaming();
       }
     }
-    
-    Console.WriteLine($"Starting Streaming of {MatchDetailsFetched?.MatchId}");
-    StartStreaming();
-  }
+
+    public void Dispose()
+    {
+      Console.WriteLine("Disposing Websocket Connection");
+      wsClient?.Close();
+    }
 }
