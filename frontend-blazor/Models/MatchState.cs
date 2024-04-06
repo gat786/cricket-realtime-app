@@ -3,6 +3,8 @@ namespace frontend_blazor.Models {
     public string? FullName, FName, LName;
     public int RunsScored, BallsFaced, Fours, Sixes = 0;
 
+    public bool hasBeenDismissed = false;
+
     public BatsmanStat(string player_name) {
       this.FullName = player_name;
       this.FName = player_name.Split(" ")[0];
@@ -17,6 +19,7 @@ namespace frontend_blazor.Models {
 
   public class Innings {
     public string? BattingTeam, BowlingTeam;
+    public int? InningNumber;
     public List<BatsmanStat> BatsmanStats;
     public List<BowlerStat> BowlerStats;
 
@@ -24,9 +27,10 @@ namespace frontend_blazor.Models {
     public BatsmanStat? OnstrikeBatsman, OffstrikeBatsman;
     public BowlerStat? CurrentBowler;
 
-    public Innings(string battingTeam, string bowlingTeam) {
+    public Innings(string battingTeam, string bowlingTeam, int InningNumber) {
       this.BattingTeam = battingTeam;
       this.BowlingTeam = bowlingTeam;
+      this.InningNumber = InningNumber;
 
       this.BatsmanStats = new List<BatsmanStat>();
       this.BowlerStats = new List<BowlerStat>();
@@ -52,11 +56,11 @@ namespace frontend_blazor.Models {
       //  when a inning is starting
       if (this.OnstrikeBatsman is null && this.OffstrikeBatsman is null) {
         BatsmanStat batsmanStat = new BatsmanStat(ballDataRoot.Data.Batter);
-        BatsmanStat offStrikeBatsmanStat = new BatsmanStat(ballDataRoot.Data.NonStriker);
         this.OnstrikeBatsman = batsmanStat;
-        this.OffstrikeBatsman = offStrikeBatsmanStat;
-
         this.BatsmanStats.Add(batsmanStat);
+
+        BatsmanStat offStrikeBatsmanStat = new BatsmanStat(ballDataRoot.Data.NonStriker);
+        this.OffstrikeBatsman = offStrikeBatsmanStat;
         this.BatsmanStats.Add(offStrikeBatsmanStat);
       }
 
@@ -68,6 +72,29 @@ namespace frontend_blazor.Models {
         }
       }
 
+      if (ballDataRoot?.Data.Wickets is not null) {
+        this.BatsmanStats.Find(player => player.FullName == ballDataRoot.Data?.Wickets[0]?.PlayerOut).hasBeenDismissed = true;
+        this.WicketsFallen += 1;
+      }
+
+      if (this.BatsmanStats.Find(player => player.FullName == ballDataRoot.Data.Batter) is null) {
+        BatsmanStat batsmanStat = new BatsmanStat(ballDataRoot.Data.Batter);
+        this.OnstrikeBatsman = batsmanStat;
+        this.BatsmanStats.Add(batsmanStat);
+      }
+
+      if(this.BowlerStats.Find(bowler => bowler.FullName == ballDataRoot.Data.Bowler) is null) {
+        BowlerStat bowlerStat = new BowlerStat();
+        bowlerStat.FullName = ballDataRoot.Data.Bowler;
+        this.BowlerStats.Add(bowlerStat);
+      }else {
+        var bowlerToUpdate = this.BowlerStats.Find(bowler => bowler.FullName == ballDataRoot.Data.Bowler);
+        bowlerToUpdate.DeliveriesBowled += 1;
+        bowlerToUpdate.RunsGiven += ballDataRoot.Data.Runs.Total;
+        if(ballDataRoot?.Data?.Runs?.Extras == 0) {
+          bowlerToUpdate.LegalDeliveriesBowled += 1;
+        }
+      }
     }
   }
 
@@ -88,11 +115,11 @@ namespace frontend_blazor.Models {
       string tossDecision    = this.TossDetails.Decision;
 
       if (tossDecision == "bat") {
-        this.FirstInnings   = new Innings(tossWinningTeam, tossLosingTeam);
-        this.SecondInnings  = new Innings(tossLosingTeam, tossWinningTeam);
+        this.FirstInnings   = new Innings(tossWinningTeam, tossLosingTeam, 0);
+        this.SecondInnings  = new Innings(tossLosingTeam, tossWinningTeam, 1);
       } else {
-        this.FirstInnings   = new Innings(tossLosingTeam, tossWinningTeam);
-        this.SecondInnings  = new Innings(tossWinningTeam, tossLosingTeam);
+        this.FirstInnings   = new Innings(tossLosingTeam, tossWinningTeam, 0);
+        this.SecondInnings  = new Innings(tossWinningTeam, tossLosingTeam, 1);
       }
     }
   }

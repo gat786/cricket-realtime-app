@@ -58,14 +58,89 @@
         <div class="tabbarHeader">
           <div
             class="tabbarItem @(ActiveInnings == 0 ? "active" : "")"
-            @onclick="(() => { ActiveInnings = 0; })">
+            @onclick="(() => { 
+              ActiveInnings = 0;
+              InningsDataToShow = matchState?.FirstInnings;
+            })">
             First Innings
           </div>
           <div 
             class="tabbarItem @(ActiveInnings == 1 ? "active" : "")"
-            @onclick="(() => {  ActiveInnings = 1; })">
+            @onclick="(() => {
+              ActiveInnings = 1;
+              InningsDataToShow = matchState?.SecondInnings;
+            })">
             Second Innings
           </div>
+        </div>
+        <div class="tabbarData">
+          @if ((InningsDataToShow is not null) && (InningsDataToShow.BatsmanStats is not null)) {
+            <div>
+              <img 
+                src=@Teams?.Find(x => x.Name == InningsDataToShow.BattingTeam)?.ImagePath 
+                class="country-flags"/>
+              
+              <span>
+                Score @InningsDataToShow?.Score / @InningsDataToShow?.WicketsFallen
+                Extras - @InningsDataToShow?.Extras
+              </span>
+              <span>
+                VS
+              </span>
+
+              <img
+                src=@Teams?.Find(x => x.Name == InningsDataToShow.BowlingTeam)?.ImagePath
+                class="country-flags"/>
+            </div>
+
+            <span>
+              Batsmans
+            </span>
+            @foreach (var batsman in InningsDataToShow?.BatsmanStats) {
+              <table>
+                <tr class="batsman">
+                  <td class="batsman-name">
+                    <span>@batsman.FullName</span>
+                  </td>
+                  <td class="batsman-score">
+                    <span>@batsman.RunsScored</span>
+                  </td>
+                  <td class="batsman-balls">
+                    <span>@batsman.BallsFaced</span>
+                  </td>
+                  <td class="batsman-fours">
+                    <span>@batsman.Fours</span>
+                  </td>
+                  <td class="batsman-sixes">
+                    <span>@batsman.Sixes</span>
+                  </td>
+                </tr>
+              </table>
+            }
+
+            <span>
+              Bowlers
+            </span>
+
+            <table>
+              @foreach(var bowler in InningsDataToShow?.BowlerStats) {
+                <tr class="bowler">
+                  <td class="bowler-name">
+                    <span>@bowler.FullName</span>
+                  </td>
+                  <td class="bowler-overs">
+                    <span>@bowler.LegalDeliveriesBowled</span>
+                  </td>
+                  <td class="bowler-runs">
+                    <span>@bowler.RunsGiven</span>
+                  </td>
+                  <td class="bowler-wickets">
+                    <span>@bowler.WicketsTaken</span>
+                  </td>
+                </tr>
+              }
+            </table>
+          }
         </div>
       </div>
     </div>
@@ -126,6 +201,7 @@
   public string? StreamTitle { get; set; }
 
   public MatchDetailsRoot? MatchDetailsFetched;
+  public Innings? InningsDataToShow;
 
   public MatchState? matchState = null;
 
@@ -220,14 +296,21 @@
           if (messageType == WebsocketResponseType.BallData)
           {
             BallDataRoot ballDataRoot = JsonSerializer.Deserialize<BallDataRoot>(dataToParse);
+            if (ballDataRoot.Innings == 0 && ballDataRoot.Over == 0 && ballDataRoot.Delivery == 0)
+            {
+              ActiveInnings = 0;
+              InningsDataToShow = matchState?.FirstInnings;
+              InvokeAsync(() => StateHasChanged());
+            }
             if (ballDataRoot.Innings == 0 ){
               // update first innings
               matchState?.FirstInnings.UpdateInningsScore(ballDataRoot);
             }
-            else if (ballDataRoot.Innings == 1) {
+            else if (ballDataRoot.Innings == 1 ) {
               // update second innings
               matchState?.SecondInnings.UpdateInningsScore(ballDataRoot);
             }
+            InvokeAsync(() => StateHasChanged());
           }
           else if (messageType == WebsocketResponseType.ErrorMessage)
           {
@@ -244,9 +327,9 @@
           else if (messageType == WebsocketResponseType.MatchDetails){
             MatchDetailsRoot matchDetailsRoot = JsonSerializer.Deserialize<MatchDetailsRoot>(dataToParse);
             matchState = new MatchState(matchDetailsRoot.Data);
-            InvokeAsync(() => StateHasChanged());
           }
         }
+        InvokeAsync(() => StateHasChanged());
       };
     }
     protected async override Task OnInitializedAsync()
