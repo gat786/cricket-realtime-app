@@ -1,8 +1,84 @@
 @page "/players"
+@attribute [StreamRendering]
 @using System.Text.Json
 @using System.Text.Json.Serialization
+@using frontend_blazor.Models
 @inject IHttpClientFactory ClientFactory
-
+@inject IConfiguration Configuration
 <PageTitle>Players</PageTitle>
 
-<h1>Players</h1>
+<div>
+  <h1>Players</h1>
+  <select name="country-select" id="country-select">
+    <option value="all">All</option>
+    @foreach (var country in CountriesList)
+    {
+      <option value="@country">@country</option>
+    }
+  </select>
+
+
+  <select name="position" id="position">
+    <option value="all">All</option>
+    <option value="Allrounder">Allrounder</option>
+    <option value="Wicketkeeper">Wicketkeeper</option>
+    <option value="Batsman">Batsman</option>
+    <option value="Bowler">Bowler</option>
+  </select>
+</div>
+
+<ol>
+  @foreach (var player in PlayersList)
+  {
+    <li>@player.Fullname</li>
+  }
+</ol>
+
+
+@code {
+
+  List<Player> PlayersList = new List<Player>();
+  List<string> CountriesList = new List<string>();
+  protected override async Task OnInitializedAsync() {
+    CountriesList = await getCountryNames();
+    List<Player>? playersResponse = await getPlayersList();
+    if(playersResponse is not null){
+      PlayersList = playersResponse;
+    }
+  }
+
+  private async Task<List<string>> getCountryNames() {
+    string? PlayersUrl = Configuration["Urls:Players"];
+    HttpClient client = new HttpClient();
+    var response = await client.GetAsync($"{PlayersUrl}/countries_list");
+    if (response.IsSuccessStatusCode) {
+      var responseString = await response.Content.ReadAsStringAsync();
+      if (responseString is null ){
+        return new List<string>();
+      }
+      CountriesNames? countriesList = JsonSerializer.Deserialize<CountriesNames>(responseString);
+      if(countriesList is not null){
+        List<string> countries = countriesList.Countries.ToList<string>();
+        return countries;
+      }
+    }
+    return null;
+  }  
+
+  private async Task<List<Player>>? getPlayersList() {
+    string? PlayersUrl = Configuration["Urls:Players"];
+    HttpClient client = new HttpClient();
+    var response = await client.GetAsync($"{PlayersUrl}/list");
+    if (response.IsSuccessStatusCode) {
+      var responseString = await response.Content.ReadAsStringAsync();
+      if (responseString is null ){
+        return null;
+      }
+      List<Player>? playersList = JsonSerializer.Deserialize<List<Player>>(responseString);
+      if(playersList is not null){
+        return playersList;
+      }
+    }
+    return null;
+  }
+}
