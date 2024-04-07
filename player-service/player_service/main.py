@@ -79,6 +79,15 @@ def get_players_list(country_name: str = None, position: PlayerPosition = None,)
     else:
       return df.to_dict(orient="records")
 
+@app.get("/countries_list")
+def get_countries_list():
+  logger.debug("Getting countries list to display in drop down button")
+  with open(f"{exports.data_root}/player/players_data.csv") as player_csv_file:
+    df: pd.DataFrame = pd.read_csv(player_csv_file)
+    country_names = df['country_name'].unique()
+    return {
+      "countries": country_names.tolist()
+    }
 
 app.add_middleware(
   CORSMiddleware,
