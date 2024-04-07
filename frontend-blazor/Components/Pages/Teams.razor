@@ -1,7 +1,64 @@
 @page "/teams"
 @using System.Text.Json
 @using System.Text.Json.Serialization
+@using frontend_blazor.Models
 @inject IHttpClientFactory ClientFactory
+@inject IConfiguration Configuration
 
 <PageTitle>Teams</PageTitle>
 <h1>Teams</h1>
+
+@if (teams != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Is National Team</th>
+                <th>Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var team in teams)
+            {
+                <tr>
+                    <td>@team.Id</td>
+                    <td>@team.Name</td>
+                    <td>@team.NationalTeam</td>
+                    <td>@team.Code</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+
+
+@code {
+    private List<Team> teams;
+
+    protected override async Task OnInitializedAsync()
+    {
+      teams = await GetTeams();
+    }
+
+    private async Task<List<Team>?> GetTeams()
+    {
+      string? TeamsUrl = Configuration["Urls:Teams"];
+      var client = new HttpClient();
+      var response = await client.GetAsync($"{TeamsUrl}/list");
+      if (response.IsSuccessStatusCode)
+      {
+        var responseStream = await response.Content.ReadAsStreamAsync();
+        var teams = await JsonSerializer.DeserializeAsync<List<Team>>(responseStream);
+        Console.WriteLine(teams.Count);
+        return teams;
+      }
+      return null;
+      
+    }
+}

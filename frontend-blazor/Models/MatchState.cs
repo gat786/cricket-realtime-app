@@ -48,6 +48,10 @@ namespace frontend_blazor.Models {
     }
 
     public void UpdateInningsScore(BallDataRoot ballDataRoot) {
+      if (ballDataRoot is null) {
+        return;
+      }
+
       this.Score                    += ballDataRoot.Data.Runs.Total;
       this.DeliveriesBowled         += 1;
       this.LegalDeliveriesBowled    += 1;
@@ -86,6 +90,11 @@ namespace frontend_blazor.Models {
       if(this.BowlerStats.Find(bowler => bowler.FullName == ballDataRoot.Data.Bowler) is null) {
         BowlerStat bowlerStat = new BowlerStat();
         bowlerStat.FullName = ballDataRoot.Data.Bowler;
+        bowlerStat.DeliveriesBowled = 1;
+        if(ballDataRoot?.Data?.Runs?.Extras == 0) {
+          bowlerStat.LegalDeliveriesBowled += 1;
+        }
+        bowlerStat.RunsGiven = ballDataRoot.Data.Runs.Total;
         this.BowlerStats.Add(bowlerStat);
       }else {
         var bowlerToUpdate = this.BowlerStats.Find(bowler => bowler.FullName == ballDataRoot.Data.Bowler);
