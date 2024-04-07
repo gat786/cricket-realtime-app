@@ -27,12 +27,29 @@
   </select>
 </div>
 
-<ol>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Fullname</th>
+      <th>Country</th>
+      <th>Position</th>
+      <th>Batting Style</th>
+      <th>Bowling Style</th>
+      <th>Position</th>
+    </tr>
+  </thead>
   @foreach (var player in PlayersList)
   {
-    <li>@player.Fullname</li>
+    <tr>
+      <td>@player.Fullname</td>
+      <td>@player.CountryName</td>
+      <td>@player.Position</td>
+      <td>@player.Battingstyle</td>
+      <td>@player.Bowlingstyle</td>
+      <td>@player.Position</td>
+    </tr>
   }
-</ol>
+</table>
 
 
 @code {
