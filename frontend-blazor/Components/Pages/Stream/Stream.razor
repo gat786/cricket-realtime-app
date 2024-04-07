@@ -92,12 +92,22 @@
                 src=@Teams?.Find(x => x.Name == InningsDataToShow.BowlingTeam)?.ImagePath
                 class="country-flags"/>
             </div>
+            @if (InningsDataToShow.DeliveriesBowled > 0) {
 
             <span>
               Batsmans
             </span>
-            @foreach (var batsman in InningsDataToShow?.BatsmanStats) {
-              <table>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Runs</th>
+                    <th scope="col">Balls Faced</th>
+                    <th scope="col">Fours</th>
+                    <th scope="col">Sixes</th>
+                  </tr>
+                </thead>
+                @foreach (var batsman in InningsDataToShow?.BatsmanStats) {
                 <tr class="batsman">
                   <td class="batsman-name">
                     <span>@batsman.FullName</span>
@@ -115,14 +125,22 @@
                     <span>@batsman.Sixes</span>
                   </td>
                 </tr>
+                }
               </table>
-            }
 
             <span>
               Bowlers
             </span>
 
-            <table>
+            <table class="table table-body">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Deliveries Bowled</th>
+                  <th scope="col">Runs</th>
+                  <th scope="col">Wickets</th>
+                </tr>
+              </thead>
               @foreach(var bowler in InningsDataToShow?.BowlerStats) {
                 <tr class="bowler">
                   <td class="bowler-name">
@@ -140,6 +158,10 @@
                 </tr>
               }
             </table>
+            } else {
+              <span>Innings Yet To Start</span>
+            }
+
           }
         </div>
       </div>
