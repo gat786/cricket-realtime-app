@@ -48,6 +48,10 @@ namespace frontend_blazor.Models {
     }
 
     public void UpdateInningsScore(BallDataRoot ballDataRoot) {
+      if (ballDataRoot is null) {
+        return;
+      }
+
       this.Score                    += ballDataRoot.Data.Runs.Total;
       this.DeliveriesBowled         += 1;
       this.LegalDeliveriesBowled    += 1;
