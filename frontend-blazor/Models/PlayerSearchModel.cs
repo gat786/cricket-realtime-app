@@ -7,4 +7,11 @@ namespace frontend_blazor.Models {
     [JsonPropertyName("country_name")]
     public string CountryName {get;set;}
   }
+
+  public record PlayerFilterModel {
+    [JsonPropertyName("position")]
+    public string Position {get; set;}
+    [JsonPropertyName("country_name")]
+    public string CountryName {get;set;}
+  }
 }
