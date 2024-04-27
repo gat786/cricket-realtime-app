@@ -61,7 +61,9 @@
       foreach (var TeamName in MatchData.Teams)
       {
         try{
-          string TeamDataString = await client.GetStringAsync($"{TeamsUrl}/{TeamName.ToLower()}");
+          string teamDataUrl = $"{TeamsUrl}/{TeamName.ToLower()}";
+          Console.WriteLine($"Fetching Data from Teams API {teamDataUrl}");
+          string TeamDataString = await client.GetStringAsync(teamDataUrl);
           Team? TeamData = JsonSerializer.Deserialize<Team>(TeamDataString);
           if (TeamData != null)
           {

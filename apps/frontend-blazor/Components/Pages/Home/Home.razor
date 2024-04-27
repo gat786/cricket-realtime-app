@@ -47,7 +47,9 @@ else
     string? ScoreUrl = Configuration["Urls:Score"];
 
     var client = new HttpClient();
-    var response = await client.GetAsync(ScoreUrl + "/list");
+    string scoreListUrl = $"{ScoreUrl}/list";
+    Console.WriteLine($"Fetching Data from Score API {scoreListUrl}");
+    var response = await client.GetAsync(scoreListUrl);
     if (response.IsSuccessStatusCode)
     {
       var responseStream = await response.Content.ReadAsStringAsync();

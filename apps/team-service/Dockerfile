@@ -10,6 +10,8 @@ ENV PYTHONUNBUFFERED 1
 ENV DATA_ROOT /usr/src/app/data
 ENV SERVER_PORT 8000
 
+# SERVER_PORT is the port that the FastAPI server will listen on
+# expose this port on the Docker container
 EXPOSE 8000
 
 # Install Poetry

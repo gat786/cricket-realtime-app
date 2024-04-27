@@ -8,11 +8,11 @@ RUN dotnet restore frontend-blazor.csproj
 
 COPY . .
 
-RUN dotnet build -o /app/build
+RUN dotnet build -c Release -o /app/build
 
 FROM build as publish
 
-RUN dotnet publish -o /app/publish /p:UseAppHost=false
+RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
 
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
