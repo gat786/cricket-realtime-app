@@ -1,0 +1,64 @@
+﻿@page "/"
+@attribute [StreamRendering]
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using frontend_blazor.Utils
+@using frontend_blazor.Models
+@using frontend_blazor.Data
+@inject IHttpClientFactory ClientFactory
+@inject IConfiguration Configuration
+@inject ILogger<Home> Logger
+
+<PageTitle>StreamLit</PageTitle>
+
+<h3>Welcome to StreamIt</h3>
+<hr />
+<br />
+<h4>Click on any of these matches to start streaming its content</h4>
+
+
+@if (Response == null)
+{
+  <p>Make sure we have Scores API Setup</p>
+}
+else
+{
+  if (Response?.Matches != null)
+  {
+    <div class="root-grid">
+      @foreach (var MatchData in Response.Matches)
+      {
+        <frontend_blazor.Components.Elements.MatchCard
+          MatchData=MatchData
+        />
+      }
+    </div>
+  }
+
+}
+
+@code {
+  MatchListResponse? Response;
+  string initial = "Starting Data";
+  protected async override Task OnInitializedAsync()
+  {
+    string? PlayersUrl = Configuration["Urls:Players"];
+    string? TeamsUrl = Configuration["Urls:Teams"];
+    string? ScoreUrl = Configuration["Urls:Score"];
+
+    var client = new HttpClient();
+    var response = await client.GetAsync(ScoreUrl + "/list");
+    if (response.IsSuccessStatusCode)
+    {
+      var responseStream = await response.Content.ReadAsStringAsync();
+      if (responseStream != null)
+      {
+        Response = JsonSerializer.Deserialize<MatchListResponse>(response.Content.ReadAsStream());
+      }
+    }
+    else
+    {
+      Console.WriteLine("Fetching Data failed");
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.filter {
+  border-width: 0.5px;
+  border-style: solid;
+  border-color: gray;
+}
+
+.filter button {
+  background-color: transparent;
+  margin: 0px;
+  padding: 0px;
+  border: none;
+}

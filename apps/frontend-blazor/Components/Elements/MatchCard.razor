@@ -1,0 +1,77 @@
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using frontend_blazor.Utils
+@using frontend_blazor.Models
+@inject IHttpClientFactory ClientFactory
+@inject IConfiguration Configuration
+@attribute [StreamRendering]
+
+@if (TeamsData.Count > 1 && MatchData is not null)
+{
+  <a href="/stream/@MatchData.FileId" class="root-div flex flex-col">
+  <div class="flex flex-col p-4 my-2 border border-black">
+    <div class="flex flex-row">
+      <div class="">
+        <img style=@img_style src=@TeamsData[0].ImagePath />
+        <p>@TeamsData[0].Name </p>
+      </div>
+
+      <div class="align-self-center mx-4">
+        VS
+      </div>
+
+      <div>
+        <img style=@img_style src=@TeamsData[1].ImagePath />
+        <p>@TeamsData[1].Name</p>
+      </div>
+    </div>
+    <div>
+      Date - @MatchData.Date
+    </div>
+  </div>
+</a>
+}
+
+
+@code {
+  [Parameter]
+  public Match? MatchData {get; set;}
+
+  string Team1 = "";
+  string Team2 = "";
+
+  string img_style = "height: 80px; width: 130px;";
+  List<Team> TeamsData = new List<Team>();
+
+  protected async override Task OnInitializedAsync()
+  {
+    
+    string? TeamsUrl = Configuration["Urls:Teams"];
+    if (MatchData is not null){
+      if (MatchData.Teams?.ToList<string>().Count > 1)
+      {
+        Team1 = MatchData.Teams.ToList<string>()[0];
+        Team2 = MatchData.Teams.ToList<string>()[1];
+      }
+
+      var client = new HttpClient();
+      if (MatchData.Teams is null) {
+        return;
+      }
+      foreach (var TeamName in MatchData.Teams)
+      {
+        try{
+          string TeamDataString = await client.GetStringAsync($"{TeamsUrl}/{TeamName.ToLower()}");
+          Team? TeamData = JsonSerializer.Deserialize<Team>(TeamDataString);
+          if (TeamData != null)
+          {
+            TeamsData.Add(TeamData);
+          }
+        }
+        catch (Exception e) {
+          Console.WriteLine(e.StackTrace);
+        }
+      }
+    }
+  }
+}
