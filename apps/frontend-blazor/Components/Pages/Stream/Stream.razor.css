@@ -89,7 +89,6 @@
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: 1rem;
   margin-block: 1rem;
 }
 
@@ -105,18 +104,22 @@
 
 .tabbarItem {
   cursor: pointer;
+  background-color: #a3a3a3;
+  color: #fff;
 }
 
 .tabbarItem.first {
   padding-inline-end: 1rem;
   padding-inline-start: 0.5rem;
   border-style: solid;
-  border-color: gray;  
+  border-color: gray;
 }
 
 .active {
   border-bottom: none !important;
-  border-color: black !important;
+  border-color: var(--russian-violet) !important;
+  background-color: #fff !important;
+  color: var(--russian-violet);
 }
 
 .tabbarItem:first-child {
@@ -139,4 +142,20 @@
 .table-body {
   width: 100%;
   padding: 1rem;
+}
+
+.tabbarData {
+  margin: 1rem;
+}
+
+.dismissed {
+  color: #a5a5a5;
+}
+
+.still-playing {
+  color: green;
+}
+
+.table {
+  border: solid 0.5px gray;
 }

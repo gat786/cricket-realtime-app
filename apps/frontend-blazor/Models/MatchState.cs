@@ -73,19 +73,28 @@ namespace frontend_blazor.Models {
         if (player.FullName == ballDataRoot.Data.Batter) {
           player.BallsFaced += 1;
           player.RunsScored += ballDataRoot.Data.Runs.Batter;
+          if (ballDataRoot.Data.Runs.Batter == 4) {
+            player.Fours += 1;
+          } else if (ballDataRoot.Data.Runs.Batter == 6) {
+            player.Sixes += 1;
+          }
         }
       }
 
+      // if a wicket has been taken
       if (ballDataRoot?.Data.Wickets is not null) {
         this.BatsmanStats.Find(player => player.FullName == ballDataRoot.Data?.Wickets[0]?.PlayerOut).hasBeenDismissed = true;
+        this.BowlerStats.Find(bowler => bowler.FullName == ballDataRoot.Data.Bowler).WicketsTaken += 1;
         this.WicketsFallen += 1;
       }
 
+      // if a new batsman is on strike and we dont have him in batsmanstats
       if (this.BatsmanStats.Find(player => player.FullName == ballDataRoot.Data.Batter) is null) {
         BatsmanStat batsmanStat = new BatsmanStat(ballDataRoot.Data.Batter);
         this.OnstrikeBatsman = batsmanStat;
         this.BatsmanStats.Add(batsmanStat);
       }
+
 
       if(this.BowlerStats.Find(bowler => bowler.FullName == ballDataRoot.Data.Bowler) is null) {
         BowlerStat bowlerStat = new BowlerStat();

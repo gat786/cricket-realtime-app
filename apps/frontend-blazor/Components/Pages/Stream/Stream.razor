@@ -75,27 +75,27 @@
         </div>
         <div class="tabbarData">
           @if ((InningsDataToShow is not null) && (InningsDataToShow.BatsmanStats is not null)) {
-            <div>
+            <div class="flex flex-row">
               <img 
                 src=@Teams?.Find(x => x.Name == InningsDataToShow.BattingTeam)?.ImagePath 
                 class="country-flags"/>
               
-              <span>
-                Score @InningsDataToShow?.Score / @InningsDataToShow?.WicketsFallen
-                Extras - @InningsDataToShow?.Extras
-              </span>
-              <span>
-                VS
-              </span>
-
-              <img
-                src=@Teams?.Find(x => x.Name == InningsDataToShow.BowlingTeam)?.ImagePath
-                class="country-flags"/>
+              <div class="margin-2">
+                <h5>
+                  Score - @InningsDataToShow?.Score / @InningsDataToShow?.WicketsFallen
+                </h5>
+                <div>
+                  Extras - @InningsDataToShow?.Extras
+                </div>
+                <div>
+                  Overs - @(@InningsDataToShow?.LegalDeliveriesBowled / 6).@(@InningsDataToShow?.LegalDeliveriesBowled % 6)
+                </div>
+              </div>
             </div>
             @if (InningsDataToShow.DeliveriesBowled > 0) {
 
             <span>
-              Batsmans
+              Batting Stats
             </span>
               <table class="table">
                 <thead>
@@ -108,7 +108,7 @@
                   </tr>
                 </thead>
                 @foreach (var batsman in InningsDataToShow?.BatsmanStats) {
-                <tr class="batsman">
+                <tr class="batsman @(@batsman.hasBeenDismissed ? "dismissed" : "still-playing")">
                   <td class="batsman-name">
                     <span>@batsman.FullName</span>
                   </td>
@@ -129,14 +129,14 @@
               </table>
 
             <span>
-              Bowlers
+              Bowling Stats
             </span>
 
             <table class="table table-body">
               <thead>
                 <tr>
                   <th scope="col">Name</th>
-                  <th scope="col">Deliveries Bowled</th>
+                  <th scope="col">Overs</th>
                   <th scope="col">Runs</th>
                   <th scope="col">Wickets</th>
                 </tr>
@@ -147,7 +147,9 @@
                     <span>@bowler.FullName</span>
                   </td>
                   <td class="bowler-overs">
-                    <span>@bowler.LegalDeliveriesBowled</span>
+                    <span>
+                      @(@bowler?.LegalDeliveriesBowled / 6).@(@bowler?.LegalDeliveriesBowled % 6)
+                    </span>
                   </td>
                   <td class="bowler-runs">
                     <span>@bowler.RunsGiven</span>
@@ -222,6 +224,9 @@
   [Parameter]
   public string? StreamTitle { get; set; }
 
+  public string? CurrentlySelectedTeam { get; set; }
+  public int ActiveInnings {get; set;} = 0;
+
   public MatchDetailsRoot? MatchDetailsFetched;
   public Innings? InningsDataToShow;
 
@@ -236,54 +241,6 @@
     CurrentlySelectedTeam = teamName;
     StateHasChanged();
   }
-
-  @functions {
-    public string? CurrentlySelectedTeam { get; set; }
-    public int ActiveInnings {get; set;} = 0;
-
-    public async Task fetchTeamPlayers(string teamName)
-    {
-      string? PlayersUrl = Configuration["Urls:Players"];
-
-      Console.WriteLine($"Selecting {teamName}");
-      CurrentlySelectedTeam = teamName;
-      var playersListObject = new List<Player>();
-
-      List<string>? playersList = MatchDetailsFetched?.Data.Players[CurrentlySelectedTeam];
-
-      if (playersList != null)
-      {
-        foreach (var player in playersList)
-        {
-          string playersInfoUrl = $"{PlayersUrl}/search";
-          PlayerSearchModel searchModel = new PlayerSearchModel()
-          {
-            Name = player,
-            CountryName = CurrentlySelectedTeam
-          };
-          HttpResponseMessage responseMessage = await client.PostAsJsonAsync<PlayerSearchModel>(playersInfoUrl, searchModel);
-
-          if (responseMessage.IsSuccessStatusCode)
-          {
-            string response = await responseMessage.Content.ReadAsStringAsync();
-            PlayersSearchResponse? playersSearchResponse = JsonSerializer.Deserialize<PlayersSearchResponse>(response);
-            if (playersSearchResponse != null && playersSearchResponse.Players.Count > 0)
-            {
-              Player mostCloseResult = playersSearchResponse.Players[0];
-              playersListObject.Add(mostCloseResult);
-            }
-            else
-            {
-              Player unfoundPlayer = new Player(player, player, player);
-              playersListObject.Add(unfoundPlayer);
-            }
-          }
-        }
-
-      }
-    }
-  }
-
 
     private async Task StartStreaming()
     {
@@ -394,6 +351,7 @@
             }
           }
         }
+        ChangeSelectedTeam(MatchDetailsFetched.Data.Teams[0]);
       }
 
       Console.WriteLine($"Starting Streaming of {MatchDetailsFetched?.MatchId}");
