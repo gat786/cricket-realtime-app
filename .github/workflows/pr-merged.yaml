@@ -30,26 +30,18 @@ jobs:
     
     - id: copy-data-folder
       name: Copy data folder to player and score service folders
+      working-directory: './apps'
       run: |
         cp -r data player-service/
         cp -r data score-service/
         cp -r data team-service/
       
-    - id: dockerx-build-and-push-frontend
-      name: Build and push (Frontend Svelte App)
-      uses: docker/build-push-action@v5
-      with:
-        push: true
-        context: frontend
-        tags: gat786/cric-frontend, gat786/cric-frontend:${{ github.sha }}
-        platforms: linux/arm64, linux/amd64
-
     - id: dockerx-build-and-push-ps
       name: Build and push (Player Service)
       uses: docker/build-push-action@v5
       with:
         push: true
-        context: player-service
+        context: apps/player-service
         tags: gat786/cric-player-service, gat786/cric-player-service:${{ github.sha }}
         platforms: linux/arm64, linux/amd64
     
@@ -58,7 +50,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        context: score-service
+        context: apps/score-service
         tags: gat786/cric-score-service, gat786/cric-score-service:${{ github.sha }}
         platforms: linux/arm64, linux/amd64
     
@@ -67,6 +59,15 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        context: team-service
+        context: apps/team-service
+        tags: gat786/cric-team-service, gat786/cric-team-service:${{ github.sha }}
+        platforms: linux/arm64, linux/amd64
+
+    - id: dockerx-build-and-push-razor
+      name: Build and push (Frontend Razor)
+      uses: docker/build-push-action@v5
+      with:
+        push: true
+        context: apps/frontend-blazor
         tags: gat786/cric-team-service, gat786/cric-team-service:${{ github.sha }}
         platforms: linux/arm64, linux/amd64
