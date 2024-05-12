@@ -1,0 +1,207 @@
+@page "/players"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using System.Xml.Linq
+@using frontend_blazor.Models
+@using Microsoft.AspNetCore.WebUtilities
+@inject IHttpClientFactory ClientFactory
+@inject IConfiguration Configuration
+@inject NavigationManager Navigation
+<PageTitle>Players</PageTitle>
+
+<div>
+  <h1>Players</h1>
+  <select 
+    name="country-select" 
+    id="country-select"
+    @onchange="OnCountrySelected">
+    <option value="all">All Countries</option>
+    @foreach (var country in CountriesList)
+    {
+      if (country == SelectedCountry){
+        <option value="@country" selected="@country">@country</option> 
+      }else {
+        <option value="@country">@country</option>
+      }
+    }
+  </select>
+
+
+  <select 
+    name="position" 
+    id="position"
+    @onchange="OnPositionSelected">
+    @foreach(var position in Positions)
+    {
+      if (position == SelectedPosition){
+        <option value="@position" selected="@position">@position</option>
+      }else {
+        <option value="@position">@position</option>
+      }
+    }
+  </select>
+</div>
+
+<div>
+  @if ((SelectedCountry is not null && SelectedCountry != "all") || (SelectedPosition is not null && SelectedPosition != "all")){
+    if(SelectedCountry != ""){
+    if (SelectedCountry == "all"){
+
+    }else {
+      <div class="filter">
+        @SelectedCountry
+        <button 
+          @onclick="RemoveSelectedPlayerCountry">X</button>
+      </div>
+    }
+    }
+    if(SelectedPosition is not null && SelectedPosition != ""){
+      if (SelectedPosition.ToLower() == "all") {
+        <span></span>
+      }
+      else {
+        <div class="filter">
+          @SelectedPosition 
+          <button
+            @onclick="RemoveSelectedPlayerType"
+            >X</button>
+        </div>
+      }
+    }
+  }
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Fullname</th>
+      <th>Country</th>
+      <th>Position</th>
+      <th>Batting Style</th>
+      <th>Bowling Style</th>
+    </tr>
+  </thead>
+  @foreach (var player in PlayersList)
+  {
+    <tr>
+      <td>@player.Fullname</td>
+      <td>@player.CountryName</td>
+      <td>@player.Position</td>
+      <td>@player.Battingstyle</td>
+      <td>@player.Bowlingstyle</td>
+    </tr>
+  }
+</table>
+
+
+@code {
+
+  List<Player> PlayersList = new List<Player>();
+  List<string> Positions = new List<string>([
+      "All",
+      "Allrounder",
+      "Wicketkeeper",
+      "Batsman",
+      "Bowler"
+    ]);
+
+  [SupplyParameterFromQuery( Name = "country")]
+  public string? SelectedCountry { get; set; }
+
+  [SupplyParameterFromQuery( Name = "position")]
+  string? SelectedPosition{ get; set; }
+
+  List<string> CountriesList = new List<string>();
+
+  private void OnCountrySelected(ChangeEventArgs e){
+    SelectedCountry = e?.Value?.ToString();
+    string uri = Navigation.GetUriWithQueryParameter("country", SelectedCountry);
+    Navigation.NavigateTo(uri, forceLoad: true);
+    StateHasChanged();
+  }
+
+  private void RemoveSelectedPlayerCountry(){
+    SelectedCountry = "";
+    string uri = Navigation.GetUriWithQueryParameter("position", SelectedPosition);
+    Navigation.NavigateTo(uri, forceLoad: true);
+    StateHasChanged();
+  }
+
+  private void RemoveSelectedPlayerType() {
+    SelectedPosition = "";
+    string uri = Navigation.GetUriWithQueryParameter("country", SelectedCountry);
+    Navigation.NavigateTo(uri, forceLoad: true);
+    StateHasChanged();
+  }
+
+  private void OnPositionSelected(ChangeEventArgs e) {
+    SelectedPosition = e?.Value?.ToString();
+    string uri = Navigation.GetUriWithQueryParameter("position", SelectedPosition);
+    Navigation.NavigateTo(uri, forceLoad: true);
+    StateHasChanged();
+  }
+
+
+
+  protected override async Task OnInitializedAsync() {
+    
+    CountriesList = await getCountryNames();
+    List<Player>? playersResponse = await getPlayersList(
+      SelectedTeam: SelectedCountry,
+      SelectedPosition: SelectedPosition
+    );
+    if(playersResponse is not null){
+      PlayersList = playersResponse;
+    }
+  }
+
+  private async Task<List<string>> getCountryNames() {
+    string? PlayersUrl = Configuration["Urls:Players"];
+    HttpClient client = new HttpClient();
+    var response = await client.GetAsync($"{PlayersUrl}/countries_list");
+    if (response.IsSuccessStatusCode) {
+      var responseString = await response.Content.ReadAsStringAsync();
+      if (responseString is null ){
+        return new List<string>();
+      }
+      CountriesNames? countriesList = JsonSerializer.Deserialize<CountriesNames>(responseString);
+      if(countriesList is not null){
+        List<string> countries = countriesList.Countries.ToList<string>();
+        return countries;
+      }
+    }
+    return null;
+  }  
+
+  private async Task<List<Player>>? getPlayersList(
+    string? SelectedTeam = "", 
+    string? SelectedPosition = ""
+  ) {
+    string? PlayersUrl = Configuration["Urls:Players"];
+    HttpClient client = new HttpClient();
+    Dictionary<string, string> filterModel = new Dictionary<string, string>();
+    if (SelectedTeam is not null && SelectedTeam != "all"){
+      filterModel["country_name"] = SelectedTeam;
+    }
+    if (SelectedPosition is not null && SelectedPosition.ToLower() != "all"){
+      filterModel["position"]     = SelectedPosition;
+    }
+    string playerSearchUrl = $"{PlayersUrl}/list";
+    string queryString = QueryHelpers.AddQueryString(playerSearchUrl, filterModel);
+    Console.WriteLine(queryString);
+    var response = await client.GetAsync(queryString);
+    if (response.IsSuccessStatusCode) {
+      var responseString = await response.Content.ReadAsStringAsync();
+      if (responseString is null ){
+        return null;
+      }
+      List<Player>? playersList = JsonSerializer.Deserialize<List<Player>>(responseString);
+      if(playersList is not null){
+        return playersList;
+      }
+    }
+    return null;
+  }
+}

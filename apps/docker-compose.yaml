@@ -1,0 +1,40 @@
+services:
+  score-service:
+    build: ./score-service
+    ports:
+      - 8000:8000
+    environment:
+      - SERVER_PORT=8000
+    volumes:
+      - ./data:/usr/src/app/data
+  player-service:
+    build: ./player-service
+    ports:
+      - 8001:8001
+    environment:
+      - SERVER_PORT=8001
+    volumes:
+      - ./data:/usr/src/app/data
+  team-service:
+    build: ./team-service
+    volumes:
+      - ./data:/usr/src/app/data
+    environment:
+      - SERVER_PORT=8002
+    ports:
+      - 8002:8002
+  # frontend:
+  #   build: ./frontend-blazor
+  #   environment:
+  #     - Urls__Score=http://score-service:8000
+  #     - Urls__Players=http://player-service:8001
+  #     - Urls__Teams=http://team-service:8002
+  #     - Urls__ScoreWebsocket=ws://score-service:8000
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #   develop:
+  #     watch:
+  #       - path: ./fronten d-blazor
+  #         action: rebuild
+  #   ports:
+  #     - 8080:8080
+  
