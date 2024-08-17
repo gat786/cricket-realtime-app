@@ -45,7 +45,6 @@
 
   protected async override Task OnInitializedAsync()
   {
-    
     string? TeamsUrl = Configuration["Urls:Teams"];
     if (MatchData is not null){
       if (MatchData.Teams?.ToList<string>().Count > 1)

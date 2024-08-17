@@ -26,9 +26,9 @@ else
   if (Response?.Matches != null)
   {
     <div class="root-grid">
-      @foreach (var MatchData in Response.Matches)
+      @foreach (var MatchData in Response?.Matches)
       {
-        <frontend_blazor.Components.Elements.MatchCard
+        <frontend_blazor.Components.Elements.MatchCard.MatchCard
           MatchData=MatchData
         />
       }
@@ -57,6 +57,7 @@ else
         if (responseStream != null)
         {
           Response = JsonSerializer.Deserialize<MatchListResponse>(response.Content.ReadAsStream());
+          StateHasChanged();
         }
       }
       else
