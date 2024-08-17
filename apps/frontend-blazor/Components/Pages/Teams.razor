@@ -39,7 +39,7 @@
 else
 {
     <p><em>Loading...</em></p>
-    if (ExceptionMessage is not null) {
+    if (ExceptionMessage != "") {
         <em>@ExceptionMessage</em>
     }
 }
@@ -47,7 +47,7 @@ else
 
 @code {
     private List<Team> teams;
-    private string ExceptionMessage;
+    private string ExceptionMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,9 +69,9 @@ else
         }
       }
       catch ( System.Net.Http.HttpRequestException E) {
-        Console.WriteLine("Error Getting Teams Data");
-        Console.WriteLine("Make sure the Teams API is Up");
-        ExceptionMessage = E.Message;
+        var message = "Error Getting Teams Data, Make sure the Teams API is Up";
+        Console.WriteLine(message, E.StackTrace);
+        ExceptionMessage = message;
       }
 
       return null;

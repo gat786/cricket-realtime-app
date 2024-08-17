@@ -9,16 +9,15 @@ services:
       - ./data:/usr/src/app/data
     profiles:
       - backend
-  player-service:
-    build: ./player-service
-    ports:
-      - 8001:8001
-    environment:
-      - SERVER_PORT=8001
-    volumes:
-      - ./data:/usr/src/app/data
-    profiles:
-      - backend
+  # player-service:
+  #   build: ./player-service
+  #   ports:
+  #     - 8001:8001
+  #   environment:
+  #     - SERVER_PORT=8001
+  #   volumes:
+  #     - ./data:/usr/src/app/data
+  #   profiles: []
   team-service:
     build: ./team-service
     volumes:
