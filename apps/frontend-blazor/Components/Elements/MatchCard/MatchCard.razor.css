@@ -1,6 +1,7 @@
 .root-div{
   display: flex;
-  width: fit-content;
+  width: 300px;
+  max-width: 400px;
 }
 
 .flex {
@@ -13,4 +14,9 @@
 
 .flex-col {
   flex-direction: column;
+}
+
+.country-image {
+  height: 30px;
+  width: 50px;
 }
