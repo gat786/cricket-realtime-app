@@ -5,10 +5,10 @@ FROM --platform=$BUILDPLATFORM python:3.9-slim
 WORKDIR /usr/src/app
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV DATA_ROOT /usr/src/app/data
-ENV SERVER_PORT 8000
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DATA_ROOT=/usr/src/app/data
+ENV SERVER_PORT=8000
 
 # SERVER_PORT is the port that the FastAPI server will listen on
 # expose this port on the Docker container

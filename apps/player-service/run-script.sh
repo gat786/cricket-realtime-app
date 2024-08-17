@@ -17,7 +17,7 @@ if [ "$( docker container inspect -f '{{.State.Running}}' $container_name )" = "
 fi
 
 echo "Running $service_name in a detached container"
-docker run -d -p 8001:8001 --name $container_name $container_name
+docker run -d -p 8001:8000 --name $container_name $container_name
 
 echo "Deleting the temporary data directory"
 rm -rf data
