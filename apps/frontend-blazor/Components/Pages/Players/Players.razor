@@ -42,35 +42,14 @@
       }
     }
   </select>
+
+  <button 
+    @onclick=ClearSearchFilters>
+    Clear Filters
+  </button>
 </div>
 
 <div>
-  @if ((SelectedCountry is not null && SelectedCountry != "all") || (SelectedPosition is not null && SelectedPosition != "all")){
-    if(SelectedCountry != ""){
-    if (SelectedCountry == "all"){
-
-    }else {
-      <div class="filter">
-        @SelectedCountry
-        <button 
-          @onclick="RemoveSelectedPlayerCountry">X</button>
-      </div>
-    }
-    }
-    if(SelectedPosition is not null && SelectedPosition != ""){
-      if (SelectedPosition.ToLower() == "all") {
-        <span></span>
-      }
-      else {
-        <div class="filter">
-          @SelectedPosition 
-          <button
-            @onclick="RemoveSelectedPlayerType"
-            >X</button>
-        </div>
-      }
-    }
-  }
 </div>
 
 <table class="table">
@@ -108,25 +87,26 @@
     ]);
 
   [SupplyParameterFromQuery( Name = "country")]
-  public string? SelectedCountry { get; set; }
+  public string SelectedCountry { get; set; } = "";
 
   [SupplyParameterFromQuery( Name = "position")]
-  string? SelectedPosition{ get; set; }
+  string SelectedPosition{ get; set; } = "";
 
   List<string> CountriesList = new List<string>();
 
   private void OnCountrySelected(ChangeEventArgs e){
-    SelectedCountry = e?.Value?.ToString();
-    string uri = Navigation.GetUriWithQueryParameter("country", SelectedCountry);
-    Navigation.NavigateTo(uri, forceLoad: true);
-    StateHasChanged();
+    var selectedCountryName = e?.Value?.ToString();
+    if (selectedCountryName != null){
+      SelectedCountry = selectedCountryName;
+      string uri = Navigation.GetUriWithQueryParameter("country", SelectedCountry);
+      Navigation.NavigateTo(uri, forceLoad: true);
+      StateHasChanged();
+    }
   }
 
-  private void RemoveSelectedPlayerCountry(){
-    SelectedCountry = "";
-    string uri = Navigation.GetUriWithQueryParameter("position", SelectedPosition);
+  private void ClearSearchFilters() {
+    string uri = "/players/";
     Navigation.NavigateTo(uri, forceLoad: true);
-    StateHasChanged();
   }
 
   private void RemoveSelectedPlayerType() {
@@ -175,7 +155,7 @@
     return null;
   }  
 
-  private async Task<List<Player>>? getPlayersList(
+  private async Task<List<Player>> getPlayersList(
     string? SelectedTeam = "", 
     string? SelectedPosition = ""
   ) {
@@ -195,13 +175,13 @@
     if (response.IsSuccessStatusCode) {
       var responseString = await response.Content.ReadAsStringAsync();
       if (responseString is null ){
-        return null;
+        return [];
       }
       List<Player>? playersList = JsonSerializer.Deserialize<List<Player>>(responseString);
       if(playersList is not null){
         return playersList;
       }
     }
-    return null;
+    return [];
   }
 }
