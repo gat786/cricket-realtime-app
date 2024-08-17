@@ -7,6 +7,8 @@ services:
       - SERVER_PORT=8000
     volumes:
       - ./data:/usr/src/app/data
+    profiles:
+      - backend
   player-service:
     build: ./player-service
     ports:
@@ -15,6 +17,8 @@ services:
       - SERVER_PORT=8001
     volumes:
       - ./data:/usr/src/app/data
+    profiles:
+      - backend
   team-service:
     build: ./team-service
     volumes:
@@ -23,6 +27,8 @@ services:
       - SERVER_PORT=8002
     ports:
       - 8002:8002
+    profiles:
+      - backend
   frontend:
     build: ./frontend-blazor
     environment:
@@ -33,4 +39,6 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 8080:8080
+    profiles:
+      - frontend
   
