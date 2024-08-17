@@ -69,5 +69,5 @@ jobs:
       with:
         push: true
         context: apps/frontend-blazor
-        tags: gat786/cric-team-service, gat786/cric-team-service:${{ github.sha }}
+        tags: gat786/cric-frontend-service, gat786/cric-frontend-service:${{ github.sha }}
         platforms: linux/arm64, linux/amd64
