@@ -98,12 +98,12 @@ tolerations: []
 affinity: {}
 
 frontend:
-  image: gat786/cric-frontend
+  image: gat786/cric-frontend-service
   tag: latest
   replicaCount: 1
 
   deployment:
-    containerPort: 3000
+    containerPort: 8080
   service:
     name: frontend-service
     port: 80

@@ -68,13 +68,13 @@ app: frontend
 
 {{- define "frontend.env" -}}
 env:
-  - name: PUBLIC_PLAYER_SERVICE_ENDPOINT
+  - name: Urls__Players
     value: http://{{ .Values.playerService.service.name }}.{{ .Release.Namespace }}.svc
-  - name: PUBLIC_TEAM_SERVICE_ENDPOINT
+  - name: Urls__Teams
     value: http://{{ .Values.teamService.service.name }}.{{ .Release.Namespace }}.svc
-  - name: PUBLIC_SCORE_SERVICE_ENDPOINT
+  - name: Urls__Score
     value: http://{{ .Values.scoreService.service.name }}.{{ .Release.Namespace }}.svc
-  - name: PUBLIC_SCORE_SOCKET_ENDPOINT
+  - name: Urls__ScoreWebsocket
     value: ws://{{ .Values.scoreService.service.name }}.{{ .Release.Namespace }}.svc
 {{- end }}
 

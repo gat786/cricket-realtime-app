@@ -98,6 +98,7 @@ app.add_middleware(
 )
 
 def run_app():
+  logger.info("Starting up Player service")
   uvicorn.run(
     "player_service.main:app", 
     host="0.0.0.0", 

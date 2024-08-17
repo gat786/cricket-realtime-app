@@ -3,6 +3,7 @@ import os
 import json
 import time
 import asyncio
+import logging
 from json.decoder import JSONDecodeError
 
 from score_service.utils import setup
@@ -22,7 +23,8 @@ origins = [
 ]
 data_root = exports.data_root
 app     = FastAPI()
-port    = 8000 
+port    = 8000
+logger  = logging.getLogger()
 if exports.port.isnumeric():
   port    = int(exports.port)
 
@@ -209,6 +211,7 @@ app.add_middleware(
 )
 
 def main():
+  logger.info("Starting up Score service")
   uvicorn.run(
     "score_service.main:app",
     host="0.0.0.0",

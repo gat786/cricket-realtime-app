@@ -66,6 +66,7 @@ app.add_middleware(
 )
 
 def run_app():
+  logger.info("Starting up Team service")
   uvicorn.run(
     "team_service.main:app", 
     host="0.0.0.0", 
