@@ -1,4 +1,4 @@
-build-docker-all:
+run-all:
 	echo "building all the images all at once"
 	
 	# cd frontend-blazor && bash run-script.sh
@@ -6,11 +6,11 @@ build-docker-all:
 	cd score-service && bash run-script.sh
 	cd team-service && bash run-script.sh
 
-build-ps-docker:
+run-player:
 	cd player-service && bash run-script.sh
 
-build-ts-docker:
+run-team:
 	cd team-service && bash run-script.sh
 
-build-ss-docker:
+run-score:
 	cd score-service && bash run-script.sh
