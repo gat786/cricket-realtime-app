@@ -1,0 +1,2032 @@
+{
+  "clientName": "icc",
+  "configCacheTime": 2,
+  "refreshInterval": 10,
+  "apiCacheTiming": 5,
+  "defaultLanguage": "en",
+  "isPushAllowed": false,
+  "pushStream": "",
+  "baseAPIPath": "https://alt-api.sportz.io/",
+  "intervalApi": "sifeeds/multisport/?methodtype=3&client=47f6f66713&sport=1&league=0&timezone=0530&language={{LANG}}&{{FEEDTYPE}}={{FEEDVALUE}}",
+  "common_apis": {
+    "translationApi": "",
+    "CUSTOM_NAMES": "",
+    "PLAYER_IMG": "https://assets-icc.sportz.io/static-assets/buildv3-stg/images/players/{{PLAYER_ID}}.png?v=2",
+    "TEAM_IMG": "https://assets-icc.sportz.io/static-assets/buildv3-stg/images/teams/{{TEAM_ID}}.png?v=7",
+    "FLAGS": {
+      "1": "https://assets-icc.sportz.io/static-assets/buildv3-stg/images/teams/{{TEAM_ID}}.png?v=2",
+      "2": "https://assets-icc.sportz.io/static-assets/buildv3-stg/football/flags/{{TEAM_ID}}.png",
+      "GENERAL": "https://assets-icc.sportz.io/static-assets/buildv3-stg/{{SPORT}}/flags/{{TEAM_ID}}.png"
+    },
+    "icc_player_img": {
+      "generic": {
+        "portrait": "https://images.icc-cricket.com/icc-web/image/upload/t_player-headshot-portrait/prd/assets/players/generic/colored/{{PLAYER_ID}}.png",
+        "portrait-lg": "https://images.icc-cricket.com/icc-web/image/upload/t_player-headshot-portrait-lg/prd/assets/players/generic/colored/{{PLAYER_ID}}.png",
+        "landscape": "https://images.icc-cricket.com/icc-web/image/upload/t_player-headshot-landscape/prd/assets/players/generic/colored/{{PLAYER_ID}}.png",
+        "square": "https://images.icc-cricket.com/icc-web/image/upload/t_player-headshot-square/prd/assets/players/generic/colored/{{PLAYER_ID}}.png"
+      },
+      "series": {
+        "portrait": "https://images.icc-cricket.com/icc-web/image/upload/t_player-headshot-portrait/prd/assets/players/{{SERIES_ID}}/{{PLAYER_ID}}.png",
+        "portrait-lg": "https://images.icc-cricket.com/icc-web/image/upload/t_player-headshot-portrait-lg/prd/assets/players/{{SERIES_ID}}/{{PLAYER_ID}}.png",
+        "landscape": "https://images.icc-cricket.com/icc-web/image/upload/t_player-headshot-landscape/prd/assets/players/{{SERIES_ID}}/{{PLAYER_ID}}.png",
+        "square": "https://images.icc-cricket.com/icc-web/image/upload/t_player-headshot-square/prd/assets/players/{{SERIES_ID}}/{{PLAYER_ID}}.png"
+      }
+    }
+  },
+  "clientDependencies": [],
+  "scheduleApiParams": {
+    "L": "is_live=true",
+    "R": "is_recent=true",
+    "U": "is_upcoming=true",
+    "compType": "competition_type_ids=",
+    "team": "team_ids=",
+    "league": "league_ids=",
+    "dateRange": "from_date={{START_DATE}}&to_date={{END_DATE}}",
+    "pageSize": "page_size=",
+    "pageNo": "page_number=",
+    "series": "series_ids=",
+    "tour": "tour_ids=",
+    "parentChampionshipIds": "parent_championship_ids=",
+    "championshipIds": "championship_ids=",
+    "gameCount": "game_count=",
+    "gameId": "game_id=",
+    "lang": "lang=",
+    "inning": "inning=",
+    "seriesId": "series_id=",
+    "parentId": "parent_id=",
+    "pagination": "pagination=true",
+    "playerId": "player_id=",
+    "championshipId": "championship_id=",
+    "T20": {
+      "comp_type_id": 3
+    },
+    "Test": {
+      "comp_type_id": 1
+    },
+    "ODI": {
+      "comp_type_id": 2
+    }
+  },
+  "widgets": {
+    "fixtures": {
+      "matchStateText": {
+        "L": "Live",
+        "R": "Recent",
+        "U": "Upcoming"
+      },
+      "page": {
+        "env":"prod",
+        "customJs": "js/fullFixtureV3.js",
+        "fileName": "fullFixture",
+        "css": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/css/flatpicker.min.css"],
+        "attributes": [
+          {
+            "attr": "data-matchstate",
+            "key": "scheduleApiParams"
+          },
+          {
+            "attr": "data-parent-championship-ids",
+            "path": "scheduleApiParams.parentChampionshipIds"
+          },
+          {
+            "attr": "data-championship-ids",
+            "path": "scheduleApiParams.championshipIds"
+          },
+          {
+            "attr": "data-tour-ids",
+            "path": "scheduleApiParams.tour"
+          },
+          {
+            "attr": "data-series-ids",
+            "path": "scheduleApiParams.series"
+          },
+          {
+            "attr": "data-date-range",
+            "path": "scheduleApiParams.dateRange"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          }
+        ],
+        "dataApis": {
+          "matches": "https://assets-icc.sportz.io/cricket/v1/schedule?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&is_deleted=false&{{QUERY}}",
+          "teamsApi": {
+            "mensTeamsList": "https://assets-icc.sportz.io/cricket/static/json/iccteamlist/mens_international_teamlist.json",
+            "womensTeamsList": "https://assets-icc.sportz.io/cricket/static/json/iccteamlist/womens_international_teamlist.json"
+          },
+          "datesApi": {
+            "dateList": "https://assets-icc.sportz.io/cricket/v1/schedule?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&date_list=true&pagination=false&is_deleted=false&league_ids={{LEAGUE_IDS}}&{{FROM_DATE_TO_DATE}}",
+            "dateListChampionship": "https://assets-icc.sportz.io/cricket/v1/schedule?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&date_list=true&is_deleted=false&{{QUERY}}",
+            "geoLocation":{
+              "api": "https://www.icc-cricket.com/geo.json"
+            },
+            "dev_geoLocation":{
+              "api": "https://react-fe-en.icc-dev.deltatre.digital/geo.json"
+            }
+          }
+        }
+      },
+      "strip": {
+        "env":"prod",
+        "customJs": "js/fixtureStripV3.js",
+        "css": [],
+        "fileName": "fixtureStrip",
+        "attributes": [
+          {
+            "attr": "data-matchstate",
+            "key": "scheduleApiParams"
+          },
+          {
+            "attr": "data-league-ids",
+            "path": "scheduleApiParams.league"
+          },
+          {
+            "attr": "data-comp-type-ids",
+            "path": "scheduleApiParams.compType"
+          },
+          {
+            "attr": "data-team-ids",
+            "path": "scheduleApiParams.team"
+          },
+          {
+            "attr": "data-year",
+            "path": "scheduleApiParams.year"
+          },
+          {
+            "attr": "data-tour-ids",
+            "path": "scheduleApiParams.tour"
+          },
+          {
+            "attr": "data-series-ids",
+            "path": "scheduleApiParams.series"
+          },
+          {
+            "attr": "data-date-range",
+            "path": "scheduleApiParams.dateRange"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          },
+          {
+            "attr": "data-count"
+          }
+        ],
+        "swiper_config": {
+          "web": {
+            "slidesPerView": 4.5,
+            "spaceBetween": 32,
+            "loop": false,
+            "centeredSlides": false,
+            "pagination": {
+              "el": ".si-widget[data-viewtype='strip'] .swiper-pagination"
+            },
+            "navigation": {
+              "nextEl": ".si-widget[data-viewtype='strip'] .swiper-button-next",
+              "prevEl": ".si-widget[data-viewtype='strip'] .swiper-button-prev"
+            }
+          },
+          "mobile_bckp": {
+            "slidesPerView": 1.5,
+            "spaceBetween": 24,
+            "loop": false,
+            "centeredSlides": false,
+            "pagination": {
+              "el": ".si-widget[data-viewtype='strip'] .swiper-pagination"
+            },
+            "navigation": {
+              "nextEl": ".si-widget[data-viewtype='strip'] .swiper-button-next",
+              "prevEl": ".si-widget[data-viewtype='strip'] .swiper-button-prev"
+            }
+          }
+        },
+        "dataApis": {
+          "matches": "https://assets-icc.sportz.io/cricket/v1/schedule?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&league_ids=1,9,10,35&is_deleted=false&pagination=false&{{QUERY}}",
+          "geoLocation":{
+            "api": "https://www.icc-cricket.com/geo.json"
+          },
+          "dev_geoLocation":{
+            "api": "https://react-fe-en.icc-dev.deltatre.digital/geo.json"
+          }
+        }
+      },
+      "footer": {
+        "customJs": "js/fixtureStripV3.js",
+        "css": [],
+        "fileName": "fixtureStrip",
+        "attributes": [
+          {
+            "attr": "data-matchstate",
+            "key": "scheduleApiParams"
+          },
+          {
+            "attr": "data-league-ids",
+            "path": "scheduleApiParams.league"
+          },
+          {
+            "attr": "data-comp-type-ids",
+            "path": "scheduleApiParams.compType"
+          },
+          {
+            "attr": "data-team-ids",
+            "path": "scheduleApiParams.team"
+          },
+          {
+            "attr": "data-year",
+            "path": "scheduleApiParams.year"
+          },
+          {
+            "attr": "data-tour-ids",
+            "path": "scheduleApiParams.tour"
+          },
+          {
+            "attr": "data-series-ids",
+            "path": "scheduleApiParams.series"
+          },
+          {
+            "attr": "data-date-range",
+            "path": "scheduleApiParams.dateRange"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          }
+        ],
+        "swiper_config": {
+          "slidesPerView": 1.2,
+          "spaceBetween": 33,
+          "pagination": {
+            "el": ".swiper-pagination",
+            "clickable": true
+          },
+          "navigation": {
+            "nextEl": ".swiper-button-next",
+            "prevEl": ".swiper-button-prev"
+          },
+          "breakpoints": {
+            "768": {
+              "slidesPerView": 1.2,
+              "spaceBetween": 53
+            },
+            "1024": {
+              "slidesPerView": 3.2,
+              "spaceBetween": 53
+            },
+            "1366": {
+              "slidesPerView": 3.2,
+              "spaceBetween": 53
+            },
+            "1600": {
+              "slidesPerView": 3.2,
+              "spaceBetween": 53
+            }
+          }
+        },
+        "dataApis": {
+          "matches": "https://assets-icc.sportz.io/cricket/v1/schedule?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+        }
+      }
+    },
+    "rankings": {
+      "strip": {
+        "customJs": "js/rankingsStripV3.js",
+        "fileName": "rankingsStrip",
+        "css": [],
+        "dataApis": {
+          "rankingMatchFormats": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/ranking?client_id={{CLIENTID}}&comp_type={{COMPTYPE}}&type={{TYPE}}&lang={{LANG}}&feed_format=json"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      },
+      "page": {
+        "customJs": "js/fullRankingsV3.js",
+        "fileName": "fullRankings",
+        "css": [],
+        "dataApis": {
+          "rankingMatchFormats": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/ranking?client_id={{CLIENTID}}&comp_type={{COMPTYPE}}&type={{TYPE}}&date={{DATE}}&lang={{LANG}}&feed_format=json"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "mastHead": {
+      "page": {
+        "env":"prod",
+        "customJs": "js/mastHeadV3.js",
+        "fileName": "mastHead",
+        "css": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/css/si-matchcenter.css?v={{VERSION}}"],
+        "dataApis": {
+          "matches": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/game/scorecard?client_id={{CLIENTID}}&game_id={{GAME_ID}}&lang={{LANG}}&feed_format=json"
+          },
+          "overByOver": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/game/over-by-over?client_id={{CLIENTID}}&game_id={{OVER_GAME_ID}}&inning={{INNING_ID}}&lang={{LANG}}&feed_format=json"
+          },
+          "geoLocation":{
+            "api": "https://www.icc-cricket.com/geo.json"
+          },
+          "dev_geoLocation":{
+            "api": "https://react-fe-en.icc-dev.deltatre.digital/geo.json"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      },
+      "transparent_masthead": {
+        "env":"prod",
+        "customJs": "js/mastHeadV3.js",
+        "fileName": "mastHead",
+        "css": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/css/si-matchcenter.css?v={{VERSION}}"],
+        "dataApis": {
+          "matches": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/game/scorecard?client_id={{CLIENTID}}&game_id={{GAME_ID}}&lang={{LANG}}&feed_format=json"
+          },
+          "overByOver": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/game/over-by-over?client_id={{CLIENTID}}&game_id={{OVER_GAME_ID}}&inning={{INNING_ID}}&lang={{LANG}}&feed_format=json"
+          },
+          "geoLocation":{
+            "api": "https://www.icc-cricket.com/geo.json"
+          },
+          "dev_geoLocation":{
+            "api": "https://react-fe-en.icc-dev.deltatre.digital/geo.json"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "scorecard": {
+      "page": {
+        "customJs": "js/scorecardV3.js",
+        "fileName": "scorecard",
+        "css": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/css/si-matchcenter.css?v={{VERSION}}"],
+        "dataApis": {
+          "matches": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/game/scorecard?client_id={{CLIENTID}}&game_id={{GAME_ID}}&lang={{LANG}}&feed_format=json"
+          },
+          "batsmen": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/game/batsman-split?client_id={{CLIENTID}}&game_id={{GAME_ID}}&inning={{INNING_ID}}&lang={{LANG}}&feed_format=json"
+          },
+          "commentary": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/game/commentary?client_id={{CLIENTID}}&game_id={{GAME_ID}}&pagination=false&inning={{INNING_ID}}&type=all&lang={{LANG}}&feed_format=json"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "squad": {
+      "scorecard": {
+        "customJs": "js/squadV3.js",
+        "css": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/css/si-matchcenter.css?v={{VERSION}}"],
+        "fileName": "squad",
+        "attributes": [
+          {
+            "attr": "data-gameid",
+            "path": "scheduleApiParams.gameId"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          }
+        ],
+        "dataApis": {
+          "scorecard": "https://assets-icc.sportz.io/cricket/v1/game/scorecard?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+        }
+      }
+    },
+    "h2h": {
+      "scorecard": {
+        "customJs": "js/h2hV3.js",
+        "css": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/css/si-matchcenter.css?v={{VERSION}}"],
+        "js": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/js/apexchart.js"],
+        "fileName": "h2h",
+        "attributes": [
+          {
+            "attr": "data-gameid",
+            "path": "scheduleApiParams.gameId",
+            "apis": "h2h,scorecard,batsmanSplit,commentary,over_by_over"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang",
+            "apis": "h2h,scorecard,batsmanSplit,commentary,over_by_over"
+          }
+        ],
+        "customData": {
+          "titles": {
+            "team": "team head to head",
+            "batsman": "top batter",
+            "bowler": "top bowler"
+          },
+          "configs": {
+            "teams": [
+              {
+                "id": "t-w",
+                "label": "WIN",
+                "path": "data[IDX].won"
+              },
+              {
+                "id": "t-l",
+                "label": "LOST",
+                "path": "data[IDX].lost"
+              },
+              {
+                "id": "t-t",
+                "label": "TIED",
+                "path": "data[IDX].tied"
+              },
+              {
+                "id": "t-nr",
+                "label": "NO RESULT",
+                "path": "data[IDX].noresult"
+              },
+              {
+                "id": "t-wp",
+                "label": "WIN %",
+                "path": "data[IDX].win_percentage",
+                "postfix": "%"
+              }
+            ],
+            "batsmen": [
+              {
+                "id": "bts-ctr",
+                "label": "TOTAL RUNS",
+                "path": "teams[T_IDX].top_players.batsmen.player[0].runs"
+              },
+              {
+                "id": "bts-cbavg",
+                "label": "BATTING AVG",
+                "path": "teams[T_IDX].top_players.batsmen.player[0].batting_average"
+              },
+              {
+                "id": "bts-cbsr",
+                "label": "BATTING SR",
+                "path": "teams[T_IDX].top_players.batsmen.player[0].batting_strike_rate",
+                "postfix": ""
+              },
+              {
+                "id": "bts-chs",
+                "label": "HIGHEST SCORE",
+                "path": "teams[T_IDX].top_players.batsmen.player[0].highest_score"
+              }
+            ],
+            "bowler": [
+              {
+                "id": "bow-ctw",
+                "label": "TOTAL WICKETS",
+                "path": "teams[T_IDX].top_players.bowler.player[0].wickets"
+              },
+              {
+                "id": "bow-cbavg",
+                "label": "BOWLING AVG",
+                "path": "teams[T_IDX].top_players.bowler.player[0].bowling_average"
+              },
+              {
+                "id": "bow-cbsr",
+                "label": "BOWLING SR",
+                "path": "teams[T_IDX].top_players.bowler.player[0].bowling_strike_rate",
+                "postfix": ""
+              },
+              {
+                "id": "bow-cbf",
+                "label": "BEST FIGURE",
+                "path": "teams[T_IDX].top_players.bowler.player[0].best_figure"
+              }
+            ]
+          }
+        },
+        "dataApis": {
+          "h2h": "https://assets-icc.sportz.io/cricket/v1/game/head-to-head?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}",
+          "scorecard": "https://assets-icc.sportz.io/cricket/v1/game/scorecard?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{SCORECARD_QUERY}}",
+          "batsmanSplit": "https://assets-icc.sportz.io/cricket/v1/game/batsman-split?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{BATSMAN_SPLIT_QUERY}}",
+          "commentary": "https://assets-icc.sportz.io/cricket/v1/game/commentary?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{COMMENTARY_QUERY}}",
+          "over_by_over": "https://assets-icc.sportz.io/cricket/v1/game/over-by-over?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{OBO_QUERY}}"
+        }
+      }
+    },
+    "stats": {
+      "scorecard": {
+        "customJs": "js/matchInfoV3.js",
+        "fileName": "matchInfo",
+        "css": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/css/si-matchcenter.css?v={{VERSION}}"],
+        "attributes": [
+          {
+            "attr": "data-gameid",
+            "path": "scheduleApiParams.gameId"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          }
+        ],
+        "dataApis": {
+          "stats": "https://assets-icc.sportz.io/cricket/v1/game/scorecard?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "commentary": {
+      "scorecard": {
+        "customJs": "js/commentaryV3.js",
+        "fileName": "commentary",
+        "css": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/css/si-matchcenter.css?v={{VERSION}}"],
+        "attributes": [
+          {
+            "attr": "data-gameid",
+            "path": "scheduleApiParams.gameId"
+          },
+          {
+            "attr": "data-inning",
+            "path": "scheduleApiParams.inning"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          }
+        ],
+        "dataApis": {
+          "scorecard": {
+            "gameData": "https://assets-icc.sportz.io/cricket/v1/game/scorecard?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+          },
+          "commentary": {
+            "commentaryData": "https://assets-icc.sportz.io/cricket/v1/game/commentary?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+          },
+          "keyEvent": {
+            "keyEventData": "https://assets-icc.sportz.io/cricket/v1/game/commentary?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&key_event=true&{{QUERY}}"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "profileform": {
+      "strip": {
+        "customJs": "js/playerProfileFormV3.js",
+        "fileName": "playerProfileForm",
+        "css": [],
+        "dataApis": {
+          "playerForm": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/player?client_id={{CLIENTID}}&feed_format=json&player_id={{PLAYER_ID}}&lang={{LANG}}"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "profileskills": {
+      "strip": {
+        "customJs": "js/playerProfileSkillsV3.js",
+        "fileName": "playerProfileSkills",
+        "css": [],
+        "dataApis": {
+          "playerSkills": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/player?client_id={{CLIENTID}}&feed_format=json&player_id={{PLAYER_ID}}&lang={{LANG}}"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "profileranking": {
+      "strip": {
+        "customJs": "js/playerProfileRankingV3.js",
+        "fileName": "playerProfileRanking",
+        "css": [],
+        "dataApis": {
+          "playerForm": {
+            "api": "https://assets-icc.sportz.io/cricket/v1/player?client_id={{CLIENTID}}&feed_format=json&player_id={{PLAYER_ID}}&lang={{LANG}}"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "standings": {
+      "customData": {
+        "columnsConfig": [
+          {
+            "key": "pos",
+            "short_key": "pos",
+            "class": "si-position",
+            "showData": true,
+            "display_name": "pos",
+            "type": "pos",
+            "display_name_short": "pos"
+          },
+          {
+            "key": "name",
+            "short_key": "short_name",
+            "image_key": "id",
+            "class": "si-team",
+            "showData": true,
+            "display_name": "team",
+            "type": "team",
+            "display_name_short": "team"
+          },
+          {
+            "key": "p",
+            "short_key": "p",
+            "class": "si-play",
+            "showData": true,
+            "display_name": "played",
+            "type": "played",
+            "display_name_short": "pld"
+          },
+          {
+            "key": "w",
+            "short_key": "w",
+            "class": "si-won",
+            "display_name": "won",
+            "type": "won",
+            "display_name_short": "w"
+          },
+          {
+            "key": "l",
+            "short_key": "l",
+            "class": "si-lost",
+            "display_name": "lost",
+            "type": "lost",
+            "display_name_short": "l"
+          },
+          {
+            "key": "nr",
+            "short_key": "nr",
+            "class": "si-noresult",
+            "display_name": "n/r",
+            "type": "nr",
+            "display_name_short": "n/r"
+          },
+          {
+            "key": "t",
+            "short_key": "t",
+            "class": "si-draw",
+            "display_name": "tied",
+            "type": "tied",
+            "display_name_short": "t"
+          },
+          {
+            "key": "nrr",
+            "short_key": "nrr",
+            "class": "si-nrr",
+            "showData": true,
+            "display_name": "net rr",
+            "type": "nrr",
+            "display_name_short": "nrr"
+          },
+          {
+            "key": "pts",
+            "short_key": "pts",
+            "class": "si-points",
+            "showData": true,
+            "display_name": "points",
+            "type": "points",
+            "display_name_short": "pts"
+          }
+        ]
+      },
+      "page": {
+        "customJs": "js/standingsV3.js",
+        "fileName": "standings",
+        "css": [],
+        "attributes": [
+          {
+            "attr": "data-seriesid",
+            "path": "scheduleApiParams.seriesId"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          }
+        ],
+        "dataApis": {
+          "standings": "https://assets-icc.sportz.io/cricket/v1/series/standing?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      },
+      "rhs": {
+        "customJs": "js/standingsV3.js",
+        "fileName": "standings",
+        "css": [],
+        "attributes": [
+          {
+            "attr": "data-seriesid",
+            "path": "scheduleApiParams.seriesId"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          }
+        ],
+        "dataApis": {
+          "standings": "https://assets-icc.sportz.io/cricket/v1/series/standing?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "playerprofile": {
+      "graph": {
+        "customJs": "js/playerProfileGraphV3.js",
+        "fileName": "playerProfileGraph",
+        "css": [],
+        "js": ["https://assets-icc.sportz.io/static-assets/buildv3-stg/js/apexchart.js"],
+        "attributes": [
+          {
+            "attr": "data-player-id",
+            "path": "scheduleApiParams.playerId",
+            "apis": "player"
+          },
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang",
+            "apis": "player"
+          }
+        ],
+        "dataApis": {
+          "player": "https://assets-icc.sportz.io/cricket/v1/player?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+        }
+      }
+    },
+    "tournamentStats": {
+      "customData": {
+        "tournamentStats": {
+          "overview": "overview",
+          "batting": [
+            {
+              "key": "Most Runs",
+              "display_name": "Most Runs",
+              "value": "runs_scored",
+              "classes": [
+                {
+                  "display_name": "Matches",
+                  "class": "si-run",
+                  "value": "matches_played"
+                },
+                {
+                  "display_name": "Innings",
+                  "class": "si-innings",
+                  "value": "innings_played"
+                },
+                {
+                  "display_name": "Bat Avg",
+                  "class": "si-batavg",
+                  "value": "average"
+                },
+                {
+                  "display_name": "Runs",
+                  "class": "si-runs",
+                  "value": "runs_scored"
+                }
+              ],
+              "showStats": true
+            },
+            {
+              "key": "Highest Score",
+              "display_name": "Highest Score Innings",
+              "value": "highest_score",
+              "classes": [
+                {
+                  "display_name": "Runs",
+                  "class": "si-run",
+                  "value": "highest_score"
+                },
+                {
+                  "display_name": "Balls",
+                  "class": "si-innings",
+                  "value": "balls_faced"
+                },
+                {
+                  "display_name": "Strike Rate",
+                  "class": "si-batavg",
+                  "value": "batting_strike_rate"
+                },
+                {
+                  "display_name": "Opposition",
+                  "class": "si-runs",
+                  "value": "vs_team_name"
+                }
+              ],
+              "showStats": true
+            },
+            {
+              "key": "Best Batting Average",
+              "display_name": "Best Batting Average",
+              "value": "average",
+              "classes": [
+                {
+                  "display_name": "Matches",
+                  "class": "si-run",
+                  "value": "matches_played"
+                },
+                {
+                  "display_name": "Innings",
+                  "class": "si-innings",
+                  "value": "innings_played"
+                },
+                {
+                  "display_name": "Runs",
+                  "class": "si-runs",
+                  "value": "runs_scored"
+                },
+                {
+                  "display_name": "Bat Avg",
+                  "class": "si-batavg",
+                  "value": "average"
+                }
+              ],
+              "showStats": true
+            },
+            {
+              "key": "Best Strike Rate",
+              "value": "batting_strike_rate",
+              "classes": [
+                {
+                  "display_name": "Matches",
+                  "class": "si-batavg",
+                  "value": "matches_played"
+                },
+                {
+                  "display_name": "Innings",
+                  "class": "si-innings",
+                  "value": "innings_played"
+                },
+                {
+                  "display_name": "Runs",
+                  "class": "si-runs",
+                  "value": "runs_scored"
+                },
+                {
+                  "display_name": "Strike Rate",
+                  "class": "si-run",
+                  "value": "batting_strike_rate"
+                }
+              ],
+              "display_name": "Best Batting Strike Rate"
+            },
+            {
+              "key": "Best Batting Strike Rate (I)",
+              "value": "batting_strike_rate",
+              "classes": [
+                {
+                  "display_name": "Runs",
+                  "class": "si-runs",
+                  "value": "Runs"
+                },
+                {
+                  "display_name": "Balls",
+                  "class": "si-batavg",
+                  "value": "balls_faced"
+                },
+                {
+                  "display_name": "Strike Rate",
+                  "class": "si-run",
+                  "value": "batting_strike_rate"
+                },
+                {
+                  "display_name": "Opposition",
+                  "class": "si-innings",
+                  "value": "vs_team_name"
+                }
+              ],
+              "display_name": "Best Batting Strike Rate (Innings)"
+            },
+            {
+              "key": "Most 4s",
+              "value": "fours",
+              "classes": [
+                {
+                  "display_name": "Innings",
+                  "class": "si-innings",
+                  "value": "innings_played"
+                },
+                {
+                  "display_name": "Runs",
+                  "class": "si-runs",
+                  "value": "runs_scored"
+                },
+                {
+                  "display_name": "4s",
+                  "class": "si-run",
+                  "value": "fours"
+                },
+                {
+                  "display_name": "Bat Avg",
+                  "class": "si-batavg",
+                  "value": "average"
+                }
+              ],
+              "display_name": "Most Fours"
+            },
+            {
+              "key": "Most 6s",
+              "value": "sixes",
+              "classes": [
+                {
+                  "display_name": "Innings",
+                  "class": "si-innings",
+                  "value": "innings_played"
+                },
+                {
+                  "display_name": "Runs",
+                  "class": "si-runs",
+                  "value": "runs_scored"
+                },
+                {
+                  "display_name": "6s",
+                  "class": "si-run",
+                  "value": "sixes"
+                },
+                {
+                  "display_name": "Bat Avg",
+                  "class": "si-batavg",
+                  "value": "average"
+                }
+              ],
+              "display_name": "Most Sixes"
+            },
+            {
+              "key": "Most Fifties",
+              "value": "fifties",
+              "classes": [
+                {
+                  "display_name": "Innings",
+                  "class": "si-innings",
+                  "value": "innings_played"
+                },
+                {
+                  "display_name": "Runs",
+                  "class": "si-runs",
+                  "value": "runs_scored"
+                },
+                {
+                  "display_name": "50s",
+                  "class": "si-run",
+                  "value": "fifties"
+                },
+                {
+                  "display_name": "Bat Avg",
+                  "class": "si-batavg",
+                  "value": "average"
+                }
+              ],
+              "display_name": "Most Fifties"
+            },
+            {
+              "key": "Most Hundreds",
+              "value": "hundred",
+              "classes": [
+                {
+                  "display_name": "Innings",
+                  "class": "si-innings",
+                  "value": "innings_played"
+                },
+                {
+                  "display_name": "Runs",
+                  "class": "si-runs",
+                  "value": "runs_scored"
+                },
+                {
+                  "display_name": "100s",
+                  "class": "si-run",
+                  "value": "hundred"
+                },
+                {
+                  "display_name": "Bat Avg",
+                  "class": "si-batavg",
+                  "value": "average"
+                }
+              ],
+              "display_name": "Most Hundreds"
+            },
+            {
+              "key": "Fastest Centuries",
+              "value": "Runs",
+              "classes": [
+                {
+                  "display_name": "Runs",
+                  "class": "si-run",
+                  "value": "Runs"
+                },
+                {
+                  "display_name": "Balls",
+                  "class": "si-run",
+                  "value": "balls_faced"
+                },
+                {
+                  "display_name": "Strike Rate",
+                  "class": "si-innings",
+                  "value": "batting_strike_rate"
+                },
+                {
+                  "display_name": "Opposition",
+                  "class": "si-batavg",
+                  "value": "vs_team_name"
+                }
+              ],
+              "display_name": "Fastest Hundreds"
+            }
+          ],
+          "bowling": [
+            {
+              "key": "Most Wickets",
+              "value": "wickets",
+              "display_name": "Most Wickets",
+              "classes": [
+                {
+                  "display_name": "Matches",
+                  "class": "si-run",
+                  "value": "matches_played"
+                },
+                {
+                  "display_name": "Overs",
+                  "class": "si-innings",
+                  "value": "overs"
+                },
+                {
+                  "display_name": "Strike Rate",
+                  "class": "si-runs",
+                  "value": "bowling_strike_rate"
+                },
+                {
+                  "display_name": "Wickets",
+                  "class": "si-batavg",
+                  "value": "wickets"
+                }
+              ],
+              "showStats": true
+            },
+            {
+              "key": "Best figures",
+              "value": "best_bowling_figures",
+              "display_name": "Best Bowling Figures (Innings)",
+              "classes": [
+                {
+                  "display_name": "Wickets",
+                  "class": "si-run",
+                  "value": "best_bowling_figures"
+                },
+                {
+                  "display_name": "Overs",
+                  "class": "si-innings",
+                  "value": "overs"
+                },
+                {
+                  "display_name": "Economy",
+                  "class": "si-batavg",
+                  "value": "economy"
+                },
+                {
+                  "display_name": "Opposition",
+                  "class": "si-runs",
+                  "value": "vs_team_name"
+                }
+              ],
+              "showStats": true
+            },
+            {
+              "key": "Best Bowling Average",
+              "value": "best_bowling_average",
+              "display_name": "Best Bowling Average",
+              "classes": [
+                {
+                  "display_name": "Matches",
+                  "class": "si-runs",
+                  "value": "matches_played"
+                },
+                {
+                  "display_name": "Overs",
+                  "class": "si-innings",
+                  "value": "overs"
+                },
+                {
+                  "display_name": "Ave",
+                  "class": "si-run",
+                  "value": "best_bowling_average"
+                },
+                {
+                  "display_name": "Wickets",
+                  "class": "si-batavg",
+                  "value": "wickets"
+                }
+              ],
+              "showStats": true
+            },
+            {
+              "key": "Best Bowling Strike Rate",
+              "value": "bowling_strike_rate",
+              "classes": [
+                {
+                  "display_name": "Matches",
+                  "class": "si-innings",
+                  "value": "matches_played"
+                },
+                {
+                  "display_name": "Overs",
+                  "class": "si-runs",
+                  "value": "overs"
+                },
+                {
+                  "display_name": "Strike Rate",
+                  "class": "si-run",
+                  "value": "bowling_strike_rate"
+                },
+                {
+                  "display_name": "Wickets",
+                  "class": "si-batavg",
+                  "value": "wickets"
+                }
+              ],
+              "display_name": "Best Bowling Strike Rate"
+            },
+            {
+              "key": "Best Bowling Strike-Rate (I)",
+              "value": "bowling_strike_rate",
+              "classes": [
+                {
+                  "display_name": "Wickets",
+                  "class": "si-batavg",
+                  "value": "wickets"
+                },
+                {
+                  "display_name": "Overs",
+                  "class": "si-innings",
+                  "value": "overs"
+                },
+                {
+                  "display_name": "Strike Rate",
+                  "class": "si-run",
+                  "value": "bowling_strike_rate"
+                },
+                {
+                  "display_name": "Opposition",
+                  "class": "si-runs",
+                  "value": "against_team_name"
+                }
+              ],
+              "display_name": "Best Bowling Strike Rate (Innings)"
+            },
+            {
+              "key": "Best Economy Rates",
+              "value": "economy",
+              "classes": [
+                {
+                  "display_name": "Matches",
+                  "class": "si-innings",
+                  "value": "matches_played"
+                },
+                {
+                  "display_name": "Overs",
+                  "class": "si-runs",
+                  "value": "overs"
+                },
+                {
+                  "display_name": "Wickets",
+                  "class": "si-batavg",
+                  "value": "wickets"
+                },
+                {
+                  "display_name": "Economy",
+                  "class": "si-run",
+                  "value": "economy"
+                }
+              ],
+              "display_name": "Best Bowling Economy"
+            },
+            {
+              "key": "Best Bowling Economy (I)",
+              "value": "economy",
+              "classes": [
+                {
+                  "display_name": "Overs",
+                  "class": "si-innings",
+                  "value": "overs"
+                },
+                {
+                  "display_name": "Wickets",
+                  "class": "si-batavg",
+                  "value": "wickets"
+                },
+                {
+                  "display_name": "Economy",
+                  "class": "si-run",
+                  "value": "economy"
+                },
+                {
+                  "display_name": "Opposition",
+                  "class": "si-runs",
+                  "value": "against_team_name"
+                }
+              ],
+              "display_name": "Best Bowling Economy (Innings)"
+            },
+            {
+              "key": "Most Maidens",
+              "value": "most_maidens",
+              "classes": [
+                {
+                  "display_name": "Matches",
+                  "class": "si-innings",
+                  "value": "matches_played"
+                },
+                {
+                  "display_name": "Overs",
+                  "class": "si-batavg",
+                  "value": "overs"
+                },
+                {
+                  "display_name": "Runs",
+                  "class": "si-runs",
+                  "value": "runs_given"
+                },
+                {
+                  "display_name": "Maidens",
+                  "class": "si-run",
+                  "value": "most_maidens"
+                }
+              ],
+              "display_name": "Most Maidens"
+            },
+            {
+              "key": "Most dot balls",
+              "value": "dot balls",
+              "classes": [
+                {
+                  "display_name": "Innings",
+                  "class": "si-batavg",
+                  "value": "Innings"
+                },
+                {
+                  "display_name": "Overs",
+                  "class": "si-innings",
+                  "value": "overs"
+                },
+                {
+                  "display_name": "Dots",
+                  "class": "si-run",
+                  "value": "dot balls"
+                },
+                {
+                  "display_name": "Economy",
+                  "class": "si-runs",
+                  "value": "economy"
+                }
+              ],
+              "display_name": "Most Dot Balls"
+            }
+          ],
+          "team": [
+            {
+              "key": "Team Analysis",
+              "value": "win_percentage",
+              "classes": [
+                {
+                  "display_name": "Win %",
+                  "class": "si-run",
+                  "value": "win_percentage"
+                },
+                {
+                  "display_name": "Matches",
+                  "class": "si-innings",
+                  "value": "matches"
+                },
+                {
+                  "display_name": "Wins",
+                  "class": "si-batavg",
+                  "value": "wins"
+                },
+                {
+                  "display_name": "Lost",
+                  "class": "si-runs",
+                  "value": "lost"
+                }
+              ],
+              "display_name": "Best Win Percentage",
+              "showStats": true
+            },
+            {
+              "key": "Highest match aggregate",
+              "value": "aggregate_runs",
+              "classes": [
+                {
+                  "display_name": "Aggregate Runs",
+                  "class": "si-run",
+                  "value": "aggregate_runs"
+                },
+                {
+                  "display_name": "Opposition",
+                  "class": "si-innings",
+                  "value": "against_team_name"
+                }
+              ],
+              "display_name": "Highest Match Aggregate"
+            },
+            {
+              "key": "Highest Margin of victory (wickets)",
+              "value": "team_highest_margin_victory_wickets",
+              "classes": [
+                {
+                  "display_name": "Margin",
+                  "class": "si-run",
+                  "value": "team_highest_margin_victory_wickets"
+                },
+                {
+                  "display_name": "Target",
+                  "class": "si-run",
+                  "value": "team_score"
+                },
+                {
+                  "display_name": "Opposition",
+                  "class": "si-innings",
+                  "value": "vs_team_name"
+                }
+              ],
+              "display_name": "Largest Victories (Wickets)"
+            },
+            {
+              "key": "Highest Margin of victory (runs)",
+              "value": "team_highest_margin_victory_runs",
+              "classes": [
+                {
+                  "display_name": "Margin",
+                  "class": "si-run",
+                  "value": "team_highest_margin_victory_runs"
+                },
+                {
+                  "display_name": "Target",
+                  "class": "si-run",
+                  "value": "team_score"
+                },
+                {
+                  "display_name": "Opposition",
+                  "class": "si-innings",
+                  "value": "vs_team_name"
+                }
+              ],
+              "display_name": "Largest Victories (Runs)"
+            },
+            {
+              "key": "Team Analysis",
+              "value": "wins",
+              "classes": [
+                {
+                  "display_name": "Matches",
+                  "class": "si-innings",
+                  "value": "matches"
+                },
+                {
+                  "display_name": "Wins",
+                  "class": "si-run",
+                  "value": "wins"
+                },
+                {
+                  "display_name": "Lost",
+                  "class": "si-runs",
+                  "value": "lost"
+                },
+                {
+                  "display_name": "No Result",
+                  "class": "si-batavg",
+                  "value": "no_result"
+                }
+              ],
+              "display_name": "Most Wins",
+              "showStats": true
+            },
+            {
+              "key": "Most losses",
+              "value": "matches_lost",
+              "classes": [
+                {
+                    "display_name": "Matches Played",
+                    "class": "si-innings",
+                    "value": "matches_played"
+                },
+                {
+                    "display_name": "Matches Lost",
+                    "class": "si-innings",
+                    "value": "matches_lost"
+                },
+                {
+                    "display_name": "Wins",
+                    "class": "si-batavg",
+                    "value": "wins"
+                },
+                {
+                    "display_name": "No Result",
+                    "class": "si-batavg",
+                    "value": "no_result"
+                }
+              ],
+              "display_name": "Most Losses",
+              "showStats": true
+            }
+          ]
+        }
+      },
+      "stats": {
+        "customJs": "js/tournamentStatsV3.js",
+        "fileName": "tournamentStats",
+        "css": [],
+        "attributes": [
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          }
+        ],
+        "dataApis": {
+          "statsApi": {
+            "statsData": "https://assets-icc.sportz.io/cricket/v1/stats/series?client_id=tPZJbRgIub3Vua93/DWtyQ==&type=0&feed_format=json&{{QUERY}}"
+          },
+          "recordsApi": {
+            "recordsData": "https://assets-icc.sportz.io/cricket/v1/stats/parent?client_id=tPZJbRgIub3Vua93/DWtyQ==&type=0&feed_format=json&{{QUERY}}"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      },
+      "records": {
+        "customJs": "js/tournamentStatsV3.js",
+        "fileName": "tournamentStats",
+        "css": [],
+        "attributes": [
+          {
+            "attr": "data-lang",
+            "path": "scheduleApiParams.lang"
+          }
+        ],
+        "dataApis": {
+          "statsApi": {
+            "statsData": "https://assets-icc.sportz.io/cricket/v1/stats/series?client_id=tPZJbRgIub3Vua93/DWtyQ==&type=0&feed_format=json&{{QUERY}}"
+          },
+          "recordsApi": {
+            "recordsData": "https://assets-icc.sportz.io/cricket/v1/stats/parent?client_id=tPZJbRgIub3Vua93/DWtyQ==&type=0&feed_format=json&{{QUERY}}"
+          }
+        },
+        "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "wcstandings": {
+      "customData": {
+          "columnsConfig": [
+              {
+                  "key": "position",
+                  "short_key": "position",
+                  "class": "si-position",
+                  "showOnMobile": true,
+                  "display_name": "pos",
+                  "type": "pos",
+                  "wdType": "all",
+                  "display_name_short": "pos"
+              },
+              {
+                  "key": "team_name",
+                  "short_key": "team_short_name",
+                  "image_key": "team_id",
+                  "class": "si-team",
+                  "showOnMobile": true,
+                  "display_name": "team",
+                  "type": "team",
+                  "wdType": "all",
+                  "display_name_short": "team"
+              },
+              {
+                  "key": "matches_played",
+                  "short_key": "matches_played",
+                  "class": "si-play",
+                  "showOnMobile": true,
+                  "display_name": "played",
+                  "type": "played",
+                  "wdType": "all",
+                  "display_name_short": "pld"
+              },
+              {
+                  "key": "matches_won",
+                  "short_key": "matches_won",
+                  "class": "si-won",
+                  "display_name": "won",
+                  "type": "won",
+                  "wdType": "all",
+                  "showOnMobile": false,
+                  "display_name_short": "w"
+              },
+              {
+                  "key": "matches_lost",
+                  "short_key": "matches_lost",
+                  "class": "si-lost",
+                  "display_name": "lost",
+                  "type": "lost",
+                  "wdType": "all",
+                  "showOnMobile": false,
+                  "display_name_short": "l"
+              },
+              {
+                  "key": "matches_drawn",
+                  "short_key": "matches_drawn",
+                  "class": "si-draw",
+                  "display_name": "draw",
+                  "type": "draw",
+                  "showOnMobile": false,
+                  "wdType": "wtc",
+                  "display_name_short": "dr"
+              },
+              {
+                  "key": "penalty",
+                  "short_key": "penalty",
+                  "class": "si-draw",
+                  "display_name": "Ded",
+                  "type": "ded",
+                  "wdType": "wtc",
+                  "showOnMobile": false,
+                  "display_name_short": "ded"
+              },
+              {
+                  "key": "matches_tied",
+                  "short_key": "matches_tied",
+                  "class": "si-draw",
+                  "display_name": "tied",
+                  "type": "tied",
+                  "showOnMobile": false,
+                  "wdType": "iwc",
+                  "display_name_short": "t"
+              },
+              {
+                  "key": "matches_noresult",
+                  "short_key": "matches_noresult",
+                  "class": "si-noresult",
+                  "display_name": "n/r",
+                  "type": "nr",
+                  "showOnMobile": false,
+                  "wdType": "iwc",
+                  "display_name_short": "n/r"
+              },
+              {
+                  "key": "net_run_rate",
+                  "short_key": "net_run_rate",
+                  "class": "si-nrr",
+                  "showOnMobile": true,
+                  "display_name": "net rr",
+                  "type": "nrr",
+                  "wdType": "iwc",
+                  "display_name_short": "nrr"
+              },
+              {
+                  "key": "points",
+                  "short_key": "points",
+                  "class": "si-points",
+                  "showOnMobile": true,
+                  "display_name": "points",
+                  "type": "points",
+                  "wdType": "all",
+                  "display_name_short": "pts"
+              },
+              {
+                  "key": "points_contested_and_total_points_ratio",
+                  "short_key": "points_contested_and_total_points_ratio",
+                  "class": "si-nrr",
+                  "display_name": "pct",
+                  "type": "pct",
+                  "showOnMobile": true,
+                  "wdType": "wtc",
+                  "display_name_short": "pct"
+              }
+          ]
+      },
+      "page": {
+          "customJs": "js/wcStandingsV3.js",
+          "fileName": "wcStandings",
+          "css": [],
+          "attributes": [
+              {
+                  "attr": "data-lang",
+                  "path": "scheduleApiParams.lang"
+              },
+              {
+                  "attr": "data-type",
+                  "path": "scheduleApiParams.type"
+              },
+              {
+                  "attr": "data-championship-id",
+                  "path": "scheduleApiParams.championshipId"
+              }
+          ],
+          "dataApis": {
+              "standings": "https://assets-icc.sportz.io/cricket/v1/championship_standing?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+          },
+          "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      },
+      "rhs": {
+          "customJs": "js/wcStandingsV3.js",
+          "fileName": "wcStandings",
+          "css": [],
+          "attributes": [
+              {
+                  "attr": "data-lang",
+                  "path": "scheduleApiParams.lang"
+              },
+              {
+                  "attr": "data-type",
+                  "path": "scheduleApiParams.type"
+              },
+              {
+                  "attr": "data-championship-id",
+                  "path": "scheduleApiParams.championshipId"
+              }
+          ],
+          "dataApis": {
+              "standings": "https://assets-icc.sportz.io/cricket/v1/championship_standing?client_id=tPZJbRgIub3Vua93/DWtyQ==&feed_format=json&{{QUERY}}"
+          },
+          "client_id": "tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    },
+    "rankingPredictor": {
+        "page": {
+            "customJs": "js/rankingPredictorV3.js",
+            "fileName": "rankingPredictor",
+            "css": [],
+            "dataApis": {
+                "series":{
+                    "api":"https://alt-api.sportz.io/cricket/v1/series?league_id=1&competition_type_ids={{COMPTYPE}}&year=2024&is_completed=false&pagination=true&page_size={{PAGESIZE}}&page_number={{PAGENUMBER}}&lang={{LANG}}&feed_format=json&client_id={{CLIENTID}}"    
+                },
+                "schedule": {
+                    "api": "https://alt-api.sportz.io/cricket/v1/schedule?client_id={{CLIENTID}}&competition_type_ids={{COMPTYPE}}&date_list=false&feed_format=json&is_live=true&is_upcoming=true&lang={{LANG}}&page_number={{PAGENUMBER}}&page_size={{PAGESIZE}}&pagination=true&timezone=0000&year=2024&timezone=0530&is_deleted=false"
+                },
+                "ranking":{
+                    "api": "https://alt-api.sportz.io/cricket/v1/ranking?comp_type={{COMPTYPE}}&type=team&lang={{LANG}}&feed_format=json&client_id={{CLIENTID}}"
+                },
+                "postApi":{
+                    "api":"https://alt-api.sportz.io/cricket/v1/team_ranking_predictor?client_id=tPZJbRgIub3Vua93%2FDWtyQ%3D%3D"
+                }
+            },
+            "client_id":"tPZJbRgIub3Vua93/DWtyQ=="
+        }
+    },
+    "playerComparison": {
+      "page": {
+          "customJs": "js/playerComparisonV3.js",
+          "fileName": "playerComparison",
+          "css": [],
+          "js": [
+              "https://assets-icc.sportz.io/static-assets/buildv3-stg/js/apexchart.js"
+          ],
+          "dataApis": {
+              "matches": {
+                  "api": "https://assets-icc.sportz.io/cricket/v1/player?player_id={{PLAYER_ID}}&is_international=true&pagination=true&page_size=20&page_number=1&lang={{LANG}}&feed_format=json&client_id={{CLIENTID}}",
+                  "teamsApi": "https://assets-icc.sportz.io/cricket/v1/team?is_international=true&lang={{LANG}}&pagination=false&feed_format=json&client_id={{CLIENTID}}&{{QUERY}}",
+                  "playersApi": "https://assets-icc.sportz.io/cricket/v1/player?is_international=true&lang={{LANG}}&pagination=false&feed_format=json&client_id={{CLIENTID}}&{{QUERY}}"
+              }
+          },
+          "client_id":"tPZJbRgIub3Vua93/DWtyQ=="
+      }
+    }
+  },
+  "vue": {
+    "requiredVueVersion": "3.3.4",
+    "cdn": "https://unpkg.com/vue@3.3.4/dist/vue.global.js"
+  },
+  "allowedTrans": {
+    "en": "English"
+  },
+  "versions": {
+    "language": "1.01",
+    "customNames": "1.01",
+    "files": "1.01"
+  },
+  "comp_labels": {
+    "1": "TEST",
+    "2": "ODI",
+    "3": "T20i",
+    "11": "TEST",
+    "12": "ODI",
+    "13": "T20i",
+    "21": "Y-TEST",
+    "22": "Y-ODI",
+    "23": "Y-T20i",
+    "101": "Y-TEST",
+    "102": "Y-ODI",
+    "103": "Y-T20i",
+    "130": "WARM-UP",
+    "42": "WARM-UP",
+    "53": "WARM-UP",
+    "61": "WARM-UP",
+    "62": "WARM-UP",
+    "4": "FC",
+    "5": "LIST A",
+    "14": "FC",
+    "15": "LIST A",
+    "6": "T20",
+    "16": "T20",
+    "others": "OTHERS"
+  },
+  "comp_type_ids_list": [
+    {
+      "id": 1,
+      "comp_type": "test",
+      "gender": "m",
+      "match_type": "Test",
+      "match_level": "International"
+    },
+    {
+      "id": 2,
+      "comp_type": "odi",
+      "gender": "m",
+      "match_type": "ODI",
+      "match_level": "International"
+    },
+    {
+      "id": 3,
+      "comp_type": "t20",
+      "gender": "m",
+      "match_type": "T20",
+      "match_level": "International"
+    },
+    {
+      "id": 4,
+      "comp_type": "test",
+      "gender": "m",
+      "match_type": "First-class",
+      "match_level": "Domestic"
+    },
+    {
+      "id": 5,
+      "comp_type": "odi",
+      "gender": "m",
+      "match_type": "List A",
+      "match_level": "Domestic"
+    },
+    {
+      "id": 6,
+      "comp_type": "t20",
+      "gender": "m",
+      "match_type": "T20",
+      "match_level": "Domestic"
+    },
+    {
+      "id": 7,
+      "comp_type": "t10",
+      "gender": "m",
+      "match_type": "T10",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 8,
+      "comp_type": "100 ball",
+      "gender": "m",
+      "match_type": "100 ball",
+      "match_level": "International"
+    },
+    {
+      "id": 11,
+      "comp_type": "test",
+      "gender": "w",
+      "match_type": "Test",
+      "match_level": "International"
+    },
+    {
+      "id": 12,
+      "comp_type": "odi",
+      "gender": "w",
+      "match_type": "ODI",
+      "match_level": "International"
+    },
+    {
+      "id": 13,
+      "comp_type": "t20",
+      "gender": "w",
+      "match_type": "T20",
+      "match_level": "International"
+    },
+    {
+      "id": 14,
+      "comp_type": "test",
+      "gender": "w",
+      "match_type": "First-class",
+      "match_level": "Domestic"
+    },
+    {
+      "id": 15,
+      "comp_type": "odi",
+      "gender": "w",
+      "match_type": "List A",
+      "match_level": "Domestic"
+    },
+    {
+      "id": 16,
+      "comp_type": "t20",
+      "gender": "w",
+      "match_type": "T20",
+      "match_level": "Domestic"
+    },
+    {
+      "id": 18,
+      "comp_type": "100 ball",
+      "gender": "w",
+      "match_type": "100 ball",
+      "match_level": "International"
+    },
+    {
+      "id": 21,
+      "comp_type": "test",
+      "gender": "m",
+      "match_type": "Youth Test",
+      "match_level": "International"
+    },
+    {
+      "id": 22,
+      "comp_type": "odi",
+      "gender": "m",
+      "match_type": "Youth ODI",
+      "match_level": "International"
+    },
+    {
+      "id": 23,
+      "comp_type": "t20",
+      "gender": "m",
+      "match_type": "Youth T20I",
+      "match_level": "International"
+    },
+    {
+      "id": 42,
+      "comp_type": "odi",
+      "gender": "m",
+      "match_type": "Warm-up ODI",
+      "match_level": "International"
+    },
+    {
+      "id": 43,
+      "comp_type": "t20",
+      "gender": "m",
+      "match_type": "Warm-up T20",
+      "match_level": "International"
+    },
+    {
+      "id": 52,
+      "comp_type": "odi",
+      "gender": "w",
+      "match_type": "Warm-up ODI",
+      "match_level": "International"
+    },
+    {
+      "id": 53,
+      "comp_type": "t20",
+      "gender": "w",
+      "match_type": "Warm-up T20",
+      "match_level": "International"
+    },
+    {
+      "id": 61,
+      "comp_type": "odi",
+      "gender": "m",
+      "match_type": "Warm-up Youth 50 over",
+      "match_level": "International"
+    },
+    {
+      "id": 62,
+      "comp_type": "t20",
+      "gender": "m",
+      "match_type": "Warm-up Youth T20",
+      "match_level": "International"
+    },
+    {
+      "id": 63,
+      "comp_type": "t20",
+      "gender": "m",
+      "match_type": "University T20",
+      "match_level": "University"
+    },
+    {
+      "id": 71,
+      "comp_type": "test",
+      "gender": "m",
+      "match_type": "Test",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 72,
+      "comp_type": "odi",
+      "gender": "m",
+      "match_type": "ODI",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 73,
+      "comp_type": "t20",
+      "gender": "m",
+      "match_type": "T20",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 78,
+      "comp_type": "100 ball",
+      "gender": "m",
+      "match_type": "100 ball",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 81,
+      "comp_type": "test",
+      "gender": "w",
+      "match_type": "Test",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 82,
+      "comp_type": "odi",
+      "gender": "w",
+      "match_type": "ODI",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 83,
+      "comp_type": "t20",
+      "gender": "w",
+      "match_type": "T20",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 88,
+      "comp_type": "100 ball",
+      "gender": "w",
+      "match_type": "100 ball",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 91,
+      "comp_type": "test",
+      "gender": "m",
+      "match_type": "Test Youth",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 92,
+      "comp_type": "odi",
+      "gender": "m",
+      "match_type": "ODI Youth",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 93,
+      "comp_type": "t20",
+      "gender": "m",
+      "match_type": "T20 Youth",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 101,
+      "comp_type": "test",
+      "gender": "w",
+      "match_type": "Youth Test",
+      "match_level": "International"
+    },
+    {
+      "id": 102,
+      "comp_type": "odi",
+      "gender": "w",
+      "match_type": "Youth ODI",
+      "match_level": "International"
+    },
+    {
+      "id": 103,
+      "comp_type": "t20",
+      "gender": "w",
+      "match_type": "Youth T20I",
+      "match_level": "International"
+    },
+    {
+      "id": 111,
+      "comp_type": "test",
+      "gender": "w",
+      "match_type": "Test Youth",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 112,
+      "comp_type": "odi",
+      "gender": "w",
+      "match_type": "ODI Youth",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 113,
+      "comp_type": "t20",
+      "gender": "w",
+      "match_type": "T20 Youth",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 114,
+      "comp_type": "t10",
+      "gender": "w",
+      "match_type": "T10",
+      "match_level": "Non-Domestic"
+    },
+    {
+      "id": 123,
+      "comp_type": "t20",
+      "gender": "m",
+      "match_type": "T20",
+      "match_level": "Virtual"
+    },
+    {
+      "id": 130,
+      "comp_type": "test",
+      "gender": "m",
+      "match_type": "Warm-up Test",
+      "match_level": "International"
+    }
+  ]
+}
