@@ -8,7 +8,7 @@ class CompType(str, Enum):
 
 class RankFor(str, Enum):
   bat         = 1
-  ball        = 2
+  bowl        = 2
   allrounder  = 3
 
 @dataclass
