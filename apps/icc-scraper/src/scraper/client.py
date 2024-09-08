@@ -57,6 +57,20 @@ def _get_ranking(
     query = rankings_url, 
     ranking_model = ranking_model
   )
+  def backoff_strategy(rank_date: str):
+    backoff_list = [7, 14, 28, 56, 90]
+    current_fetch_dt        = datetime.strptime(rank_date, date_fmt)
+    backoff_date: datetime  = current_fetch_dt - relativedelta(days = backoff_list[failure_count])
+    backoff_date            = backoff_date.strftime(date_fmt)
+    logger.warning(f"Trying to fetch for {backoff_date}")
+    return _get_ranking(
+      rankings_url=rankings_url,
+      client_id=client_id,
+      comp_type=comp_type,
+      rank_for=rank_for,
+      date_to_fetch_for=backoff_date,
+      failure_count=failure_count + 1
+    )
   try:
     response = requests.get(templated_url)
     response.raise_for_status()
@@ -68,11 +82,8 @@ def _get_ranking(
         
         if "rank_date" in batsman_rank:
           if batsman_rank["rank_date"] == None:
-            last_updated_ts: str = batsman_rank["last_updated"]
-            last_updated_ts = last_updated_ts[:last_updated_ts.find("T")]
-            rank_date = last_updated_ts
-            
-            logger.warning(f"rank date is none, using last update ts as rank date: {rank_date}")
+            logger.warning(f"rank date is none, using backoff strategy")
+            return backoff_strategy(rank_date=date_to_fetch_for)
             # last_updated = datetime.fromisoformat(,"%Y-%m-%d")
           else:
             rank_date = batsman_rank["rank_date"]
@@ -100,19 +111,7 @@ def _get_ranking(
     if e.response.status_code == 404:
       logger.warning("Error fetching data for the current date, fetching for a backoff date")
       if failure_count < 5:
-        backoff_list = [7, 14, 28, 56, 90]
-        current_fetch_dt        = datetime.strptime(date_to_fetch_for, date_fmt)
-        backoff_date: datetime  = current_fetch_dt - relativedelta(days = backoff_list[failure_count])
-        backoff_date            = backoff_date.strftime(date_fmt)
-        logger.warning(f"Trying to fetch for {backoff_date}")
-        return _get_ranking(
-          rankings_url=rankings_url,
-          client_id=client_id,
-          comp_type=comp_type,
-          rank_for=rank_for,
-          date_to_fetch_for=backoff_date,
-          failure_count=failure_count + 1
-        )
+        return backoff_strategy(rank_date=date_to_fetch_for)
       else:
         logger.error("Reached limit backing off, Considering we have reached the end of data")
         exit(1)
