@@ -16,4 +16,4 @@ class PlayerRankingItem(BaseModel):
   Points: int 
   careerbest: str
   rankdate: str
-  Player_url: str
+  Player_url: str | None = Field(default="")

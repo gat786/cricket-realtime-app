@@ -1,4 +1,15 @@
 from dataclasses import dataclass
+from enum import Enum
+
+class CompType(str, Enum):
+  test  = 1
+  odi   = 2
+  t20   = 3
+
+class RankFor(str, Enum):
+  bat         = 1
+  ball        = 2
+  allrounder  = 3
 
 @dataclass
 class RankingQuery:
