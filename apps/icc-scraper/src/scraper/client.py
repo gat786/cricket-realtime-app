@@ -1,11 +1,12 @@
 import functools
 import requests
 import logging
-from string import Template
-
+from typing import List
+import pandas as pd
 
 import models
 import models.clientconfig
+import models.playerrank
 import models.querymodel
 from templating import templatequery
 
@@ -29,6 +30,7 @@ def get_client_config() -> models.clientconfig.ClientConfig | None:
 def get_ranking():
   client_config = get_client_config()
   ranking_api = client_config.widgets["rankings"]
+  rankings_list = []
   if "page" in ranking_api:
     full_rankings_api           = ranking_api["page"]
     full_rankings_api_client_id = full_rankings_api["client_id"]
@@ -42,7 +44,33 @@ def get_ranking():
       response.raise_for_status()
 
       data = response.json()
-      logger.info(data)
+      if "data" in data:
+        data_inside = data["data"]
+        if 'bat-rank' in data_inside:
+          batsman_rank = data_inside['bat-rank']
+          if 'rank' in batsman_rank:
+            rankings = batsman_rank['rank']
+            logger.info(f"type of rankings: {type(rankings)}")
+            if type(rankings) == list:
+              for rank_item in rankings:
+                p_rank_item = models.playerrank.PlayerRankingItem.model_validate(rank_item)
+                if p_rank_item.no == "=":
+                  p_rank_item.no = previous_rank_number
+                previous_rank_number = p_rank_item.no
+                rankings_list.append(p_rank_item)
+              
+              df = pd.DataFrame(rankings_list)
+              df.to_json(
+                "batsman_rankings.json",
+                orient="records"
+              )
+            else:
+              print('ranking is not a list')
+          else:
+            logger.info('rank not present')
+        else:
+          logger.info('bat-rank not present')
+        
     except Exception as e:
       logger.error(e)
 
