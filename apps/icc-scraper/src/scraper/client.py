@@ -123,6 +123,7 @@ def _get_ranking(
 def scrape_rankings(
     comp_type: str,
     rank_for: str,
+    scrape_from_date: str = datetime.now().strftime(date_fmt),
     save: bool = False,
     save_fmt: models.save_format.SaveFormat = models.save_format.SaveFormat.json
   ):
@@ -137,8 +138,7 @@ def scrape_rankings(
   """
 
   date_fmt = """%Y%m%d"""
-  current_date        = datetime.now().strftime(date_fmt)
-  date_to_fetch_for   = current_date
+  date_to_fetch_for   = scrape_from_date
   # date_to_fetch_for = "20231108"
   save_dir      = f"{local_env.OUTPUT_DIR}/{comp_type}/{rank_for}"
   io.create_folder(save_dir)

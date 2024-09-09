@@ -1,6 +1,7 @@
 __pycache__
 .venv
 .env
+apps/data/rankings
 
 *.swp
 *.*~
