@@ -31,3 +31,4 @@ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.23/samp
 ```
 
 
+https://istio.io/latest/docs/tasks/
