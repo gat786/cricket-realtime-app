@@ -46,13 +46,19 @@ def get_team_from_name(team_id: str):
     teams_json = csv_file_content.to_json(orient="records",date_format="iso")
     
     teams = json.loads(teams_json)
-    
+    found_team = None
     for team in teams:
       if team["name"].lower() == team_id.lower():
-        return team
+        found_team = team
+        break
       if team["code"].lower() == team_id.lower():
-        return team
+        found_team = team
+        break
     
+    if exports.app_ver == "beta":
+      found_team["image_path"] = "https://public-assets-gats.s3.us-east-2.amazonaws.com/BetaLogo.svg"
+      return found_team
+
     return {
       "message": "Team not found"
     }

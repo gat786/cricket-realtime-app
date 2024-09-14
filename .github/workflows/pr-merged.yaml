@@ -63,6 +63,15 @@ jobs:
         tags: gat786/cric-team-service, gat786/cric-team-service:${{ github.sha }}
         platforms: linux/arm64, linux/amd64
 
+    - id: dockerx-build-and-push-ts-beta
+      name: Build and push (Team Service Beta)
+      uses: docker/build-push-action@v5
+      with:
+        push: true
+        context: apps/team-service
+        tags: gat786/cric-team-service, gat786/cric-team-service:${{ github.sha }}
+        platforms: linux/arm64, linux/amd64
+
     - id: dockerx-build-and-push-razor
       name: Build and push (Frontend Razor)
       uses: docker/build-push-action@v5
