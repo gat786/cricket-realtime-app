@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.playerService.service.name}}
+spec:
+  selector:
+    {{- include "playerService.labels" . | nindent 4 }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.playerService.service.port }}
+      targetPort: {{ .Values.playerService.deployment.containerPort }}
