@@ -19,3 +19,6 @@ spec:
         image: {{ .Values.teamService.image }}:{{ .Values.teamService.betaTag }}
         ports:
         - containerPort: {{ .Values.teamService.deployment.containerPort }}
+        env:
+          - name: APP_VER
+            value: beta

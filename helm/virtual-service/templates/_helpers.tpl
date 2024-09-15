@@ -88,6 +88,7 @@ app: player-service
 
 {{- define "teamService.labels" -}}
 app: team-service
+version: stable
 {{- end }}
 
 {{- define "teamService.serviceName" -}}
