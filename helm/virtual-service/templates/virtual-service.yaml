@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: Demo
+spec:
+  hosts:
+  - {{ include "teamService.serviceName" }}-vs.{{ .Release.Namespace }}.svc.cluster.local
+  http:
+  - route:
+    - destination:
+        port:
+          number: 80
+        host: {{ include "teamService.serviceName" }}.{{ .Release.Namespace }}.svc.cluster.local
