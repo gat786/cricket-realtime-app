@@ -4,6 +4,7 @@ from team_service.utils import exports
 import uvicorn
 import logging
 import json
+from fastapi import status, Response
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -38,8 +39,8 @@ def get_teams_list():
     
     return json.loads(teams_json)
   
-@app.get("/{team_id}")
-def get_team_from_name(team_id: str):
+@app.get("/{team_id}", status_code = 200)
+def get_team_from_name(team_id: str, response: Response):
   with open(exports.data_root + "/player/teams.csv", "r") as f:
     csv_file_content = pd.read_csv(f,encoding="utf-8")
     
@@ -55,10 +56,13 @@ def get_team_from_name(team_id: str):
         found_team = team
         break
     
-    if exports.app_ver == "beta":
-      found_team["image_path"] = "https://public-assets-gats.s3.us-east-2.amazonaws.com/BetaLogo.svg"
+    if found_team is not None:
+      if exports.app_ver == "beta":
+        found_team["image_path"] = "https://public-assets-gats.s3.us-east-2.amazonaws.com/BetaLogo.svg"
+      response.status_code = 200
       return found_team
-
+    
+    response.status_code = 404
     return {
       "message": "Team not found"
     }

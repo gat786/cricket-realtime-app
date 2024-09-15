@@ -8,7 +8,7 @@ container_name=$service_name
 echo "Temporarily copying data directory in current directory"
 cp -r ../data .
 
-docker build --no-cache . --tag $container_name
+docker build --no-cache . --tag $container_name --progress plain
 
 if [ "$( docker container inspect -f '{{.State.Running}}' $container_name )" = "true" ]; then
   echo "Container is running, stopping and removing it"
