@@ -4,7 +4,7 @@ metadata:
   name: team-vs
 spec:
   hosts:
-  - {{ include "teamService.serviceName" . }}-vs.{{ .Release.Namespace }}.svc.cluster.local
+  - {{ include "teamService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
   http:
   - route:
     - destination:

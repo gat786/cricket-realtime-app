@@ -107,6 +107,7 @@ frontend:
   service:
     name: frontend-service
     port: 80
+    portName: http-service
 
 
 playerService:
@@ -119,6 +120,7 @@ playerService:
   service:
     port: 80
     name: player-service
+    portName: http-service
 
 teamService:
   image: gat786/cric-team-service
@@ -131,6 +133,7 @@ teamService:
   service:
     port: 80
     name: team-service
+    portName: http-service
 
 scoreService:
   image: gat786/cric-score-service
@@ -142,3 +145,4 @@ scoreService:
   service:
     port: 80
     name: score-service
+    portName: http-service
