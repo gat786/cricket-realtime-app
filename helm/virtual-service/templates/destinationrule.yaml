@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: team-service-destination-rule
+spec:
+  host: {{ include "teamService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
+  subsets:
+  - labels:
+      version: beta
+    name: beta
+  - labels:
+      version: stable
+    name: stable

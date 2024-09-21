@@ -4,7 +4,7 @@ metadata:
   name: {{ include "teamService.serviceName" . }}
 spec:
   selector:
-    {{- include "teamService.labels" . | nindent 4 }}
+    app: team-service
   ports:
     - protocol: TCP
       port: {{ .Values.teamService.service.port }}

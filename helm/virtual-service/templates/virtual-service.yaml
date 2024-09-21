@@ -1,13 +1,17 @@
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
-  name: team-vs
+  name: team-service-virtual-service
 spec:
   hosts:
   - {{ include "teamService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
   http:
   - route:
     - destination:
-        port:
-          number: 80
         host: {{ include "teamService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
+        subset: beta
+      weight: 5
+    - destination:
+        host: {{ include "teamService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
+        subset: stable
+      weight: 95
