@@ -41,9 +41,15 @@
   string Team1 = "";
   string Team2 = "";
   List<Team> TeamsData = new List<Team>();
-
-  protected async override Task OnInitializedAsync()
+  
+  protected async override void OnParametersSet()
   {
+    TeamsData.Clear();
+    await LoadTeamsData();
+    StateHasChanged();
+  }
+
+  async Task LoadTeamsData() {
     string? TeamsUrl = Configuration["Urls:Teams"];
     if (MatchData is not null){
       if (MatchData.Teams?.ToList<string>().Count > 1)
@@ -60,7 +66,6 @@
       {
         try{
           string teamDataUrl = $"{TeamsUrl}/{TeamName.ToLower()}";
-          Console.WriteLine($"Fetching Data from Teams API {teamDataUrl}");
           string TeamDataString = await client.GetStringAsync(teamDataUrl);
           Team? TeamData = JsonSerializer.Deserialize<Team>(TeamDataString);
           if (TeamData != null)
@@ -68,10 +73,18 @@
             TeamsData.Add(TeamData);
           }
         }
-        catch (Exception e) {
-          Console.WriteLine(e.StackTrace);
+        catch (HttpRequestException e) {
+          Console.WriteLine("Exception occured while Getting Team Data");
+          Console.WriteLine("StatusCode Returned: ", e.StatusCode);
         }
       }
     }
+  }
+
+  protected async override Task OnInitializedAsync()
+  {
+    TeamsData.Clear();
+    await LoadTeamsData();
+    StateHasChanged();
   }
 }

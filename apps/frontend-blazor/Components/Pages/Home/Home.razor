@@ -49,6 +49,7 @@ else
   protected async Task FetchMatches(){
     string? ScoreUrl = Configuration["Urls:Score"];
     var client = new HttpClient();
+    List<Match> MatchList = new List<Match>();
     string scoreListUrl = $"{ScoreUrl}/list";
     Console.WriteLine($"Fetching Data from Score API {scoreListUrl}");
     try{
@@ -61,6 +62,7 @@ else
         if (responseStream != null)
         {
           Response = JsonSerializer.Deserialize<MatchListResponse>(response.Content.ReadAsStream());
+          MatchList = Response?.Matches;
           isLoading = false;
           StateHasChanged();
         }
