@@ -10,8 +10,8 @@ spec:
     - destination:
         host: {{ include "teamService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
         subset: beta
-      weight: 5
+      weight: 50
     - destination:
         host: {{ include "teamService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
         subset: stable
-      weight: 95
+      weight: 50
