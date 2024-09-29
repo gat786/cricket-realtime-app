@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: score-service
+  labels:
+    {{- include "scoreService.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.scoreService.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "scoreService.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "scoreService.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: score-service
+        image: {{ .Values.scoreService.image }}:{{ .Values.scoreService.tag }}
+        ports:
+        - containerPort: {{ .Values.scoreService.deployment.containerPort }}

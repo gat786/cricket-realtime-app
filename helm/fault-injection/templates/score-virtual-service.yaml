@@ -1,0 +1,12 @@
+
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: team-service-virtual-service
+spec:
+  hosts:
+  - {{ include "scoreService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
+  http:
+  - route:
+    - destination:
+        host: {{ include "scoreService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: player-service
+  labels:
+    {{- include "playerService.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.playerService.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "playerService.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "playerService.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: player-service
+        image: {{ .Values.playerService.image }}:{{ .Values.playerService.tag }}
+        ports:
+        - containerPort: {{ .Values.playerService.deployment.containerPort }}

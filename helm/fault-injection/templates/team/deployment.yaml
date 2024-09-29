@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: team-service
+  labels:
+    {{- include "teamService.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.teamService.replicaCount}}
+  selector:
+    matchLabels:
+      {{- include "teamService.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "teamService.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: team-service
+        image: {{ .Values.teamService.image }}:{{ .Values.teamService.tag }}
+        ports:
+        - containerPort: {{ .Values.teamService.deployment.containerPort }}
