@@ -2,11 +2,16 @@
 apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
-  name: team-service-virtual-service
+  name: {{ include "scoreService.serviceName" . }}-virtual-service
 spec:
   hosts:
   - {{ include "scoreService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
   http:
-  - route:
+  - fault:
+      delay:
+        fixedDelay: 1s
+        percentage:
+          value: 50
+    route:
     - destination:
         host: {{ include "scoreService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local

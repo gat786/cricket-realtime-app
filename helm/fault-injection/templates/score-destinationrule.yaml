@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
-  name: {{ include "scoreService.serviceName" }}-destination-rule
+  name: {{ include "scoreService.serviceName" . }}-destination-rule
 spec:
   host: {{ include "scoreService.serviceName" . }}.{{ .Release.Namespace }}.svc.cluster.local
   subsets:
